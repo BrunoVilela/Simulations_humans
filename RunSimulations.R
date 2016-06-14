@@ -1,30 +1,44 @@
+# Clean everything
 rm(list = ls())
+
+# Load the functions
 source("SimulationFunctions.R")
 
-################################################################################################
-################################################################################################
+#==================================================================
+#==================================================================
 # Start with simple simulation 
-# only vertical transmission to adjacent neighbors, colonize an empty world)
 
+# Only vertical transmission to adjacent neighbors, colonize an empty world)
 P.speciation <- as.data.frame(matrix(c(0.5, 0.5, 0.5, 0.5), 2, 2, byrow = TRUE))
 P.extinction <- as.data.frame(matrix(c(0, 0.2, 0.4, 0), 2, 2, byrow = TRUE))
-P.Arisal <- as.data.frame(matrix(c(0.05, 0, 0, 0.05), 2, 2, byrow = TRUE)) # P of coming up with a novel subsistence mode
+# P of coming up with a novel subsistence mode
+P.Arisal <- as.data.frame(matrix(c(0.05, 0, 0, 0.05), 2, 2, byrow = TRUE))
+
 names(P.extinction) <- names(P.speciation) <- names(P.Arisal) <- c("EnvF", "EnvD") 
 row.names(P.extinction) <- row.names(P.speciation) <- c("For", "Dom")
 row.names(P.Arisal) <- c("Evolve.For", "Evolve.Dom")
 
+# Set up the number of replications (1 for general tests)
 Replicates <- 1
 
 
-#####################################################
-# simple only vertical transmission
-P.diffusion <- as.data.frame(matrix(c(0, 0, 0, 0), 2, 2, byrow = TRUE)) # P of diffusing your trait to a particular target
-names(P.diffusion) <- c("Target.In.EnvF", "Target.In.EnvD") # where the target lives
-row.names(P.diffusion) <- c("Source.Is.For", "Source.Is.Dom") # What the source society does
+#==================================================================
+# Simple only vertical transmission
 
-P.TakeOver <- as.data.frame(matrix(c(0, 0, 0, 0), 2, 2, byrow = TRUE)) # P of taking over a neighbiors position
-names(P.TakeOver) <- c("Source.In.AppHabitat", "Source.NOT.In.AppHabitat") # How appropriate is the SOURCE's habitat to its strategy? lives
-row.names(P.TakeOver) <- c("Target.In.AppHabitat", "Target.NOT.In.AppHabitat") # How appropriate is the TARGET society's habitat
+# P of diffusing your trait to a particular target
+P.diffusion <- as.data.frame(matrix(c(0, 0, 0, 0), 2, 2, byrow = TRUE)) 
+# Where the target lives
+names(P.diffusion) <- c("Target.In.EnvF", "Target.In.EnvD")
+# What the source society does
+row.names(P.diffusion) <- c("Source.Is.For", "Source.Is.Dom")
+# P of taking over a neighbiors position
+P.TakeOver <- as.data.frame(matrix(c(0, 0, 0, 0), 2, 2, byrow = TRUE))
+# How appropriate is the SOURCE's habitat to its strategy? lives
+names(P.TakeOver) <- c("Source.In.AppHabitat", 
+                       "Source.NOT.In.AppHabitat")
+# How appropriate is the TARGET society's habitat
+row.names(P.TakeOver) <- c("Target.In.AppHabitat", 
+                           "Target.NOT.In.AppHabitat") 
 
 for (i in 1:Replicates) {
   print(paste("Replicate", i))
@@ -46,15 +60,21 @@ for (i in 1:Replicates) {
 
 VT.Sim <- list(all.trees, all.Worlds, all.node.Data)
 
-#####################################################
-# vertical transmission and takeover
-P.diffusion <- as.data.frame(matrix(c(0, 0, 0, 0), 2, 2, byrow = TRUE)) # P of diffusing your trait to a particular target
-names(P.diffusion) <- c("Target.In.EnvF", "Target.In.EnvD") # where the target lives
-row.names(P.diffusion) <- c("Source.Is.For", "Source.Is.Dom") # What the source society does
+#==================================================================
+# Vertical transmission and takeover
 
-P.TakeOver <- as.data.frame(matrix(c(0.4, 0, 0, 0.4), 2, 2, byrow = TRUE)) # P of taking over a neighbiors position
-names(P.TakeOver) <- c("Source.In.AppHabitat", "Source.NOT.In.AppHabitat") # How appropriate is the SOURCE's habitat to its strategy? lives
-row.names(P.TakeOver) <- c("Target.In.AppHabitat", "Target.NOT.In.AppHabitat") # How appropriate is the TARGET society's habitat
+# P of diffusing your trait to a particular target
+P.diffusion <- as.data.frame(matrix(c(0, 0, 0, 0), 2, 2, byrow = TRUE))
+# Where the target lives
+names(P.diffusion) <- c("Target.In.EnvF", "Target.In.EnvD")
+# What the source society does
+row.names(P.diffusion) <- c("Source.Is.For", "Source.Is.Dom") 
+# P of taking over a neighbiors position
+P.TakeOver <- as.data.frame(matrix(c(0.4, 0, 0, 0.4), 2, 2, byrow = TRUE))
+# How appropriate is the SOURCE's habitat to its strategy? lives
+names(P.TakeOver) <- c("Source.In.AppHabitat", "Source.NOT.In.AppHabitat")
+# How appropriate is the TARGET society's habitat
+row.names(P.TakeOver) <- c("Target.In.AppHabitat", "Target.NOT.In.AppHabitat")
 
 
 for (i in 1:Replicates) {
@@ -76,15 +96,21 @@ for (i in 1:Replicates) {
 
 TO.Sim <- list(all.trees, all.Worlds, all.node.Data)
 
-#####################################################
-# vertical transmission and takeover
-P.diffusion <- as.data.frame(matrix(c(0.5, 0, 0, 0.5), 2, 2, byrow = T)) # P of diffusing your trait to a particular target
-names(P.diffusion) <- c("Target.In.EnvF", "Target.In.EnvD") # where the target lives
-row.names(P.diffusion) <- c("Source.Is.For", "Source.Is.Dom") # What the source society does
+#==================================================================
+# Vertical transmission and takeover
 
-P.TakeOver <- as.data.frame(matrix(c(0.4, 0, 0.05, 0), 2, 2, byrow = T)) # P of taking over a neighbiors position
-names(P.TakeOver) <- c("Source.In.AppHabitat", "Source.NOT.In.AppHabitat") # How appropriate is the SOURCE's habitat to its strategy? lives
-row.names(P.TakeOver) <- c("Target.In.AppHabitat", "Target.NOT.In.AppHabitat") # How appropriate is the TARGET society's habitat
+# P of diffusing your trait to a particular target
+P.diffusion <- as.data.frame(matrix(c(0.5, 0, 0, 0.5), 2, 2, byrow = TRUE)) 
+# Where the target lives
+names(P.diffusion) <- c("Target.In.EnvF", "Target.In.EnvD")
+# What the source society does
+row.names(P.diffusion) <- c("Source.Is.For", "Source.Is.Dom")
+# P of taking over a neighbiors position
+P.TakeOver <- as.data.frame(matrix(c(0.4, 0, 0.05, 0), 2, 2, byrow = TRUE))
+# How appropriate is the SOURCE's habitat to its strategy? lives
+names(P.TakeOver) <- c("Source.In.AppHabitat", "Source.NOT.In.AppHabitat") 
+# How appropriate is the TARGET society's habitat
+row.names(P.TakeOver) <- c("Target.In.AppHabitat", "Target.NOT.In.AppHabitat")
 
 for (i in 1:Replicates) {
   print(paste("Replicate", i))
@@ -107,7 +133,8 @@ for (i in 1:Replicates) {
 
 Dif.Sim <- list(all.trees, all.Worlds, all.node.Data)
 
-save(VT.Sim, TO.Sim, Dif.Sim, file = '/Users/CarlosMacPro/Dropbox/Projects/CulturalEvoSimulations/Results.Rdata')
+save(VT.Sim, TO.Sim, Dif.Sim, 
+     file = 'Results.Rdata')
 
 ######################
 # plot a few examples
