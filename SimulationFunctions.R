@@ -449,7 +449,8 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     }
     
     if (!is.null(mytree)) {
-      # extend the tips of branches that did not reproduce to maintain an ultrametric tree
+      # Extend the tips of branches that did not reproduce to maintain
+      # an ultrametric tree
       for (i in 1:length(mytree$tip.label)) {
         dist.root <- distRoot(mytree, tips = i, method = "patristic")
         if (dist.root < myT) {
@@ -461,7 +462,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     }
   } 
   
-  return (list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
+  return(list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
 }
 
 

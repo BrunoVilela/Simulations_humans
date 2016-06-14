@@ -49,11 +49,11 @@ for (i in 1:Replicates) {
   if (i == 1) {
     all.trees <- list(myOut$mytree)
     all.Worlds <- list(myOut$myWorld)
-    all.node.Data <- list(myOut$node.Data)
+    all.node.Data <- list(myOut$NodeData)
   } else {
     all.trees[[i]] <- myOut$mytree
     all.Worlds[[i]] <- myOut$myWorld
-    all.node.Data[[i]] <- myOut$node.Data
+    all.node.Data[[i]] <- myOut$NodeData
   }
   print (paste(i, 'out of', Replicates, 'simulations'))
 }
@@ -85,11 +85,11 @@ for (i in 1:Replicates) {
   if (i == 1) {
     all.trees <- list(myOut$mytree)
     all.Worlds <- list(myOut$myWorld)
-    all.node.Data <- list(myOut$node.Data)
+    all.node.Data <- list(myOut$NodeData)
   }  else {
     all.trees[[i]] <- myOut$mytree
     all.Worlds[[i]] <- myOut$myWorld
-    all.node.Data[[i]] <- myOut$node.Data
+    all.node.Data[[i]] <- myOut$NodeData
   }
   print (paste(i, 'out of', Replicates, 'simulations'))
 }
@@ -121,12 +121,12 @@ for (i in 1:Replicates) {
   if (i == 1) {
     all.trees <- list(myOut$mytree)
     all.Worlds <- list(myOut$myWorld)
-    all.node.Data <- list(myOut$node.Data)
+    all.node.Data <- list(myOut$NodeData)
   }
   else {
     all.trees[[i]] <- myOut$mytree
     all.Worlds[[i]] <- myOut$myWorld
-    all.node.Data[[i]] <- myOut$node.Data
+    all.node.Data[[i]] <- myOut$NodeData
   }
   print (paste(i, 'out of', Replicates, 'simulations'))
 }
