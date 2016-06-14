@@ -232,7 +232,9 @@ Extinct <- function(mytree, NodeData, myWorld, Ext.tip) {
   NodeData[, 2] <- as.numeric(gsub('t', '', mytree$tip.label))
   
   # remove tip from map
-  myWorld$Parent[Ext.tip] <- myWorld$BirthT[Ext.tip] <- myWorld$Trait[Ext.tip] <- NA
+  myWorld$Parent[Ext.tip] <- NA
+  myWorld$BirthT[Ext.tip] <- NA
+  myWorld$Trait[Ext.tip] <- NA
   
   return(list("myWorld" = myWorld, "mytree" = mytree,
               "NodeData" = NodeData))
@@ -272,10 +274,10 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     
     # add one time step to the process
     myT <- myT + 1
-    
-    if (sum(!is.na(myWorld$Trait)) > 2) {
+    trait.nonNA <- !is.na(myWorld$Trait)
+    if (sum(trait.nonNA) > 2) {
       # allow the possibility of extinction
-      for (i in which(!is.na(myWorld$Trait))) {
+      for (i in which(trait.nonNA)) {
         if (myWorld$Trait[i] == 1) {
           if (myWorld$Environment[i] == 1) {
             Pext <- P.extinction["For", "EnvF"]
