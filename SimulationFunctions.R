@@ -20,7 +20,7 @@ library(diversitree)
 #==================================================================
 # First some simple hexagonal grid functions
 
-# Function to check whether a neighbor is out of bounds in the
+# Function to check whether a neighbor is out of bounds
 checkNeighbor <- function (myHex, direction, myWorld) {
   Neigh <- as.numeric(myHex + direction)
   if (length(which(myWorld$x == Neigh[1] & 
@@ -63,11 +63,11 @@ neighbors <- function(myHex, check = TRUE, myWorld) {
 # (env = 1; trait = 1) and the rest is good for domestication (env = 2; trait = 2)
 
 BuildWorld <- function (R, P) {
-  myWorld <- as.data.frame(matrix(c(0, 0, 0), 1, 3))
   
+  myWorld <- as.data.frame(matrix(c(0, 0, 0), 1, 3))
   # Cube coordinates for hexagonal grid systems 
   # (see http://www.redblobgames.com/grids/hexagons/)
-  names(myWorld) <- c('x', 'y', 'z') 
+  names(myWorld) <- c('x', 'y', 'z')
   
   myWorld$Parent <- NA
   myWorld$BirthT <- NA
@@ -161,7 +161,7 @@ Speciate <- function(myT, Parent, PosTargets, myWorld,
                                        BL, ",t", NewSoc,
                                        ":", BL, ");")) 
     
-    OldParentalNode <- NodeData$Node[which(NodeData$Tip == Parent)]
+    OldParentalNode <- NodeData$Node[NodeData$Tip == Parent]
     
     mytree <- read.tree(text = write.tree(bind.tree(mytree, 
                                                     newtips,
@@ -169,9 +169,10 @@ Speciate <- function(myT, Parent, PosTargets, myWorld,
                                           file = ''))
     
     # update NodeData
-    NodeData <- as.data.frame(matrix(NA, length(mytree$tip.label), 2))
+    tip.length <- Ntip(mytree)
+    NodeData <- as.data.frame(matrix(NA, tip.length, 2))
     names(NodeData) <- c('Node', 'Tip')
-    NodeData[, 1] <- 1:length(mytree$tip.label) 
+    NodeData[, 1] <- 1:tip.length
     NodeData[, 2] <- as.numeric(gsub('t', '', mytree$tip.label))
   }
   
@@ -224,9 +225,10 @@ Extinct <- function(mytree, NodeData, myWorld, Ext.tip) {
   mytree <- drop.tip(mytree, tip = NodeData$Node[NodeData$Tip == Ext.tip])
   
   # update NodeData
-  NodeData <- as.data.frame(matrix(NA, length(mytree$tip.label), 2))
+  tip.length <- Ntip(mytree)
+  NodeData <- as.data.frame(matrix(NA, tip.length, 2))
   names(NodeData) <- c('Node', 'Tip')
-  NodeData[, 1] <- 1:length(mytree$tip.label) 
+  NodeData[, 1] <- 1:tip.length
   NodeData[, 2] <- as.numeric(gsub('t', '', mytree$tip.label))
   
   # remove tip from map
@@ -241,11 +243,12 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
                    P.diffusion, P.Arisal, P.TakeOver) {
   myT <- 0
   
+  world.size <- nrow(myWorld)
   # Initialize parameters we will use later to build the phylogeny
-  rootnode <- nrow(myWorld) + 1 # standard convention for root node number
+  rootnode <-  world.size + 1 # standard convention for root node number
   
   # set the seed for simulation
-  start <- sample(1:dim(myWorld)[1], 1)
+  start <- sample(1:world.size, 1)
   myWorld$Parent[start] <- 0 # root
   myWorld$BirthT[start] <- 0 # starts at time zero
   myWorld$Trait[start] <- 1 # assumes ancestral state is forager
@@ -272,12 +275,12 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     
     if (sum(!is.na(myWorld$Trait)) > 2) {
       # allow the possibility of extinction
-      for ( i in which(!is.na(myWorld$Trait))) {
+      for (i in which(!is.na(myWorld$Trait))) {
         if (myWorld$Trait[i] == 1) {
           if (myWorld$Environment[i] == 1) {
-            Pext <- P.extinction["For","EnvF"]
+            Pext <- P.extinction["For", "EnvF"]
           } else {
-            Pext <- P.extinction["For","EnvD"]
+            Pext <- P.extinction["For", "EnvD"]
           }
         } else {
           if (myWorld$Environment[i] == 1) {
@@ -287,7 +290,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
           }
         }
         if (!is.null(mytree)) {
-          if (length(mytree$tip.label) > 3 & runif(1) < Pext ) { 
+          if (Ntip(mytree) > 3 & runif(1) < Pext ) { 
             Temp <- Extinct(mytree, NodeData, myWorld, Ext.tip = i) 
             myWorld <- Temp$myWorld
             mytree <- Temp$mytree
@@ -297,14 +300,16 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
       }
     }
     
-    if (length(which(!is.na(myWorld$Trait))) > 2) {
+    if (sum(!is.na(myWorld$Trait)) > 2) {
       # allow possibility of diffusion (phylogenies don't change)
-      UsedCells <- which(!is.na(myWorld$Trait))
+      usedcells <- !is.na(myWorld$Trait)
+      UsedCells.length <- sum(usedcells)
+      UsedCells <- which(usedcells)
       
-      if (length(UsedCells) > 1) {
+      if (UsedCells.length > 1) {
         for (i in UsedCells) { 
           myHex <- myWorld[i, c('x', 'y', 'z')]
-          PosTargets <- getTargets(myHex, myWorld, takeover = T)
+          PosTargets <- getTargets(myHex, myWorld, takeover = TRUE)
           PosTargets <- PosTargets[myWorld$Trait[PosTargets] != myWorld$Trait[i]]
           
           if (length(PosTargets) > 1) {
@@ -314,7 +319,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
           }
           
           if (length(NewSoc) == 1) {
-            if (myWorld$Trait[i] == 1){
+            if (myWorld$Trait[i] == 1) {
               if (myWorld$Environment[NewSoc] == 1) {
                 if (runif(1) < P.diffusion[1, 1]) {
                   myWorld$Trait[NewSoc] <- myWorld$Trait[i]
@@ -330,7 +335,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
                   myWorld$Trait[NewSoc] <- myWorld$Trait[i]
                 }
               } else {
-                if (runif(1) < P.diffusion[2,2]) {
+                if (runif(1) < P.diffusion[2, 2]) {
                   myWorld$Trait[NewSoc] <- myWorld$Trait[i]
                 }
               }
@@ -340,7 +345,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
       }
       
       # Allow possibility of hostile take overs (phylogenies DO change)
-      if (length(UsedCells) > 1) {
+      if (UsedCells.length > 1) {
         for (i in UsedCells) {   
           myHex <- myWorld[i, c('x', 'y', 'z')]
           PosTargets <- getTargets(myHex, myWorld, takeover = TRUE)
@@ -356,7 +361,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
             TakeOver <- FALSE # baseline
             if (myWorld$Trait[i] == myWorld$Environment[i]) { # Source is in right habitat
               if (myWorld$Trait[i] == myWorld$Environment[Ext.tip]) { # target is also in appropriate habitat
-                if (runif(1) < P.TakeOver[1,1]) {
+                if (runif(1) < P.TakeOver[1, 1]) {
                   TakeOver <- TRUE 
                 }
               } else {
@@ -367,11 +372,11 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
             } else {
               if (myWorld$Trait[i] == myWorld$Environment[Ext.tip]) { # target is also in appropriate habitat
                 if (runif(1) < P.TakeOver[1, 2]) {
-                  TakeOver <- T 
+                  TakeOver <- TRUE 
                 }
               } else {
                 if (runif(1) < P.TakeOver[2, 2]) { 
-                  TakeOver <- T 
+                  TakeOver <- TRUE 
                 }
               }
             }
@@ -379,7 +384,9 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
             if (TakeOver) {
               # eliminate any record of the society that used to occupy the chosen spot
               Temp <- Extinct(mytree, NodeData, myWorld, Ext.tip) 
-              myWorld <- Temp$myWorld; mytree <- Temp$mytree; NodeData <- Temp$NodeData
+              myWorld <- Temp$myWorld
+              mytree <- Temp$mytree
+              NodeData <- Temp$NodeData
               
               # and now occupy this spot with a descendant of the domest society
               Temp <- Speciate(myT = myT, Parent = i, PosTargets = Ext.tip, 
@@ -442,9 +449,9 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     if (!is.null(mytree)) {
       # extend the tips of branches that did not reproduce to maintain an ultrametric tree
       for (i in 1:length(mytree$tip.label)) {
-        if (distRoot(mytree, tips = i, method="patristic") < myT) {
+        dist.root <- distRoot(mytree, tips = i, method = "patristic")
+        if (dist.root < myT) {
           ThisBranch <- which(mytree$edge[, 2] == i)
-          dist.root <- distRoot(mytree, tips = i, method = "patristic")
           sub <- (myT - dist.root)
           mytree$edge.length[ThisBranch] <- mytree$edge.length[ThisBranch] + sub
         }
