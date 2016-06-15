@@ -23,12 +23,12 @@ library(diversitree)
 # Function to check whether a neighbor is out of bounds
 checkNeighbor <- function (myHex, direction, myWorld) {
   Neigh <- as.numeric(myHex + direction)
-  if (length(which(myWorld$x == Neigh[1] & 
-                   myWorld$y == Neigh[2] &
-                   myWorld$z == Neigh[3])) > 0) {
-    return (Neigh)
+  if (sum(myWorld$x == Neigh[1] & 
+          myWorld$y == Neigh[2] &
+          myWorld$z == Neigh[3]) > 0) {
+    return(Neigh)
   } else {
-    return (c(NA, NA, NA)) 
+    return(c(NA, NA, NA)) 
   }
 }
 
