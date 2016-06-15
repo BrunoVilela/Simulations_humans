@@ -64,43 +64,47 @@ neighbors <- function(myHex, check = TRUE, myWorld) {
 
 BuildWorld <- function (R, P) {
   
-  myWorld <- as.data.frame(matrix(c(0, 0, 0), 1, 3))
+  # Calculate matrix size
+  n <- (3 + (2 * (R - 1)))
+  nrow.world <- sum(((n - 1) : (n - R)) * 2, n)
+  # Calculate loop size
+  n2 <- (3 + (2 * (R - 2)))
+  loop <- sum(((n2 - 1) : (n2 - (R - 1))) * 2, n2)
+  # Empty Matrix
+  myWorld <- as.data.frame(matrix(NA, ncol = 7, nrow = nrow.world))
+  
   # Cube coordinates for hexagonal grid systems 
   # (see http://www.redblobgames.com/grids/hexagons/)
-  names(myWorld) <- c('x', 'y', 'z')
+  names(myWorld) <- c('x', 'y', 'z', "Parent", "BirthT", "Trait", "Environment")
   
-  myWorld$Parent <- NA
-  myWorld$BirthT <- NA
-  myWorld$Trait <- NA
-  
+  myWorld[1, 1:3] <- 0 
   if (runif(1) <= P) {
-    myWorld$Environment <- 2
+    myWorld$Environment[1] <- 2
   } else {
-    myWorld$Environment <- 1
+    myWorld$Environment[1] <- 1
   }
-  
-  for (i in 1:R) {
-    for (j in 1:nrow(myWorld)) {
+  # Counter
+  x <- 1
+  for (j in 1:loop) {
       myHex <- myWorld[j, c('x', 'y', 'z')]
       myneighbors <- neighbors(myHex, check = FALSE)
       for (k in 1:nrow(myneighbors)) {
         if (sum(myWorld$x == myneighbors[k, 1] &
                 myWorld$y == myneighbors[k, 2] &
-                myWorld$z == myneighbors[k, 3]) == 0) {
+                myWorld$z == myneighbors[k, 3],
+                na.rm = TRUE) == 0) {
+          x <- x + 1
           if (runif(1) <= P) { 
             ThisEnv <- 2
           } else { 
             ThisEnv <- 1
           } 
-          myWorld <- rbind(myWorld, 
-                           as.numeric(c(myneighbors[k, ],
-                                        NA, NA, NA, ThisEnv)))
+          add.cells <- as.numeric(c(myneighbors[k, ], NA, NA, NA, ThisEnv))
+          myWorld[x, ] <- add.cells
         }
-      }
     }
   }
-  
-  myWorld$TipLabel <- paste('t', row.names(myWorld), sep = '')
+  myWorld$TipLabel <- paste0('t', 1:nrow.world)
   return(myWorld)
 }
 
