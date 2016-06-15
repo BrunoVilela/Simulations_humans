@@ -1,4 +1,5 @@
 # Github version
+# Authors: Botero, Tuff & Vilela
 # Clean everything
 rm(list = ls())
 
