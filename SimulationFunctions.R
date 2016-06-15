@@ -36,23 +36,23 @@ checkNeighbor <- function (myHex, direction, myWorld) {
 # (NA if neighbor is outside of desired grid system)
 neighbors <- function(myHex, check = TRUE, myWorld) {
   if (check) {
-    myNeighbors <- as.data.frame(rbind(
+    myNeighbors <- rbind(
       checkNeighbor(myHex, c(0, 1, -1), myWorld), 
       checkNeighbor(myHex, c(1,  0, -1), myWorld), 
       checkNeighbor(myHex, c(-1, 1,  0), myWorld), 
       checkNeighbor(myHex, c(1, -1,  0), myWorld), 
       checkNeighbor(myHex, c(-1,  0, 1), myWorld), 
-      checkNeighbor(myHex, c(0, -1, 1), myWorld)))
+      checkNeighbor(myHex, c(0, -1, 1), myWorld))
   } else {
-    myNeighbors <- as.data.frame(rbind(
+    myNeighbors <- rbind(
       myHex + c(0, 1, -1), 
       myHex + c(1,  0, -1), 
       myHex + c(-1, 1,  0), 
       myHex + c(1, -1,  0), 
       myHex + c(-1,  0, 1), 
-      myHex + c(0, -1, 1)))
+      myHex + c(0, -1, 1))
   }
-  names(myNeighbors) <- c('x', 'y', 'z')
+  colnames(myNeighbors) <- c('x', 'y', 'z')
   row.names(myNeighbors) <- c('n1', 'n2', 'n3', 'n4', 'n5', 'n6')
   return(myNeighbors)
 }
@@ -63,6 +63,9 @@ neighbors <- function(myHex, check = TRUE, myWorld) {
 # (env = 1; trait = 1) and the rest is good for domestication (env = 2; trait = 2)
 
 BuildWorld <- function (R, P) {
+  # Cube coordinates for hexagonal grid systems 
+  # (see http://www.redblobgames.com/grids/hexagons/)
+  
   
   # Calculate matrix size
   n <- (3 + (2 * (R - 1)))
@@ -71,40 +74,30 @@ BuildWorld <- function (R, P) {
   n2 <- (3 + (2 * (R - 2)))
   loop <- sum(((n2 - 1) : (n2 - (R - 1))) * 2, n2)
   # Empty Matrix
-  myWorld <- as.data.frame(matrix(NA, ncol = 7, nrow = nrow.world))
-  
-  # Cube coordinates for hexagonal grid systems 
-  # (see http://www.redblobgames.com/grids/hexagons/)
-  names(myWorld) <- c('x', 'y', 'z', "Parent", "BirthT", "Trait", "Environment")
-  
+  myWorld <- matrix(NA, ncol = 8, nrow = nrow.world)
   myWorld[1, 1:3] <- 0 
-  if (runif(1) <= P) {
-    myWorld$Environment[1] <- 2
-  } else {
-    myWorld$Environment[1] <- 1
-  }
+  myWorld[1, 7] <- ifelse(runif(1) <= P, 2, 1)
+  
   # Counter
   x <- 1
   for (j in 1:loop) {
-      myHex <- myWorld[j, c('x', 'y', 'z')]
-      myneighbors <- neighbors(myHex, check = FALSE)
-      for (k in 1:nrow(myneighbors)) {
-        if (sum(myWorld$x == myneighbors[k, 1] &
-                myWorld$y == myneighbors[k, 2] &
-                myWorld$z == myneighbors[k, 3],
-                na.rm = TRUE) == 0) {
-          x <- x + 1
-          if (runif(1) <= P) { 
-            ThisEnv <- 2
-          } else { 
-            ThisEnv <- 1
-          } 
-          add.cells <- as.numeric(c(myneighbors[k, ], NA, NA, NA, ThisEnv))
-          myWorld[x, ] <- add.cells
-        }
+    myHex <- myWorld[j, 1:3]
+    myneighbors <- neighbors(myHex, check = FALSE)
+    for (k in 1:nrow(myneighbors)) {
+      if (sum(myWorld[, 1] == myneighbors[k, 1] &
+              myWorld[, 2] == myneighbors[k, 2] &
+              myWorld[, 3] == myneighbors[k, 3],
+              na.rm = TRUE) == 0) {
+        x <- x + 1
+        ThisEnv <- ifelse(runif(1) <= P, 2, 1)
+        myWorld[x, ]  <- as.numeric(c(myneighbors[k, ], NA, NA, NA, ThisEnv, NA))
+      }
     }
   }
-  myWorld$TipLabel <- paste0('t', 1:nrow.world)
+  myWorld[, 8] <- paste0('t', 1:nrow.world)
+  myWorld <- as.data.frame(myWorld)
+  colnames(myWorld) <- c('x', 'y', 'z', "Parent", "BirthT", "Trait", "Environment",
+                         "TipLabel")
   return(myWorld)
 }
 
@@ -119,9 +112,9 @@ getTargets <- function(myHex, myWorld, takeover) {
   nAll <- nrow(AllTargets)
   if (!takeover) {
     for (j in 1:nAll) { # empty cells for colonization
-      index <- which(myWorld$x == AllTargets[j, 1] &
-                       myWorld$y == AllTargets[j, 2] &
-                       myWorld$z == AllTargets[j, 3])
+      index <- which(myWorld[, 1] == AllTargets[j, 1] &
+                       myWorld[, 2] == AllTargets[j, 2] &
+                       myWorld[, 3] == AllTargets[j, 3])
       if (is.na(myWorld$Trait[index])) {
         PosTargets <- c(PosTargets, index) 
       }
