@@ -291,6 +291,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
             Pext <- P.extinction["Dom","EnvD"]
           }
         }
+        
         if (!is.null(mytree)) {
           if (Ntip(mytree) > 3 & runif(1) < Pext ) { 
             Temp <- Extinct(mytree, NodeData, myWorld, Ext.tip = i) 
@@ -299,9 +300,10 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
             NodeData <- Temp$NodeData
           }
         }
-      }
-    }
+      } #close for loop
+    } #close if
     
+    #Diffusion where you can get spatial takeover but not phylogenetic takeover
     if (sum(!is.na(myWorld$Trait)) > 2) {
       # allow possibility of diffusion (phylogenies don't change)
       usedcells <- !is.na(myWorld$Trait)
