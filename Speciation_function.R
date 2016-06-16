@@ -23,7 +23,7 @@ Speciation <- function(myWorld, mytree, P.speciation,
       myHex <- myWorld[i, 1:3]
       PosTargets <- getTargets(myHex, myWorld, empty = TRUE)
       if (!is.null(PosTargets)) {
-        Temp <- Speciate(myT = myT, Parent = i, PosTargets = PosTargets, 
+        Temp <- speciate(myT = myT, Parent = i, PosTargets = PosTargets, 
                          myWorld = myWorld, mytree = mytree, NodeData = NodeData, 
                          takeover = FALSE)
         

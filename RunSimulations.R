@@ -10,10 +10,12 @@ source("Extinction_function.R")
 source("Difusion_function.R")
 source("Takeover_function.R")
 source("Speciate_function.R")
+source("Speciation_function.R")
+
 
 #==================================================================
 # Start function for cluster to call
-run_simulation <- function(i){
+run_simulation <- function(i) {
 
 
 #==================================================================
