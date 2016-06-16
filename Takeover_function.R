@@ -13,7 +13,7 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
       myHex <- myWorld[i, 1:3]
       PosTargets <- getTargets(myHex, myWorld, empty = FALSE)
       l.targets <- length(PosTargets)
-      PosTargets <- PosTargets[myWorld[PosTargets, 6] != myWorld[i, 6]
+      PosTargets <- PosTargets[myWorld[PosTargets, 6] != myWorld[i, 6]]
       if (l.targets > 0) {
         # PosTargets different from me
         if (l.targets > 1) {
