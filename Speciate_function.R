@@ -50,7 +50,7 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
     if (arisal) {
       #... but allow the possibility of developing new modes of subsistence de novo
       l.news <- length(PosTargets)
-      prob.ar <- numeric()
+      prob.ar <- numeric(1)
       env.match <- myWorld[PosTargets, 7] == myWorld[PosTargets, 6]
       env.D <- myWorld[PosTargets, 7] == 1
       prob.ar[env.D & !env.match] <- P.Arisal[2, 2] # Prob of

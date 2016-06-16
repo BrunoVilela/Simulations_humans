@@ -15,7 +15,7 @@ source("Speciation_function.R")
 
 #==================================================================
 # Start function for cluster to call
-run_simulation <- function(i) {
+#run_simulation <- function(i) {
 
 
 #==================================================================
