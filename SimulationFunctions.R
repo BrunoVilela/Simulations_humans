@@ -23,9 +23,7 @@ library(diversitree)
 # Function to check whether a neighbor is out of bounds
 checkNeighbor <- function (myHex, direction, myWorld) {
   Neigh <- as.numeric(myHex + direction)
-  if (sum(myWorld$x == Neigh[1] & 
-          myWorld$y == Neigh[2] &
-          myWorld$z == Neigh[3]) > 0) {
+  if (!compare(myWorld, Neigh)) {
     return(Neigh)
   } else {
     return(c(NA, NA, NA)) 
@@ -84,13 +82,10 @@ BuildWorld <- function (R, P) {
     myHex <- myWorld[j, 1:3]
     myneighbors <- neighbors(myHex, check = FALSE)
     for (k in 1:nrow(myneighbors)) {
-      if (sum(myWorld[, 1] == myneighbors[k, 1] &
-              myWorld[, 2] == myneighbors[k, 2] &
-              myWorld[, 3] == myneighbors[k, 3],
-              na.rm = TRUE) == 0) {
+      if (compare(myWorld, myneighbors[k, ])) {
         x <- x + 1
-        ThisEnv <- ifelse(runif(1) <= P, 2, 1)
-        myWorld[x, ]  <- as.numeric(c(myneighbors[k, ], NA, NA, NA, ThisEnv, NA))
+        myWorld[x, 7] <- ifelse(runif(1) <= P, 2, 1)
+        myWorld[x, 1:3]  <- myneighbors[k, ]
       }
     }
   }
@@ -121,9 +116,9 @@ getTargets <- function(myHex, myWorld, takeover) {
     }
   } else { # neighboring cells that are foragers (potential take overs or diffusion)
     for (j in 1:nAll) {
-      index <- which(myWorld$x == AllTargets[j, 1] &
-                       myWorld$y == AllTargets[j, 2] &
-                       myWorld$z == AllTargets[j, 3])
+      index <- which(myWorld[, 1] == AllTargets[j, 1] &
+                       myWorld[, 2] == AllTargets[j, 2] &
+                       myWorld[, 3] == AllTargets[j, 3])
       if (!is.na(myWorld$Trait[index])) {
         if (myWorld$Trait[index] == 1) { 
           PosTargets <- c(PosTargets, index)
