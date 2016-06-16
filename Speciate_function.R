@@ -8,14 +8,6 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
     PosTargets <- sample(PosTargets, 1)
   }
   
-  # Create a phylo object
-  if (is.null(mytree)) { 
-    mytree <- read.tree(text = paste0("(t", Parent, ":",
-                                      myT, ",t", PosTargets,
-                                      ":", myT, ");")) 
-    NodeData <- rbind(c(1, Parent), c(2, PosTargets))
-  } 
-  
   # Add a bifurcation to the node that used to be the parent
   if (!is.null(mytree)) {
     BL <- myT - distRoot(mytree, 1, method = 'patristic')
@@ -36,6 +28,16 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
     colnames(NodeData) <- c('Node', 'Tip')
     NodeData <- cbind(1:tip.length, mytree$tip.label)
   }
+  
+  # Create a phylo object
+  if (is.null(mytree)) { 
+    mytree <- read.tree(text = paste0("(t", Parent, ":",
+                                      myT, ",t", PosTargets,
+                                      ":", myT, ");")) 
+    NodeData <- rbind(c(1, Parent), c(2, PosTargets))
+  } 
+  
+
   
   # keep track of this for confirmation
   myWorld[PosTargets, 4] <- Parent
