@@ -13,17 +13,26 @@ getExtinct <- function(myWorld, mytree, P.extinction, NodeData) {
     prob.ext[!env.match & !domesticator] <- P.extinction[2, 1] # Prob of
     extinction <- runif(trait.length) > prob.ext
     if (any(extinction)) {
-      mytree <- drop.tip(mytree, tip = myWorld[index.tips[extinction], 8])
-      myWorld[index.tips[extinction], 4:6] <- NA
-      # update NodeData
-      tip.length <- length(mytree$tip.label)
-      NodeData <- matrix(NA, tip.length, 2)
-      colnames(NodeData) <- c('Node', 'Tip')
-      NodeData[, 1] <- 1:tip.length
-      NodeData[, 2] <- mytree$tip.label
+      temp <- extinct(mytree, index.tips[extinction], extinction, myWorld)
+      mytree <- temp$mytree
+      myWorld <- temp$myWorld
+      NodeData <- temp$NodeData
     }
   }
   return(list("mytree" = mytree, "myWorld" = myWorld,
               "NodeData" = NodeData))  
 }  
 
+#==================================================================
+extinct <- function(mytree, index.tips, myWorld) {
+  mytree <- drop.tip(mytree, tip = myWorld[index.tips, 8])
+  myWorld[index.tips, 4:6] <- NA
+  # update NodeData
+  tip.length <- length(mytree$tip.label)
+  NodeData <- matrix(NA, tip.length, 2)
+  colnames(NodeData) <- c('Node', 'Tip')
+  NodeData[, 1] <- 1:tip.length
+  NodeData[, 2] <- mytree$tip.label
+  return(list("mytree" = mytree, "myWorld" = myWorld,
+              "NodeData" = NodeData))  
+}

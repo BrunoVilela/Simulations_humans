@@ -17,13 +17,13 @@ run_simulation <- function(i){
 # Start with simple simulation 
 
 # Only vertical transmission to adjacent neighbors, colonize an empty world)
-P.speciation <- parameters(0.5, 0.5, 0.5, 0.5, "EnvF", "EnvD",
+P.speciation <- parameters(0.5, 0.5, 0.5, 0.5, "For", "Dom",
                            "For", "Dom") 
-P.extinction <- parameters(0, 0.2, 0.4, 0, "EnvF", "EnvD",
+P.extinction <- parameters(0, 0.2, 0.4, 0, "For", "Dom",
                            "For", "Dom") 
 
 # P of coming up with a novel subsistence mode
-P.Arisal <-  parameters(0.05, 0, 0, 0.05, "EnvF", "EnvD",
+P.Arisal <-  parameters(0.05, 0, 0, 0.05, "For", "Dom",
                         "Evolve.For", "Evolve.Dom") 
 
 # Set up the number of replications (1 for general tests)
@@ -34,12 +34,12 @@ Replicates <- 1
 # Simple only vertical transmission
 
 # P of diffusing your trait to a particular target
-P.diffusion <- parameters(0, 0, 0, 0, "Target.In.EnvF", "Target.In.EnvD",
+P.diffusion <- parameters(0, 0, 0, 0, "Target.Is.For", "Target.Is.Dom",
                           "Source.Is.For", "Source.Is.Dom")
                           
-# P of taking over a neighbiors position
-P.TakeOver <- parameters(0, 0, 0, 0, "Source.In.AppHabitat", "Source.NOT.In.AppHabitat",
-                         "Target.In.AppHabitat", "Target.NOT.In.AppHabitat")
+# P of taking over a neighbors position
+P.TakeOver <- parameters(0, 0, 0, 0, "Target.Is.For", "Target.Is.Dom",
+                         "Source.Is.For", "Source.Is.Dom")
 
 
 #for (i in 1:Replicates) { #this is being replaced by the cluster function
@@ -66,11 +66,11 @@ VT.Sim <- list(all.trees, all.Worlds, all.node.Data)
 # Vertical transmission and takeover
 
 # P of diffusing your trait to a particular target
-P.diffusion <- parameters(0, 0, 0, 0, "Target.In.EnvF", "Target.In.EnvD",
+P.diffusion <- parameters(0, 0, 0, 0, "Target.Is.For", "Target.Is.Dom",
                           "Source.Is.For", "Source.Is.Dom")
-# P of taking over a neighbiors position
-P.TakeOver <- parameters(0.4, 0, 0, 0.4, "Source.In.AppHabitat", "Source.NOT.In.AppHabitat",
-                         "Target.In.AppHabitat", "Target.NOT.In.AppHabitat")
+# P of taking over a neighbors position
+P.TakeOver <- parameters(0, 0.4, 0.4, 0, "Target.Is.For", "Target.Is.Dom",
+                         "Source.Is.For", "Source.Is.Dom")
 
 
 for (i in 1:Replicates) {
@@ -96,12 +96,12 @@ TO.Sim <- list(all.trees, all.Worlds, all.node.Data)
 # Vertical transmission and takeover
 
 # P of diffusing your trait to a particular target
-P.diffusion <- parameters(0.5, 0, 0, 0.5, "Target.In.EnvF", "Target.In.EnvD",
+P.diffusion <- parameters(0.5, 0, 0, 0.5, "Target.Is.For", "Target.Is.Dom",
                           "Source.Is.For", "Source.Is.Dom")
 
 # P of taking over a neighbiors position
-P.TakeOver <- parameters(0.4, 0, 0.05, 0, "Source.In.AppHabitat", "Source.NOT.In.AppHabitat",
-                         "Target.In.AppHabitat", "Target.NOT.In.AppHabitat")
+P.TakeOver <- parameters(0, 0.05, 0.4, 0, "Target.Is.For", "Target.Is.Dom",
+                         "Source.Is.For", "Source.Is.Dom")
 
 for (i in 1:Replicates) {
   print(paste("Replicate", i))

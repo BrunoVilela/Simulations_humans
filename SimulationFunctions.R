@@ -17,25 +17,6 @@ library(ape)
 library(adephylo)
 library(diversitree)
 
-#==================================================================
-# First some simple hexagonal grid functions
-# Returns the coordinates of all possible neighbors 
-# inside = TRUE will only return neighbors that are inside the matrix, 
-# FALSE only the outside ones
-neighbors <- function(myHex, inside = TRUE, myWorld) {
-  myNeighbors <- structure(c(0, 1, -1, 1, -1, 0, 1, 0, 1, -1, 0, -1, -1, -1, 0, 
-                             0, 1, 1), .Dim = c(6L, 3L))
-  myNeighbors <- t(apply(myNeighbors, 1, function(x, y){x + y}, y = myHex))
-  neigh.inside <- is.inside(x = myNeighbors, y = myWorld[, 1:3])
-  if (inside) {
-    myNeighbors <- myNeighbors[neigh.inside, , drop = FALSE] 
-  }
-  if(!inside) {
-    myNeighbors <- myNeighbors[!neigh.inside, , drop = FALSE] 
-  }
-  colnames(myNeighbors) <- c('x', 'y', 'z')
-  return(myNeighbors)
-}
 
 #==================================================================
 # Build an hexagonal grid with a radius of R cells over which to simulate 
@@ -74,87 +55,6 @@ BuildWorld <- function (R, P) {
 }
 
 
-
-#==================================================================
-Speciate <- function(myT, Parent, PosTargets, myWorld, 
-                     mytree, NodeData, takeover) {
-  # create descendant lineage
-  if (length(PosTargets) > 1) {
-    NewSoc <- sample(PosTargets, 1)
-  } else {
-    NewSoc <- PosTargets
-  }
-  
-  if (is.null(mytree)) { 
-    # create a phylo object
-    mytree <- read.tree(text = paste0("(t", Parent, ":",
-                                      myT, ",t", NewSoc,
-                                      ":", myT, ");")) 
-    NodeData[1, ] <- c(1, Parent)
-    NodeData[2, ] <- c(2, NewSoc)
-  } else {
-    # add a bifurcation to the node that used to be the parent
-    BL <- myT - distRoot(mytree, 1, method = 'patristic')
-    newtips <- read.tree(text = paste0("(t", Parent, ":",
-                                       BL, ",t", NewSoc,
-                                       ":", BL, ");")) 
-    
-    OldParentalNode <- NodeData$Node[NodeData$Tip == Parent]
-    
-    mytree <- read.tree(text = write.tree(bind.tree(mytree, 
-                                                    newtips,
-                                                    where = OldParentalNode),
-                                          file = ''))
-    
-    # update NodeData
-    tip.length <- Ntip(mytree)
-    NodeData <- as.data.frame(matrix(NA, tip.length, 2))
-    names(NodeData) <- c('Node', 'Tip')
-    NodeData[, 1] <- 1:tip.length
-    NodeData[, 2] <- as.numeric(gsub('t', '', mytree$tip.label))
-  }
-  
-  # keep track of this for confirmation
-  myWorld$Parent[NewSoc] <- Parent
-  myWorld$BirthT[NewSoc] <- myT
-  
-  # define the trait value that the new society will exhibit
-  if (!takeover) {
-    # we assume that the baseline is to inherit whatever the parents did
-    myWorld$Trait[NewSoc] <- myWorld$Trait[Parent]
-    
-    #... but allow the possibility of developing new modes of subsistence de novo
-    if (myWorld$Trait[Parent] == 1) { 
-      if (myWorld$Environment[NewSoc] == 1) {
-        if (runif(1) < P.Arisal[2, 1]) {
-          myWorld$Trait[NewSoc] <- 2 
-        } # domestication evolves
-      } else {
-        if (runif(1) < P.Arisal[2, 2]) {
-          myWorld$Trait[NewSoc] <- 2
-        } # domestication evolves
-      }
-    } else {
-      if (myWorld$Environment[NewSoc] == 1) {
-        if (runif(1) < P.Arisal[1, 1]) {
-          myWorld$Trait[NewSoc] <- 1
-        } # foraging evolves
-      } else {
-        if (runif(1) < P.Arisal[1, 2]) {
-          myWorld$Trait[NewSoc] <- 1
-        } # foraging evolves
-      }
-    }
-  } else { # This is a Take Over event 
-    # (the earlier soc has already been wiped out of the phylogeny
-    # outside of this function and now all is left is to replace it
-    # by a descendant of the parent)
-    myWorld$Trait[NewSoc] <- myWorld$Trait[Parent] 
-  } 
-  
-  return(list("myWorld" = myWorld, "mytree" = mytree,
-              "NodeData" = NodeData))
-}
 
 #==================================================================
 RunSim <- function(myWorld, P.extinction, P.speciation, 
@@ -196,106 +96,10 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     NodeData <- after.ext$NodeData
     
     # Diffusion: passing the know-how to my neighbors
-    if (sum(!is.na(myWorld$Trait)) > 2) {
-      # allow possibility of diffusion (phylogenies don't change)
-      usedcells <- !is.na(myWorld$Trait)
-      UsedCells.length <- sum(usedcells)
-      UsedCells <- which(usedcells)
-      
-      if (UsedCells.length > 1) {
-        for (i in UsedCells) { 
-          myHex <- myWorld[i, c('x', 'y', 'z')]
-          PosTargets <- getTargets(myHex, myWorld, takeover = TRUE)
-          PosTargets <- PosTargets[myWorld$Trait[PosTargets] != myWorld$Trait[i]]
-          
-          if (length(PosTargets) > 1) {
-            NewSoc <- sample(PosTargets, 1)
-          } else { 
-            NewSoc <- PosTargets
-          }
-          
-          if (length(NewSoc) == 1) {
-            if (myWorld$Trait[i] == 1) {
-              if (myWorld$Environment[NewSoc] == 1) {
-                if (runif(1) < P.diffusion[1, 1]) {
-                  myWorld$Trait[NewSoc] <- myWorld$Trait[i]
-                }
-              } else {
-                if (runif(1) < P.diffusion[1, 2]) {
-                  myWorld$Trait[NewSoc] <- myWorld$Trait[i]
-                }
-              }
-            } else {
-              if (myWorld$Environment[NewSoc] == 1) {
-                if (runif(1) < P.diffusion[2, 1]) { 
-                  myWorld$Trait[NewSoc] <- myWorld$Trait[i]
-                }
-              } else {
-                if (runif(1) < P.diffusion[2, 2]) {
-                  myWorld$Trait[NewSoc] <- myWorld$Trait[i]
-                }
-              }
-            }
-          }
-        }
-      }
-      
-      # Allow possibility of hostile take overs (phylogenies DO change)
-      if (UsedCells.length > 1) {
-        for (i in UsedCells) {   
-          myHex <- myWorld[i, c('x', 'y', 'z')]
-          PosTargets <- getTargets(myHex, myWorld, takeover = TRUE)
-          PosTargets <- PosTargets[myWorld$Trait[PosTargets] != myWorld$Trait[i]]
-          
-          if (length(PosTargets) > 1) { 
-            Ext.tip <- sample(PosTargets, 1)
-          } else {
-            Ext.tip <- PosTargets 
-          }
-          
-          if (length(Ext.tip) == 1) { 
-            TakeOver <- FALSE # baseline
-            if (myWorld$Trait[i] == myWorld$Environment[i]) { # Source is in right habitat
-              if (myWorld$Trait[i] == myWorld$Environment[Ext.tip]) { # target is also in appropriate habitat
-                if (runif(1) < P.TakeOver[1, 1]) {
-                  TakeOver <- TRUE 
-                }
-              } else {
-                if (runif(1) < P.TakeOver[2, 1]) { 
-                  TakeOver <- TRUE 
-                }
-              }
-            } else {
-              if (myWorld$Trait[i] == myWorld$Environment[Ext.tip]) { # target is also in appropriate habitat
-                if (runif(1) < P.TakeOver[1, 2]) {
-                  TakeOver <- TRUE 
-                }
-              } else {
-                if (runif(1) < P.TakeOver[2, 2]) { 
-                  TakeOver <- TRUE 
-                }
-              }
-            }
-            
-            if (TakeOver) {
-              # eliminate any record of the society that used to occupy the chosen spot
-              Temp <- Extinct(mytree, NodeData, myWorld, Ext.tip) 
-              myWorld <- Temp$myWorld
-              mytree <- Temp$mytree
-              NodeData <- Temp$NodeData
-              
-              # and now occupy this spot with a descendant of the domest society
-              Temp <- Speciate(myT = myT, Parent = i, PosTargets = Ext.tip, 
-                               myWorld = myWorld, mytree = mytree, NodeData = NodeData, 
-                               takeover = T)
-              myWorld <- Temp$myWorld
-              mytree <- Temp$mytree
-              NodeData <- Temp$NodeData
-            }
-          }
-        }
-      }
-    }
+    myWorld <- Diffusion(myWorld, P.diffusion)
+    
+    
+    # TAKEOVER
     
     # Now we can allow the colonized cells attempt to reproduce (in random order)
     not.na <- !is.na(myWorld$Trait)

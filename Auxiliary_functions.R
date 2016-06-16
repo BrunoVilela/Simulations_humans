@@ -59,3 +59,25 @@ getTargets <- function(myHex, myWorld, empty) {
   }
   return(PosTargets)
 }
+
+
+
+#==================================================================
+# First some simple hexagonal grid functions
+# Returns the coordinates of all possible neighbors 
+# inside = TRUE will only return neighbors that are inside the matrix, 
+# FALSE only the outside ones
+neighbors <- function(myHex, inside = TRUE, myWorld) {
+  myNeighbors <- structure(c(0, 1, -1, 1, -1, 0, 1, 0, 1, -1, 0, -1, -1, -1, 0, 
+                             0, 1, 1), .Dim = c(6L, 3L))
+  myNeighbors <- t(apply(myNeighbors, 1, function(x, y){x + y}, y = myHex))
+  neigh.inside <- is.inside(x = myNeighbors, y = myWorld[, 1:3])
+  if (inside) {
+    myNeighbors <- myNeighbors[neigh.inside, , drop = FALSE] 
+  }
+  if(!inside) {
+    myNeighbors <- myNeighbors[!neigh.inside, , drop = FALSE] 
+  }
+  colnames(myNeighbors) <- c('x', 'y', 'z')
+  return(myNeighbors)
+}
