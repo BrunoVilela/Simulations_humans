@@ -48,7 +48,7 @@ P.TakeOver <- parameters(0, 0, 0, 0, "Target.Is.For", "Target.Is.Dom",
 
 
 #for (i in 1:Replicates) { #this is being replaced by the cluster function
-  print(paste("Replicate", i))
+  #print(paste("Replicate", i))
   myWorld <- BuildWorld(R = 3, P = 0.5)
   myOut <- RunSim(myWorld, P.extinction, P.speciation, 
                   P.diffusion, P.Arisal, P.TakeOver)

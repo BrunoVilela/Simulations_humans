@@ -13,8 +13,7 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
     mytree <- read.tree(text = paste0("(t", Parent, ":",
                                       myT, ",t", PosTargets,
                                       ":", myT, ");")) 
-    NodeData[1, ] <- c(1, Parent)
-    NodeData[2, ] <- c(2, PosTargets)
+    NodeData <- rbind(c(1, Parent), c(2, PosTargets))
   } 
   
   # Add a bifurcation to the node that used to be the parent
@@ -35,8 +34,7 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
     tip.length <- Ntip(mytree)
     NodeData <- matrix(NA, tip.length, 2)
     colnames(NodeData) <- c('Node', 'Tip')
-    NodeData[, 1] <- 1:tip.length
-    NodeData[, 2] <- mytree$tip.label
+    NodeData <- cbind(1:tip.length, mytree$tip.label)
   }
   
   # keep track of this for confirmation
