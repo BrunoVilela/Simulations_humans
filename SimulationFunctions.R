@@ -50,10 +50,10 @@ BuildWorld <- function (R, P) {
   
   # Calculate matrix size
   n <- (3 + (2 * (R - 1)))
-  nrow.world <- sum(((n - 1) : (n - R)) * 2, n)
+  nrow.world <- sum(((n - 1):(n - R)) * 2, n)
   # Calculate loop size
   n2 <- (3 + (2 * (R - 2)))
-  loop <- sum(((n2 - 1) : (n2 - (R - 1))) * 2, n2)
+  loop <- sum(((n2 - 1):(n2 - (R - 1))) * 2, n2)
   # Empty Matrix
   myWorld <- matrix(NA, ncol = 8, nrow = nrow.world)
   myWorld[1, 1:3] <- 0 
@@ -181,31 +181,9 @@ Speciate <- function(myT, Parent, PosTargets, myWorld,
 }
 
 #==================================================================
-Extinct <- function(mytree, NodeData, myWorld, Ext.tip) {
-  
-  # remove the from phylogeny
-  mytree <- drop.tip(mytree, tip = NodeData$Node[NodeData$Tip == Ext.tip])
-  
-  # update NodeData
-  tip.length <- Ntip(mytree)
-  NodeData <- as.data.frame(matrix(NA, tip.length, 2))
-  names(NodeData) <- c('Node', 'Tip')
-  NodeData[, 1] <- 1:tip.length
-  NodeData[, 2] <- as.numeric(gsub('t', '', mytree$tip.label))
-  
-  # remove tip from map
-  myWorld$Parent[Ext.tip] <- NA
-  myWorld$BirthT[Ext.tip] <- NA
-  myWorld$Trait[Ext.tip] <- NA
-  
-  return(list("myWorld" = myWorld, "mytree" = mytree,
-              "NodeData" = NodeData))
-}
-
-#==================================================================
 RunSim <- function(myWorld, P.extinction, P.speciation, 
-                   P.diffusion, P.Arisal, P.TakeOver) {
-  myT <- 0
+                   P.diffusion, P.Arisal, P.TakeOver,
+                   N.steps = 250) {
   
   world.size <- nrow(myWorld)
   # Initialize parameters we will use later to build the phylogeny
@@ -213,57 +191,32 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   
   # set the seed for simulation
   start <- sample(1:world.size, 1)
-  myWorld$Parent[start] <- 0 # root
-  myWorld$BirthT[start] <- 0 # starts at time zero
-  myWorld$Trait[start] <- 1 # assumes ancestral state is forager
-  
+  myWorld[start, 4:6] <- c(0, 0, 1) # Setting root(0), time(0), ancestral(1, forager)
+
   # Keep track of the tip numbers for each position in myWorld (when colonized)
-  NodeData <- as.data.frame(matrix(c(rootnode, start), 1, 2))
-  names(NodeData) <- c('Node', 'Tip') 
+  NodeData <- matrix(c(rootnode, start), 1, 2)
+  colnames(NodeData) <- c('Node', 'Tip') 
   
   mytree <- NULL
+  myT <- 0 # Counter
   
   cat("0% [")
   
-  for (steps in 1:250) {
+  for (steps in 1:N.steps) {
     # screen update to allow monitoring progress
-    if (steps %% 25 == 0) { 
+    if (steps %% (N.steps/10) == 0) { 
       cat('-')
     }
-    if (steps == 250) { 
+    if (steps == N.steps) { 
       cat("] 100 %\n") 
     }
-    
     # add one time step to the process
     myT <- myT + 1
-    trait.nonNA <- !is.na(myWorld$Trait)
-    if (sum(trait.nonNA) > 2) {
-      # allow the possibility of extinction
-      for (i in which(trait.nonNA)) {
-        if (myWorld$Trait[i] == 1) {
-          if (myWorld$Environment[i] == 1) {
-            Pext <- P.extinction["For", "EnvF"]
-          } else {
-            Pext <- P.extinction["For", "EnvD"]
-          }
-        } else {
-          if (myWorld$Environment[i] == 1) {
-            Pext <- P.extinction["Dom","EnvF"]
-          } else {
-            Pext <- P.extinction["Dom","EnvD"]
-          }
-        }
-        
-        if (!is.null(mytree)) {
-          if (Ntip(mytree) > 3 & runif(1) < Pext ) { 
-            Temp <- Extinct(mytree, NodeData, myWorld, Ext.tip = i) 
-            myWorld <- Temp$myWorld
-            mytree <- Temp$mytree
-            NodeData <- Temp$NodeData
-          }
-        }
-      } #close for loop
-    } #close if
+
+    after.ext <- getExtinct(myWorld, mytree, P.extinction, NodeData)
+    mytree <- after.ext$mytree
+    myWorld <- after.ext$myWorld
+    NodeData <- after.ext$NodeData
     
     #Diffusion where you can get spatial takeover but not phylogenetic takeover
     if (sum(!is.na(myWorld$Trait)) > 2) {

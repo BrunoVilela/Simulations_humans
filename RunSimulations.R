@@ -6,6 +6,7 @@ rm(list = ls())
 # Load the functions
 source("SimulationFunctions.R")
 source("Auxiliary_functions.R")
+source("Extinction_function.R")
 
 #==================================================================
 #==================================================================
