@@ -19,88 +19,58 @@ library(diversitree)
 
 #==================================================================
 # First some simple hexagonal grid functions
-
-# Function to check whether a neighbor is out of bounds
-checkNeighbor <- function (myHex, direction, myWorld) {
-  Neigh <- as.numeric(myHex + direction)
-  if (length(which(myWorld$x == Neigh[1] & 
-                   myWorld$y == Neigh[2] &
-                   myWorld$z == Neigh[3])) > 0) {
-    return (Neigh)
-  } else {
-    return (c(NA, NA, NA)) 
-  }
-}
-
 # Returns the coordinates of all possible neighbors 
 # (NA if neighbor is outside of desired grid system)
 neighbors <- function(myHex, check = TRUE, myWorld) {
-  if (check) {
-    myNeighbors <- as.data.frame(rbind(
-      checkNeighbor(myHex, c(0, 1, -1), myWorld), 
-      checkNeighbor(myHex, c(1,  0, -1), myWorld), 
-      checkNeighbor(myHex, c(-1, 1,  0), myWorld), 
-      checkNeighbor(myHex, c(1, -1,  0), myWorld), 
-      checkNeighbor(myHex, c(-1,  0, 1), myWorld), 
-      checkNeighbor(myHex, c(0, -1, 1), myWorld)))
-  } else {
-    myNeighbors <- as.data.frame(rbind(
+    myNeighbors <- rbind(
       myHex + c(0, 1, -1), 
       myHex + c(1,  0, -1), 
       myHex + c(-1, 1,  0), 
       myHex + c(1, -1,  0), 
       myHex + c(-1,  0, 1), 
-      myHex + c(0, -1, 1)))
+      myHex + c(0, -1, 1))
+  if (check) {
+    neigh.inside <- is.inside(x = myNeighbors, y = myWorld[, 1:3])
+    myNeighbors <- myNeighbors[neigh.inside, ] 
   }
-  names(myNeighbors) <- c('x', 'y', 'z')
+  colnames(myNeighbors) <- c('x', 'y', 'z')
   row.names(myNeighbors) <- c('n1', 'n2', 'n3', 'n4', 'n5', 'n6')
   return(myNeighbors)
 }
-
 #==================================================================
 # Build an hexagonal grid with a radius of R cells over which to simulate 
 # cultural evolution. Assume a proportion P of the world is appropriate for foraging
 # (env = 1; trait = 1) and the rest is good for domestication (env = 2; trait = 2)
 
 BuildWorld <- function (R, P) {
-  
-  myWorld <- as.data.frame(matrix(c(0, 0, 0), 1, 3))
   # Cube coordinates for hexagonal grid systems 
   # (see http://www.redblobgames.com/grids/hexagons/)
-  names(myWorld) <- c('x', 'y', 'z')
   
-  myWorld$Parent <- NA
-  myWorld$BirthT <- NA
-  myWorld$Trait <- NA
-  
-  if (runif(1) <= P) {
-    myWorld$Environment <- 2
-  } else {
-    myWorld$Environment <- 1
+  # Calculate matrix size
+  n <- (3 + (2 * (R - 1)))
+  nrow.world <- sum(((n - 1) : (n - R)) * 2, n)
+  # Calculate loop size
+  n2 <- (3 + (2 * (R - 2)))
+  loop <- sum(((n2 - 1) : (n2 - (R - 1))) * 2, n2)
+  # Empty Matrix
+  myWorld <- matrix(NA, ncol = 9, nrow = nrow.world)
+  myWorld[1, 1:3] <- 0 
+  myWorld[, 7] <- sample(1:2, nrow.world, TRUE, prob = c(1 - P, P))
+  x <- 1 # Counter
+  for (j in 1:loop) {
+    x <- x + 1
+    myHex <- myWorld[j, 1:3]
+    myneighbors <- neighbors(myHex, check = FALSE)
+    neigh.inside <- is.inside(x = myneighbors, y = myWorld[, 1:3])
+    myneighbors <- myneighbors[!neigh.inside, , drop = FALSE]
+    x2 <- (nrow(myneighbors) + x) - 1
+    myWorld[x:x2, 1:3]  <- myneighbors
+    x <- x2
   }
-  
-  for (i in 1:R) {
-    for (j in 1:nrow(myWorld)) {
-      myHex <- myWorld[j, c('x', 'y', 'z')]
-      myneighbors <- neighbors(myHex, check = FALSE)
-      for (k in 1:nrow(myneighbors)) {
-        if (sum(myWorld$x == myneighbors[k, 1] &
-                myWorld$y == myneighbors[k, 2] &
-                myWorld$z == myneighbors[k, 3]) == 0) {
-          if (runif(1) <= P) { 
-            ThisEnv <- 2
-          } else { 
-            ThisEnv <- 1
-          } 
-          myWorld <- rbind(myWorld, 
-                           as.numeric(c(myneighbors[k, ],
-                                        NA, NA, NA, ThisEnv)))
-        }
-      }
-    }
-  }
-  
-  myWorld$TipLabel <- paste('t', row.names(myWorld), sep = '')
+  myWorld <- as.data.frame(myWorld, stringsAsFactors = FALSE)
+  colnames(myWorld) <- c('x', 'y', 'z', "Parent", "BirthT", "Trait", "Environment",
+                         "TipLabel")
+  myWorld[, 8] <- 1:nrow.world
   return(myWorld)
 }
 
@@ -113,26 +83,19 @@ getTargets <- function(myHex, myWorld, takeover) {
   
   # Figure out which of the neighboring cells are good options for this context
   nAll <- nrow(AllTargets)
+  PosTargets <- numeric(nAll)
+  
+  targs <- apply(AllTargets, 1, paste0, collapse = " ") 
+  myworld.paste <- apply(myWorld[, 1:3], 1, paste0, collapse = " ")
+  indexs <- match(targs, myworld.paste)
+  
   if (!takeover) {
-    for (j in 1:nAll) { # empty cells for colonization
-      index <- which(myWorld$x == AllTargets[j, 1] &
-                       myWorld$y == AllTargets[j, 2] &
-                       myWorld$z == AllTargets[j, 3])
-      if (is.na(myWorld$Trait[index])) {
-        PosTargets <- c(PosTargets, index) 
-      }
-    }
+    PosTargets <- indexs[is.na(myWorld[indexs, 6])]
   } else { # neighboring cells that are foragers (potential take overs or diffusion)
-    for (j in 1:nAll) {
-      index <- which(myWorld$x == AllTargets[j, 1] &
-                       myWorld$y == AllTargets[j, 2] &
-                       myWorld$z == AllTargets[j, 3])
-      if (!is.na(myWorld$Trait[index])) {
-        if (myWorld$Trait[index] == 1) { 
-          PosTargets <- c(PosTargets, index)
-        }
-      }
-    }
+    PosTargets <- indexs[myWorld[indexs, 6] == 1]
+  }
+  if(length(PosTargets) == 0) {
+    PosTargets <- NULL
   }
   return(PosTargets)
 }
