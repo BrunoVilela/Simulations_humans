@@ -73,31 +73,7 @@ BuildWorld <- function (R, P) {
   return(myWorld)
 }
 
-#==================================================================
-getTargets <- function(myHex, myWorld, takeover) {
-  
-  AllTargets <- na.omit(neighbors(myHex, check = TRUE,
-                                  myWorld = myWorld))
-  PosTargets <- NULL
-  
-  # Figure out which of the neighboring cells are good options for this context
-  nAll <- nrow(AllTargets)
-  PosTargets <- numeric(nAll)
-  
-  targs <- apply(AllTargets, 1, paste0, collapse = " ") 
-  myworld.paste <- apply(myWorld[, 1:3], 1, paste0, collapse = " ")
-  indexs <- match(targs, myworld.paste)
-  
-  if (!takeover) {
-    PosTargets <- indexs[is.na(myWorld[indexs, 6])]
-  } else { # neighboring cells that are foragers (potential take overs or diffusion)
-    PosTargets <- indexs[myWorld[indexs, 6] == 1]
-  }
-  if(length(PosTargets) == 0) {
-    PosTargets <- NULL
-  }
-  return(PosTargets)
-}
+
 
 #==================================================================
 Speciate <- function(myT, Parent, PosTargets, myWorld, 
@@ -212,13 +188,14 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     }
     # add one time step to the process
     myT <- myT + 1
-
+    
+    # Extinction time!!! buuuuu
     after.ext <- getExtinct(myWorld, mytree, P.extinction, NodeData)
     mytree <- after.ext$mytree
     myWorld <- after.ext$myWorld
     NodeData <- after.ext$NodeData
     
-    #Diffusion where you can get spatial takeover but not phylogenetic takeover
+    # Diffusion: passing the know-how to my neighbors
     if (sum(!is.na(myWorld$Trait)) > 2) {
       # allow possibility of diffusion (phylogenies don't change)
       usedcells <- !is.na(myWorld$Trait)
