@@ -6,15 +6,12 @@ rm(list = ls())
 # Load the functions
 source("SimulationFunctions.R")
 source("Auxiliary_functions.R")
-source("Extinction_function.R")
 
 #==================================================================
-# Start function for cluster to call
-run_simulation <- function(i){
-
-
 #==================================================================
 # Start with simple simulation 
+
+run_simulation <- function(i){
 
 # Only vertical transmission to adjacent neighbors, colonize an empty world)
 P.speciation <- parameters(0.5, 0.5, 0.5, 0.5, "EnvF", "EnvD",
@@ -42,7 +39,8 @@ P.TakeOver <- parameters(0, 0, 0, 0, "Source.In.AppHabitat", "Source.NOT.In.AppH
                          "Target.In.AppHabitat", "Target.NOT.In.AppHabitat")
 
 
-#for (i in 1:Replicates) { #this is being replaced by the cluster function
+#for (i in 1:Replicates) {
+
   print(paste("Replicate", i))
   myWorld <- BuildWorld(R = 3, P = 0.5)
   myOut <- RunSim(myWorld, P.extinction, P.speciation, 
@@ -126,15 +124,35 @@ Dif.Sim <- list(all.trees, all.Worlds, all.node.Data)
 
 save(VT.Sim, TO.Sim, Dif.Sim, 
      file = 'Results.Rdata')
-     
-#save_name <- paste("allresults 2_patch transplant_",namer,".Rdata", sep="")
-#save(allresults,file= save_name)
-## need to fix saving structure once we have a plan
-    
-     } #end function to be passed to cluster
-     
+save_name <- paste("allresults 2_patch transplant_",namer,".Rdata", sep="")
+save(allresults,file= save_name)
+
+
+
+######################
+# plot a few examples
+myplot(VT.Sim, i = 1)
+myplot(VT.Sim, i = 2)
+myplot(VT.Sim, i = 3)
+myplot(TO.Sim, i = 1)
+myplot(TO.Sim, i = 2)
+myplot(TO.Sim, i = 3)
+myplot(Dif.Sim, i = 1)
+myplot(Dif.Sim, i = 2)
+myplot(Dif.Sim, i = 3)
+
+
+
+
 #==================================================================
 # cluster call
+source("SimulationFunctions.R")
+source("Auxiliary_functions.R")
+library(gtools)
+library(ape)
+library(adephylo)
+library(diversitree)
+
 
 
 library(parallel)
@@ -149,7 +167,7 @@ clusterEvalQ( cl, library(adephylo) )
 clusterEvalQ( cl, library(diversitree) )
 clusterEvalQ( cl, source("SimulationFunctions.R") )
 clusterEvalQ( cl, source("Auxiliary_functions.R") )
-clusterEvalQ( cl, source("Extinction_function.R") )
+
 
 # lset are the landscapes that we will run
 
@@ -158,17 +176,4 @@ clusterEvalQ( cl, source("Extinction_function.R") )
 
 stopCluster(cl)
 
-#==================================================================
-# plot function
 
-######################
-# plot a few examples
-myplot(VT.Sim, i = 1)
-myplot(VT.Sim, i = 2)
-myplot(VT.Sim, i = 3)
-myplot(TO.Sim, i = 1)
-myplot(TO.Sim, i = 2)
-myplot(TO.Sim, i = 3)
-myplot(Dif.Sim, i = 1)
-myplot(Dif.Sim, i = 2)
-myplot(Dif.Sim, i = 3)
