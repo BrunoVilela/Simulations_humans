@@ -11,7 +11,7 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
   # Create a phylo object
   if (is.null(mytree)) { 
     mytree <- read.tree(text = paste0("(t", Parent, ":",
-                                      myT, ",t", NewSoc,
+                                      myT, ",t", PosTargets,
                                       ":", myT, ");")) 
     NodeData[1, ] <- c(1, Parent)
     NodeData[2, ] <- c(2, PosTargets)
