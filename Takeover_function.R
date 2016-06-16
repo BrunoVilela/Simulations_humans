@@ -28,6 +28,8 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
                           prob.to/multiplier, prob.to)
         if (prob.to > runif(1)) {
           takeover <- TRUE
+        } else{
+          takeover <- FALSE
         }
         if (takeover) {
           temp <- sub.TakeOver(mytree, index.tips = PosTargets, 
