@@ -7,6 +7,9 @@ rm(list = ls())
 source("SimulationFunctions.R")
 source("Auxiliary_functions.R")
 source("Extinction_function.R")
+source("Difusion_function.R")
+source("Takeover_function.R")
+source("Speciate_function.R")
 
 #==================================================================
 # Start function for cluster to call

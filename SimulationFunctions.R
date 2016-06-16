@@ -96,10 +96,15 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     NodeData <- after.ext$NodeData
     
     # Diffusion: passing the know-how to my neighbors
-    myWorld <- Diffusion(myWorld, P.diffusion)
+    myWorld <- Diffusion(myWorld, P.diffusion, multiplier = 2)
     
     
     # TAKEOVER
+    after.invasion <- TakeOver(myWorld, mytree, P.TakeOver, 
+                               NodeData, multiplier = 2)
+    mytree <- after.invasion$mytree
+    myWorld <- after.invasion$myWorld
+    NodeData <- after.invasion$NodeData
     
     # Now we can allow the colonized cells attempt to reproduce (in random order)
     not.na <- !is.na(myWorld$Trait)

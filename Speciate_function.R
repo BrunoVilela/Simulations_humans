@@ -1,7 +1,8 @@
 # Specitaion function
 
-Speciate <- function(myT, Parent, PosTargets, myWorld,
-                     mytree, NodeData, takeover) {
+speciate <- function(myT, Parent, PosTargets, myWorld,
+                     mytree, NodeData, takeover, 
+                     arisal = TRUE) {
   # Create descendant lineage
   if (length(PosTargets) > 1) {
     PosTargets <- sample(PosTargets, 1)
@@ -46,17 +47,18 @@ Speciate <- function(myT, Parent, PosTargets, myWorld,
   if (!takeover) {
     # we assume that the baseline is to inherit whatever the parents did
     myWorld[PosTargets, 6] <- myWorld[i, 6]
-    
-    #... but allow the possibility of developing new modes of subsistence de novo
-    l.news <- length(PosTargets)
-    prob.ar <- numeric()
-    env.match <- myWorld[PosTargets, 7] == myWorld[PosTargets, 6]
-    env.D <- myWorld[PosTargets, 7] == 1
-    prob.ar[env.D & !env.match] <- P.Arisal[2, 2] # Prob of
-    prob.ar[!env.D & !env.match] <- P.Arisal[1, 1] # Prob of
-    origins <- runif(l.news) > prob.ar
-    if(sum(origins) > 0) {
-      myWorld[PosTargets[origins], 6] <- ifelse(myWorld[PosTargets[origins], 6] == 1, 2, 1)
+    if (arisal) {
+      #... but allow the possibility of developing new modes of subsistence de novo
+      l.news <- length(PosTargets)
+      prob.ar <- numeric()
+      env.match <- myWorld[PosTargets, 7] == myWorld[PosTargets, 6]
+      env.D <- myWorld[PosTargets, 7] == 1
+      prob.ar[env.D & !env.match] <- P.Arisal[2, 2] # Prob of
+      prob.ar[!env.D & !env.match] <- P.Arisal[1, 1] # Prob of
+      origins <- runif(l.news) > prob.ar
+      if(sum(origins) > 0) {
+        myWorld[PosTargets[origins], 6] <- ifelse(myWorld[PosTargets[origins], 6] == 1, 2, 1)
+      }
     }
   } 
   if (takeover) { # This is a Take Over event 

@@ -39,6 +39,8 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
       } 
     }
   }
+  return(list("mytree" = mytree, "myWorld" = myWorld,
+              "NodeData" = NodeData))  
 }
 
 
@@ -53,7 +55,7 @@ sub.TakeOver <- function(mytree, index.tips, myWorld, myT,
   NodeData <- temp$NodeData
   
   # and now occupy this spot with a descendant of the domest society
-  Temp <- Speciate(myT = myT, Parent = i, PosTargets, 
+  Temp <- speciate(myT = myT, Parent = i, PosTargets, 
                    myWorld = myWorld, mytree = mytree,
                    NodeData = NodeData, takeover = TRUE)
   return(Temp)
