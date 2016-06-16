@@ -46,7 +46,7 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
   # define the trait value that the new society will exhibit
   if (!takeover) {
     # we assume that the baseline is to inherit whatever the parents did
-    myWorld[PosTargets, 6] <- myWorld[i, 6]
+    myWorld[PosTargets, 6] <- myWorld[Parent, 6]
     if (arisal) {
       #... but allow the possibility of developing new modes of subsistence de novo
       l.news <- length(PosTargets)
@@ -65,7 +65,7 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
     # (the earlier soc has already been wiped out of the phylogeny
     # outside of this function and now all is left is to replace it
     # by a descendant of the parent)
-    myWorld[PosTargets, 6] <- myWorld[i, 6]
+    myWorld[PosTargets, 6] <- myWorld[Parent, 6]
   } 
   
   return(list("myWorld" = myWorld, "mytree" = mytree,
