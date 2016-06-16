@@ -29,3 +29,33 @@ is.inside <- function(x, y, response = "logical") {
   }
   return(answer)
 }
+
+
+#==================================================================
+# Function to select targets for difusion and takeover
+getTargets <- function(myHex, myWorld, empty) {
+  # empty if TRUE will keep targets with no trait, 
+  #       if false will keep only targets with traits
+
+  AllTargets <- neighbors(myHex, inside = TRUE,
+                          myWorld = myWorld)
+  PosTargets <- NULL
+  
+  # Figure out which of the neighboring cells are good options for this context
+  nAll <- nrow(AllTargets)
+  PosTargets <- numeric(nAll)
+  
+  indexs <- is.inside(x = AllTargets, y = myWorld[, 1:3],
+                      response = "index")
+  
+  if (empty) {
+    PosTargets <- indexs[is.na(myWorld[indexs, 6])]
+  } 
+  if (!empty) {
+    PosTargets <- indexs[!is.na(myWorld[indexs, 6])]
+  }
+  if (length(PosTargets) == 0) {
+    PosTargets <- NULL
+  }
+  return(PosTargets)
+}
