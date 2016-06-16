@@ -20,29 +20,31 @@ library(diversitree)
 #==================================================================
 # First some simple hexagonal grid functions
 # Returns the coordinates of all possible neighbors 
-# (NA if neighbor is outside of desired grid system)
-neighbors <- function(myHex, check = TRUE, myWorld) {
-    myNeighbors <- rbind(
-      myHex + c(0, 1, -1), 
-      myHex + c(1,  0, -1), 
-      myHex + c(-1, 1,  0), 
-      myHex + c(1, -1,  0), 
-      myHex + c(-1,  0, 1), 
-      myHex + c(0, -1, 1))
-  if (check) {
-    neigh.inside <- is.inside(x = myNeighbors, y = myWorld[, 1:3])
-    myNeighbors <- myNeighbors[neigh.inside, ] 
+# inside = TRUE will only return neighbors that are inside the matrix, 
+# FALSE only the outside ones
+neighbors <- function(myHex, inside = TRUE, myWorld) {
+  myNeighbors <- structure(c(0, 1, -1, 1, -1, 0, 1, 0, 1, -1, 0, -1, -1, -1, 0, 
+                             0, 1, 1), .Dim = c(6L, 3L))
+  myNeighbors <- t(apply(myNeighbors, 1, function(x, y){x + y}, y = myHex))
+  neigh.inside <- is.inside(x = myNeighbors, y = myWorld[, 1:3])
+  if (inside) {
+    myNeighbors <- myNeighbors[neigh.inside, , drop = FALSE] 
+  }
+  if(!inside) {
+    myNeighbors <- myNeighbors[!neigh.inside, , drop = FALSE] 
   }
   colnames(myNeighbors) <- c('x', 'y', 'z')
-  row.names(myNeighbors) <- c('n1', 'n2', 'n3', 'n4', 'n5', 'n6')
   return(myNeighbors)
 }
+
 #==================================================================
 # Build an hexagonal grid with a radius of R cells over which to simulate 
 # cultural evolution. Assume a proportion P of the world is appropriate for foraging
 # (env = 1; trait = 1) and the rest is good for domestication (env = 2; trait = 2)
 
 BuildWorld <- function (R, P) {
+  # R is the radius of cells of the hexagonal world
+  # P is the distribution of habitas type 1 over type 2
   # Cube coordinates for hexagonal grid systems 
   # (see http://www.redblobgames.com/grids/hexagons/)
   
@@ -53,21 +55,18 @@ BuildWorld <- function (R, P) {
   n2 <- (3 + (2 * (R - 2)))
   loop <- sum(((n2 - 1) : (n2 - (R - 1))) * 2, n2)
   # Empty Matrix
-  myWorld <- matrix(NA, ncol = 9, nrow = nrow.world)
+  myWorld <- matrix(NA, ncol = 8, nrow = nrow.world)
   myWorld[1, 1:3] <- 0 
   myWorld[, 7] <- sample(1:2, nrow.world, TRUE, prob = c(1 - P, P))
   x <- 1 # Counter
   for (j in 1:loop) {
     x <- x + 1
     myHex <- myWorld[j, 1:3]
-    myneighbors <- neighbors(myHex, check = FALSE)
-    neigh.inside <- is.inside(x = myneighbors, y = myWorld[, 1:3])
-    myneighbors <- myneighbors[!neigh.inside, , drop = FALSE]
+    myneighbors <- neighbors(myHex, inside = FALSE, myWorld)
     x2 <- (nrow(myneighbors) + x) - 1
     myWorld[x:x2, 1:3]  <- myneighbors
     x <- x2
   }
-  myWorld <- as.data.frame(myWorld, stringsAsFactors = FALSE)
   colnames(myWorld) <- c('x', 'y', 'z', "Parent", "BirthT", "Trait", "Environment",
                          "TipLabel")
   myWorld[, 8] <- 1:nrow.world

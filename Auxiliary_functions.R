@@ -21,10 +21,10 @@ is.inside <- function(x, y, response = "logical") {
   # response can be logical or index numbers
   index.neigh <- apply(x, 1, paste, collapse = " ")
   index.world <- apply(na.omit(y), 1, paste, collapse = " ")
-  if(response == "logical") {
+  if (response == "logical") {
   answer <- index.neigh %in% index.world
   }
-  if(response == "index") {
+  if (response == "index") {
     answer <- match(index.neigh, index.world)
   }
   return(answer)

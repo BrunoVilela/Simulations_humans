@@ -31,7 +31,7 @@ checkNeighbor <- function (myHex, direction, myWorld) {
 }
 
 # returns the coordinates of all possible neighbors (NA if neighbor is outside of desired grid system)
-neighbors <- function(myHex, check = TRUE, myWorld) {
+neighbors2 <- function(myHex, check = TRUE, myWorld) {
   if (check) {
     myNeighbors <- as.data.frame(rbind(
       checkNeighbor(myHex, c(0, 1, -1), myWorld), 
@@ -70,7 +70,7 @@ BuildWorld2 <- function (R, P) {
   for (i in 1:R) {
     for (j in 1:nrow(myWorld)) {
       myHex <- myWorld[j, c('x', 'y', 'z')]
-      myneighbors <- neighbors(myHex, check = F)
+      myneighbors <- neighbors2(myHex, check = F)
       for (k in 1:nrow(myneighbors)) {
         if (sum(myWorld$x == myneighbors[k, 1] &
                 myWorld$y == myneighbors[k, 2] &
