@@ -1,7 +1,7 @@
 # Takeover function
 
 TakeOver <- function(myWorld, mytree, P.TakeOver, 
-                     NodeData, multiplier = 2) {
+                     NodeData, myT, multiplier = 2) {
   
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)

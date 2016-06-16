@@ -24,7 +24,7 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
                                        BL, ",t", PosTargets,
                                        ":", BL, ");")) 
     
-    OldParentalNode <- NodeData$Node[NodeData$Tip == Parent]
+    OldParentalNode <- NodeData[NodeData[, 2] == Parent, 1]
     
     mytree <- read.tree(text = write.tree(bind.tree(mytree, 
                                                     newtips,

@@ -68,7 +68,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   # set the seed for simulation
   start <- sample(1:world.size, 1)
   myWorld[start, 4:6] <- c(0, 0, 1) # Setting root(0), time(0), ancestral(1, forager)
-
+  
   # Keep track of the tip numbers for each position in myWorld (when colonized)
   NodeData <- matrix(c(rootnode, start), 1, 2)
   colnames(NodeData) <- c('Node', 'Tip') 
@@ -99,89 +99,38 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     myWorld <- Diffusion(myWorld, P.diffusion, multiplier = 2)
     
     
-    # TAKEOVER
+    # TakeOver (war time)!
     after.invasion <- TakeOver(myWorld, mytree, P.TakeOver, 
-                               NodeData, multiplier = 2)
+                               NodeData, myT, multiplier = 2)
     mytree <- after.invasion$mytree
     myWorld <- after.invasion$myWorld
     NodeData <- after.invasion$NodeData
     
-    # Now we can allow the colonized cells attempt to reproduce (in random order)
-    not.na <- !is.na(myWorld$Trait)
-    sum.notna <- sum(not.na)
-    who.notna <- which(not.na)
-    if (sum.notna > 1) { 
-      myOrder <- sample(who.notna,
-                        sum.notna)
-    } else {
-      myOrder <- who.notna
-    }
+    # Speciation (god making his job)
+    after.god <- Speciation(myWorld, mytree, P.speciation,
+                            P.Arisal, NodeData, myT)
+    mytree <- after.god$mytree
+    myWorld <- after.god$myWorld
+    NodeData <- after.god$NodeData
     
-    # go one by one allowing each society a chance to reproduce
-    for (i in 1:sum.notna) {
-      Row.In.Node.Data <- which(NodeData$Tip == myOrder[i])
-      
-      if (myWorld$Trait[myOrder[i]] == 1) {
-        if (myWorld$Environment[myOrder[i]] == 1) { 
-          Pspec <- P.speciation["For","EnvF"]
-        } else {
-          Pspec <- P.speciation["For","EnvD"] 
-        }
-      } else {
-        if (myWorld$Environment[myOrder[i]] == 1) {
-          Pspec <- P.speciation["Dom","EnvF"]
-        } else {
-          Pspec <- P.speciation["Dom","EnvD"]
-        }
-      }
-      
-      if (runif(1) <= Pspec) {
-        # speciate (i.e., send diaspora to an adjacent empty cell)
-        myHex <- myWorld[myOrder[i], c('x', 'y', 'z')]
-        PosTargets <- getTargets(myHex, myWorld, takeover = FALSE)
-        if (!is.null(PosTargets)) {
-          Temp <- Speciate(myT = myT, Parent = myOrder[i], PosTargets = PosTargets, 
-                           myWorld = myWorld, mytree = mytree, NodeData = NodeData, 
-                           takeover = FALSE)
-          
-          myWorld <- Temp$myWorld
-          mytree <- Temp$mytree
-          NodeData <- Temp$NodeData
-        }
-      }
-    }
-    
-    if (!is.null(mytree)) {
-      # Extend the tips of branches that did not reproduce to maintain
-      # an ultrametric tree
-      for (i in 1:length(mytree$tip.label)) {
-        dist.root <- distRoot(mytree, tips = i, method = "patristic")
-        if (dist.root < myT) {
-          ThisBranch <- which(mytree$edge[, 2] == i)
-          sub <- (myT - dist.root)
-          mytree$edge.length[ThisBranch] <- mytree$edge.length[ThisBranch] + sub
-        }
-      }
-    }
-  } 
+    return(list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
+  }
   
-  return(list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
-}
-
-
-#==================================================================
-# Plot output (single tree)
-myplot <- function(RunSim.Output, i) {
-  par(oma = c(1, 1, 3, 1))
-  mytree <- RunSim.Output[[1]][[i]]
-  myWorld <- RunSim.Output[[2]][[1]]
-  row.names(myWorld) <- myWorld$TipLabel
-  myWorld <- myWorld[, c("Trait", "Environment")]
-  colors <- list("Trait" = c('blue', 'red'), 
-                 "Environment" = c('Black','Brown'))
-  labels <- list("Trait" = c('Forager', 'Domesticator'),
-                 "Environment" = c('Good4For', 'Good4Dom'))
-  trait.plot(mytree, dat = myWorld, cols = colors,
-             lab = labels, type = 'p', w = 1/70)
-  title(paste(deparse(substitute(RunSim.Output)), i), outer = TRUE)
-}
+  
+  #==================================================================
+  # Plot output (single tree)
+  myplot <- function(RunSim.Output, i) {
+    par(oma = c(1, 1, 3, 1))
+    mytree <- RunSim.Output[[1]][[i]]
+    myWorld <- RunSim.Output[[2]][[1]]
+    row.names(myWorld) <- myWorld$TipLabel
+    myWorld <- myWorld[, c("Trait", "Environment")]
+    colors <- list("Trait" = c('blue', 'red'), 
+                   "Environment" = c('Black','Brown'))
+    labels <- list("Trait" = c('Forager', 'Domesticator'),
+                   "Environment" = c('Good4For', 'Good4Dom'))
+    trait.plot(mytree, dat = myWorld, cols = colors,
+               lab = labels, type = 'p', w = 1/70)
+    title(paste(deparse(substitute(RunSim.Output)), i), outer = TRUE)
+  }
+  
