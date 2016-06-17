@@ -13,7 +13,7 @@ getExtinct <- function(myWorld, mytree, P.extinction, NodeData) {
     prob.ext[!env.match & !domesticator] <- P.extinction[2, 1] # Prob of
     extinction <- runif(trait.length) > prob.ext
     if (any(extinction)) {
-      temp <- extinct(mytree, index.tips[extinction], extinction, myWorld)
+      temp <- extinct(mytree, index.tips[extinction], myWorld)
       mytree <- temp$mytree
       myWorld <- temp$myWorld
       NodeData <- temp$NodeData
