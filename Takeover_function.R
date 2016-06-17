@@ -7,7 +7,7 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   trait.length <- sum(trait.nonNA)
   index.tips <- which(trait.nonNA)
   
-  if (trait.length > 1) { # Only occurs if there is more than 1 societies
+  if (trait.length > 2) { # Only occurs if there is more than 1 societies
     index.tips <- sample(index.tips)
     for (i in index.tips) { 
       myHex <- myWorld[i, 1:3]

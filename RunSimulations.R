@@ -24,7 +24,7 @@ source("Speciation_function.R")
 # Only vertical transmission to adjacent neighbors, colonize an empty world)
 P.speciation <- parameters(0.5, 0.5, 0.5, 0.5, "For", "Dom",
                            "For", "Dom") 
-P.extinction <- parameters(0, 0.2, 0.4, 0, "For", "Dom",
+P.extinction <- parameters(0, 0.2, 0.2, 0, "For", "Dom",
                            "For", "Dom") 
 
 # P of coming up with a novel subsistence mode
@@ -52,8 +52,9 @@ P.TakeOver <- parameters(0, 0.5, 0.5, 0, "Target.Is.For", "Target.Is.Dom",
   myWorld <- BuildWorld(R = 3, P = 0.5)
   system.time (
   myOut <- RunSim(myWorld, P.extinction, P.speciation, 
-                  P.diffusion, P.Arisal, P.TakeOver, N.steps = 50)
+                  P.diffusion, P.Arisal, P.TakeOver, N.steps = 20)
   )
+  plot(myOut$mytree)
   if (i == 1) {
     all.trees <- list(myOut$mytree)
     all.Worlds <- list(myOut$myWorld)
