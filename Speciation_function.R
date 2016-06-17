@@ -9,6 +9,7 @@ Speciation <- function(myWorld, mytree, P.speciation,
     index.tips <- sample(index.tips)
   }
   for (i in index.tips) { 
+    myT <- (1/trait.length) + myT
     Row.In.Node.Data <- which(NodeData[, 2] == i)
     env.match <- myWorld[i, 7] == myWorld[i, 6]
     domesticator <- myWorld[i, 6] == 1
@@ -33,20 +34,9 @@ Speciation <- function(myWorld, mytree, P.speciation,
       }
     }
   }
-  if (!is.null(mytree)) {
-    # Extend the tips of branches that did not reproduce to maintain
-    # an ultrametric tree
-    for (i in 1:length(mytree$tip.label)) {
-      dist.root <- distRoot(mytree, tips = i, method = "patristic")
-      if (dist.root < myT) {
-        ThisBranch <- which(mytree$edge[, 2] == i)
-        sub <- (myT - dist.root)
-        mytree$edge.length[ThisBranch] <- mytree$edge.length[ThisBranch] + sub
-      }
-    }
-  }
+  mytree <- uniformBranchs(mytree, myT)
   return(list("mytree" = mytree, "myWorld" = myWorld,
-              "NodeData" = NodeData))  
+              "NodeData" = NodeData, "myT" = myT))  
 }
 
 

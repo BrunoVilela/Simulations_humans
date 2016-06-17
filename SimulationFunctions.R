@@ -74,12 +74,12 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   colnames(NodeData) <- c('Node', 'Tip') 
   
   mytree <- NULL
-  myT <- 0 # Counter
+  myT <- 0
+  cat("0% [")
   
   for (steps in 1:N.steps) {
-    cat(steps)
-    # add one time step to the process
-    myT <- myT + 1
+    if (steps%% (N.steps/10) == 0) { cat('-') }
+    if (steps==N.steps) { cat("] 100 %\n") }
     
     # Extinction time!!! buuuuu
     if (sum(P.extinction) != 0) {
@@ -100,6 +100,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     mytree <- after.invasion$mytree
     myWorld <- after.invasion$myWorld
     NodeData <- after.invasion$NodeData
+    myT <- after.invasion$myT
     }
     # Speciation (god making his job)
     after.god <- Speciation(myWorld, mytree, P.speciation,
@@ -107,6 +108,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     mytree <- after.god$mytree
     myWorld <- after.god$myWorld
     NodeData <- after.god$NodeData
+    myT <- after.god$myT
   }
   return(list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
 }

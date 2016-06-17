@@ -34,8 +34,6 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
     NodeData <- rbind(c(1, Parent), c(2, PosTargets))
   } 
   
-  
-  
   # keep track of this for confirmation
   myWorld[PosTargets, 4] <- Parent
   myWorld[PosTargets, 5] <- myT

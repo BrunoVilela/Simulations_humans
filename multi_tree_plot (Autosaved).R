@@ -1,7 +1,7 @@
 ## plot the many replicate trees that are output by the simulation
 
 
-for(h in 1:10){
+for(h in 1:100){
 myWorld <- BuildWorld(R = 3, P = 0.5)
   system.time (
   myOut <- RunSim(myWorld, P.extinction, P.speciation, 
