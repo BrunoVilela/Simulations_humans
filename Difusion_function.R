@@ -11,8 +11,8 @@ Diffusion <- function(myWorld, P.diffusion, multiplier = 2) {
     for (i in index.tips) { 
       myHex <- myWorld[i, 1:3]
       PosTargets <- getTargets(myHex, myWorld, empty = FALSE)
-      l.targets <- length(PosTargets)
       PosTargets <- PosTargets[myWorld[PosTargets, 6] != myWorld[i, 6]]
+      l.targets <- length(PosTargets)
       if (l.targets > 0) {
         # PosTargets different from me
         if (l.targets > 1) {

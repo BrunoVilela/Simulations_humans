@@ -12,13 +12,12 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
     for (i in index.tips) { 
       myHex <- myWorld[i, 1:3]
       PosTargets <- getTargets(myHex, myWorld, empty = FALSE)
-      l.targets <- length(PosTargets)
       PosTargets <- PosTargets[myWorld[PosTargets, 6] != myWorld[i, 6]]
+      l.targets <- length(PosTargets)
+      
       if (l.targets > 0) {
-      l.targets2 <- length(PosTargets)
-        
         # PosTargets different from me
-        if (l.targets2 > 1) {
+        if (l.targets > 1) {
           PosTargets <- sample(PosTargets, 1)
         }
         source.trait <- myWorld[i, 6] == 1
