@@ -108,14 +108,13 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
       myT <- after.invasion$myT
     }
     # Speciation (god making his job)
-    after.god <- Speciation(myWorld, mytree, P.speciation,
-                            P.Arisal, NodeData, myT)
+    after.god <- Speciation(myWorld, mytree, P.speciation, NodeData, myT)
     mytree <- after.god$mytree
     myWorld <- after.god$myWorld
     NodeData <- after.god$NodeData
     myT <- after.god$myT
     
-    myWorld <- Arisal(myWorld)
+    myWorld <- Arisal(myWorld, P.Arisal)
   }
   return(list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
 }
