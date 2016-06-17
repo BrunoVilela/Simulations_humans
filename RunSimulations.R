@@ -12,7 +12,10 @@ source("Takeover_function.R")
 source("Speciate_function.R")
 source("Speciation_function.R")
 source("Uniform_branchs.R")
+source("Plot_output.R")
 
+# Packages
+library(phytools)
 
 #==================================================================
 # Start function for cluster to call
@@ -25,11 +28,11 @@ source("Uniform_branchs.R")
 # Only vertical transmission to adjacent neighbors, colonize an empty world)
 P.speciation <- parameters(0.5, 0.5, 0.5, 0.5, "For", "Dom",
                            "For", "Dom") 
-P.extinction <- parameters(0, 0.2, 0.2, 0, "For", "Dom",
+P.extinction <- parameters(0, 0.5, 0.5, 0, "For", "Dom",
                            "For", "Dom") 
 
 # P of coming up with a novel subsistence mode
-P.Arisal <-  parameters(0.05, 0, 0, 0.05, "For", "Dom",
+P.Arisal <-  parameters(0, 0, 0, 0.001, "For", "Dom",
                         "Evolve.For", "Evolve.Dom") 
 
 # Set up the number of replications (1 for general tests)
@@ -40,22 +43,23 @@ Replicates <- 1
 # Simple only vertical transmission
 
 # P of diffusing your trait to a particular target
-P.diffusion <- parameters(0, 0.5, 0.5, 0, "Target.Is.For", "Target.Is.Dom",
+P.diffusion <- parameters(0, 0, 0, 0, "Target.Is.For", "Target.Is.Dom",
                           "Source.Is.For", "Source.Is.Dom")
                           
 # P of taking over a neighbors position
-P.TakeOver <- parameters(0, 0.9, 0.9, 0, "Target.Is.For", "Target.Is.Dom",
+P.TakeOver <- parameters(0, 0.1, 0.8, 0, "Target.Is.For", "Target.Is.Dom",
                          "Source.Is.For", "Source.Is.Dom")
 
 
 #for (i in 1:Replicates) { #this is being replaced by the cluster function
   #print(paste("Replicate", i))
-  myWorld <- BuildWorld(R = 3, P = 0.5)
+  myWorld <- BuildWorld(R = 3, P = 0.8)
   system.time (
   myOut <- RunSim(myWorld, P.extinction, P.speciation, 
-                  P.diffusion, P.Arisal, P.TakeOver, N.steps = 20)
+                  P.diffusion, P.Arisal, P.TakeOver, N.steps = 50)
   )
   plot(myOut$mytree)
+  x <- myOut$myWorld[, 6]
   
   if (i == 1) {
     all.trees <- list(myOut$mytree)

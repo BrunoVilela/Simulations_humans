@@ -6,13 +6,13 @@ myplot <- function(RunSim.Output, i) {
   par(oma = c(1, 1, 3, 1))
   mytree <- RunSim.Output[[1]][[i]]
   myWorld <- RunSim.Output[[2]][[1]]
-  row.names(myWorld) <- myWorld[, 8]
-  myWorld <- myWorld[, c("Trait", "Environment")]
+  row.names(myWorld) <- paste0('t', myWorld[, 8])
+  myWorld2 <- myWorld[, 6:7]
   colors <- list("Trait" = c('blue', 'red'), 
                  "Environment" = c('Black','Brown'))
   labels <- list("Trait" = c('Forager', 'Domesticator'),
                  "Environment" = c('Good4For', 'Good4Dom'))
-  trait.plot(mytree, dat = myWorld, cols = colors,
+  trait.plot(mytree, dat = as.data.frame(myWorld2), cols = colors,
              lab = labels, type = 'p', w = 1/70)
   title(paste(deparse(substitute(RunSim.Output)), i), outer = TRUE)
 }
