@@ -11,6 +11,7 @@ source("Difusion_function.R")
 source("Takeover_function.R")
 source("Speciate_function.R")
 source("Speciation_function.R")
+source("Uniform_branchs.R")
 
 
 #==================================================================
@@ -43,7 +44,7 @@ P.diffusion <- parameters(0, 0.5, 0.5, 0, "Target.Is.For", "Target.Is.Dom",
                           "Source.Is.For", "Source.Is.Dom")
                           
 # P of taking over a neighbors position
-P.TakeOver <- parameters(0, 0.5, 0.5, 0, "Target.Is.For", "Target.Is.Dom",
+P.TakeOver <- parameters(0, 0.9, 0.9, 0, "Target.Is.For", "Target.Is.Dom",
                          "Source.Is.For", "Source.Is.Dom")
 
 
@@ -55,6 +56,7 @@ P.TakeOver <- parameters(0, 0.5, 0.5, 0, "Target.Is.For", "Target.Is.Dom",
                   P.diffusion, P.Arisal, P.TakeOver, N.steps = 20)
   )
   plot(myOut$mytree)
+  
   if (i == 1) {
     all.trees <- list(myOut$mytree)
     all.Worlds <- list(myOut$myWorld)
