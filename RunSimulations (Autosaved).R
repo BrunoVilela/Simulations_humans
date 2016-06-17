@@ -131,8 +131,8 @@ for (i in 1:Replicates) {
 
 Dif.Sim <- list(all.trees, all.Worlds, all.node.Data)
 
-save(VT.Sim, TO.Sim, Dif.Sim, 
-     file = 'Results.Rdata')
+setwd("~/Box Sync/colliding ranges/Simulations_humans/cluster outputs")
+save(myOut, file = 'Results.Rdata')
      
 #save_name <- paste("allresults 2_patch transplant_",namer,".Rdata", sep="")
 #save(allresults,file= save_name)
