@@ -27,17 +27,14 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
     NodeData <- matrix(NA, tip.length, 2)
     colnames(NodeData) <- c('Node', 'Tip')
     NodeData <- cbind(1:tip.length, as.numeric(gsub("t", "", mytree$tip.label)))
-  }
-  
-  # Create a phylo object
-  if (is.null(mytree)) { 
+  } else { 
     mytree <- read.tree(text = paste0("(t", Parent, ":",
                                       myT, ",t", PosTargets,
                                       ":", myT, ");")) 
     NodeData <- rbind(c(1, Parent), c(2, PosTargets))
   } 
   
-
+  
   
   # keep track of this for confirmation
   myWorld[PosTargets, 4] <- Parent
