@@ -1,6 +1,6 @@
 # Speciation function!
 Speciation <- function(myWorld, mytree, P.speciation,
-                       P.Arisal, NodeData, myT) {
+                       NodeData, myT) {
   
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
@@ -25,8 +25,7 @@ Speciation <- function(myWorld, mytree, P.speciation,
       PosTargets <- getTargets(myHex, myWorld, empty = TRUE)
       if (!is.null(PosTargets)) {
         Temp <- speciate(myT = myT, Parent = i, PosTargets = PosTargets, 
-                         myWorld = myWorld, mytree = mytree, NodeData = NodeData, 
-                         takeover = FALSE)
+                         myWorld = myWorld, mytree = mytree, NodeData = NodeData)
         
         myWorld <- Temp$myWorld
         mytree <- Temp$mytree

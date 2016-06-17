@@ -14,9 +14,7 @@ getExtinct <- function(myWorld, mytree, P.extinction, NodeData) {
     extinction <- runif(trait.length) < prob.ext
     survivors <- (trait.length - sum(extinction)) 
     if(survivors <= 1) {
-      warning("One or less survivors, God wants at least 2 societies in the world!!!")
-      saved <- sample((1:trait.length)[extinction], 2 - survivors)
-      extinction[saved] <- FALSE
+      stop("One or less survivors, World extinction!!!")
     }
     if (any(extinction)) {
       temp <- extinct(mytree, index.tips[extinction], myWorld)
