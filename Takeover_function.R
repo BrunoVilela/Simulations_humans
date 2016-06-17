@@ -15,8 +15,10 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
       l.targets <- length(PosTargets)
       PosTargets <- PosTargets[myWorld[PosTargets, 6] != myWorld[i, 6]]
       if (l.targets > 0) {
+      l.targets2 <- length(PosTargets)
+        
         # PosTargets different from me
-        if (l.targets > 1) {
+        if (l.targets2 > 1) {
           PosTargets <- sample(PosTargets, 1)
         }
         source.trait <- myWorld[i, 6] == 1
@@ -28,7 +30,7 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
                           prob.to/multiplier, prob.to)
         if (prob.to > runif(1)) {
           takeover <- TRUE
-        } else{
+        } else {
           takeover <- FALSE
         }
         if (takeover) {

@@ -32,7 +32,7 @@ extinct <- function(mytree, remove, myWorld) {
   NodeData <- matrix(NA, tip.length, 2)
   colnames(NodeData) <- c('Node', 'Tip')
   NodeData[, 1] <- 1:tip.length
-  NodeData[, 2] <- mytree$tip.label
+  NodeData[, 2] <- as.numeric(gsub("t", "", mytree$tip.label))
   return(list("mytree" = mytree, "myWorld" = myWorld,
               "NodeData" = NodeData))  
 }
