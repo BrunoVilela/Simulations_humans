@@ -76,36 +76,31 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   mytree <- NULL
   myT <- 0 # Counter
   
-  cat("0% [")
-  
   for (steps in 1:N.steps) {
-    # screen update to allow monitoring progress
-    if (steps %% (N.steps/10) == 0) { 
-      cat('-')
-    }
-    if (steps == N.steps) { 
-      cat("] 100 %\n") 
-    }
+    cat(steps)
     # add one time step to the process
     myT <- myT + 1
     
     # Extinction time!!! buuuuu
+    if (sum(P.extinction) != 0) {
     after.ext <- getExtinct(myWorld, mytree, P.extinction, NodeData)
     mytree <- after.ext$mytree
     myWorld <- after.ext$myWorld
     NodeData <- after.ext$NodeData
-    
+    }
     # Diffusion: passing the know-how to my neighbors
+    if (sum(P.diffusion) != 0) {
     myWorld <- Diffusion(myWorld, P.diffusion, multiplier = 2)
-    
+    }
     
     # TakeOver (war time)!
+    if (sum(P.TakeOver) != 0) {
     after.invasion <- TakeOver(myWorld, mytree, P.TakeOver, 
                                NodeData, myT, multiplier = 2)
     mytree <- after.invasion$mytree
     myWorld <- after.invasion$myWorld
     NodeData <- after.invasion$NodeData
-    
+    }
     # Speciation (god making his job)
     after.god <- Speciation(myWorld, mytree, P.speciation,
                             P.Arisal, NodeData, myT)

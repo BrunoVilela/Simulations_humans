@@ -39,20 +39,21 @@ Replicates <- 1
 # Simple only vertical transmission
 
 # P of diffusing your trait to a particular target
-P.diffusion <- parameters(0, 0, 0, 0, "Target.Is.For", "Target.Is.Dom",
+P.diffusion <- parameters(0, 0.5, 0.5, 0, "Target.Is.For", "Target.Is.Dom",
                           "Source.Is.For", "Source.Is.Dom")
                           
 # P of taking over a neighbors position
-P.TakeOver <- parameters(0, 0, 0, 0, "Target.Is.For", "Target.Is.Dom",
+P.TakeOver <- parameters(0, 0.5, 0.5, 0, "Target.Is.For", "Target.Is.Dom",
                          "Source.Is.For", "Source.Is.Dom")
 
 
 #for (i in 1:Replicates) { #this is being replaced by the cluster function
   #print(paste("Replicate", i))
   myWorld <- BuildWorld(R = 3, P = 0.5)
+  system.time (
   myOut <- RunSim(myWorld, P.extinction, P.speciation, 
-                  P.diffusion, P.Arisal, P.TakeOver)
-  
+                  P.diffusion, P.Arisal, P.TakeOver, N.steps = 50)
+  )
   if (i == 1) {
     all.trees <- list(myOut$mytree)
     all.Worlds <- list(myOut$myWorld)
