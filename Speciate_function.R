@@ -26,7 +26,7 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
     tip.length <- Ntip(mytree)
     NodeData <- matrix(NA, tip.length, 2)
     colnames(NodeData) <- c('Node', 'Tip')
-    NodeData <- cbind(1:tip.length, mytree$tip.label)
+    NodeData <- cbind(1:tip.length, as.numeric(gsub("t", "", mytree$tip.label)))
   }
   
   # Create a phylo object
