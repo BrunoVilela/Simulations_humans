@@ -1,3 +1,5 @@
+# Run the full model in a cluster. This version writes files to a cluster output folder.
+
 
 sim_run_cluster <- function(replicate_cycle, combo_number){
 
@@ -57,47 +59,5 @@ clusterEvalQ( cl, source("Possible combinations of movement function.R") )
         clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, combo_number=30) 
 
 stopCluster(cl)
-
-
-
-
-
-
-
-
-
-
-
-
-library(phylobase)
-
-setwd("~/Box Sync/colliding ranges/Simulations_humans/cluster outputs/")
-list.files()
-
-a <- layout(matrix(c(1:12), 3,4, byrow=TRUE), width=c(1,1), height=c(1,1,1))
-#layout.show(a)
-
-
-#treePlot(phylo4(myOut$mytree), show.tip.label=FALSE, show.node.label=FALSE, plot.data=FALSE, edge.color="white")
-for(i in list.files()){
-load(i)
-
-tree <- myOut$mytree
-#par(oma = c(1, 1, 3, 1))
-  mytree <- myOut$mytree
-  #myWorld <- RunSim.Output[[3]]
-  row.names(myWorld) <- paste0('t', myWorld[, 8])
-  myWorld2 <- myWorld[, 6:7]
-  colors <- list("Trait" = c('blue', 'red'), 
-                 "Environment" = c('Black','Brown'))
-  labels <- list("Trait" = c('Forager', 'Domesticator'),
-                 "Environment" = c('Good4For', 'Good4Dom'))
-  trait.plot(mytree, dat = as.data.frame(myWorld2), cols = colors,
-             lab = labels, type = 'p', w = 1/10, legend=FALSE)
-             
-}
-
-
-
 
 
