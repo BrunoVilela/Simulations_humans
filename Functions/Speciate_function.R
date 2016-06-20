@@ -1,8 +1,7 @@
 # Specitaion function
 
 speciate <- function(myT, Parent, PosTargets, myWorld,
-                     mytree, NodeData, takeover, 
-                     arisal = TRUE) {
+                     mytree, NodeData) {
   # Create descendant lineage
   if (length(PosTargets) > 1) {
     PosTargets <- sample(PosTargets, 1)
@@ -37,31 +36,8 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
   # keep track of this for confirmation
   myWorld[PosTargets, 4] <- Parent
   myWorld[PosTargets, 5] <- myT
-  
-  # define the trait value that the new society will exhibit
-  if (!takeover) {
-    # we assume that the baseline is to inherit whatever the parents did
-    myWorld[PosTargets, 6] <- myWorld[Parent, 6]
-    if (arisal) {
-      #... but allow the possibility of developing new modes of subsistence de novo
-      l.news <- length(PosTargets)
-      prob.ar <- numeric(1)
-      env.match <- myWorld[PosTargets, 7] == myWorld[PosTargets, 6]
-      env.D <- myWorld[PosTargets, 7] == 1
-      prob.ar[env.D & !env.match] <- P.Arisal[2, 2] # Prob of
-      prob.ar[!env.D & !env.match] <- P.Arisal[1, 1] # Prob of
-      origins <- runif(l.news) > prob.ar
-      if(sum(origins) > 0) {
-        myWorld[PosTargets[origins], 6] <- ifelse(myWorld[PosTargets[origins], 6] == 1, 2, 1)
-      }
-    }
-  } 
-  if (takeover) { # This is a Take Over event 
-    # (the earlier soc has already been wiped out of the phylogeny
-    # outside of this function and now all is left is to replace it
-    # by a descendant of the parent)
-    myWorld[PosTargets, 6] <- myWorld[Parent, 6]
-  } 
+  myWorld[PosTargets, 6] <- myWorld[Parent, 6]
+
   
   return(list("myWorld" = myWorld, "mytree" = mytree,
               "NodeData" = NodeData))

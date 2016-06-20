@@ -14,9 +14,7 @@ getExtinct <- function(myWorld, mytree, P.extinction, NodeData) {
     extinction <- runif(trait.length) < prob.ext
     survivors <- (trait.length - sum(extinction)) 
     if(survivors <= 1) {
-      warning("One or less survivors, God wants at least 2 societies in the world!!!")
-      saved <- sample((1:trait.length)[extinction], 2 - survivors)
-      extinction[saved] <- FALSE
+      stop("One or less survivors, World extinction!!!")
     }
     if (any(extinction)) {
       temp <- extinct(mytree, index.tips[extinction], myWorld)
@@ -29,16 +27,3 @@ getExtinct <- function(myWorld, mytree, P.extinction, NodeData) {
               "NodeData" = NodeData))  
 }  
 
-#==================================================================
-extinct <- function(mytree, remove, myWorld) {
-  mytree <- drop.tip(mytree, tip = paste0("t", myWorld[remove, 8]))
-  myWorld[remove, 4:6] <- NA
-  # update NodeData
-  tip.length <- Ntip(mytree)
-  NodeData <- matrix(NA, tip.length, 2)
-  colnames(NodeData) <- c('Node', 'Tip')
-  NodeData[, 1] <- 1:tip.length
-  NodeData[, 2] <- as.numeric(gsub("t", "", mytree$tip.label))
-  return(list("mytree" = mytree, "myWorld" = myWorld,
-              "NodeData" = NodeData))  
-}
