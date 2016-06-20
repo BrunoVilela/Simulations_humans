@@ -9,15 +9,7 @@ library(diversitree)
 
 
 test_run <- function(replicate_cycle){
-	setwd("~/Box Sync/colliding ranges/Simulations_humans")
-	 source("SimulationFunctions.R") 
-source("Auxiliary_functions.R") 
-source("Extinction_function.R") 
-source("Difusion_function.R") 
-source("Takeover_function.R") 
-source("Speciate_function.R") 
-source("Speciation_function.R") 
-source("Uniform_branchs.R") 
+
 
 
 	P.speciation <- parameters(0.5, 0.5, 0.5, 0.5, "For", "Dom",
@@ -63,7 +55,7 @@ test_run(i)
 
 
 library(parallel)
-setwd("~/Box Sync/colliding ranges/Simulations_humans")
+setwd("~/Box Sync/colliding ranges/Simulations_humans/Functions")
 
 # Set up cluster
 cl <- makeCluster(6, type = "PSOCK")
@@ -73,14 +65,16 @@ clusterEvalQ( cl, library(gtools) )
 clusterEvalQ( cl, library(ape) )
 clusterEvalQ( cl, library(adephylo) )
 clusterEvalQ( cl, library(diversitree) )
-clusterEvalQ( cl, source("SimulationFunctions.R") )
+clusterEvalQ( cl, source("Arisal_module.R") )
 clusterEvalQ( cl, source("Auxiliary_functions.R") )
-clusterEvalQ( cl, source("Extinction_function.R") )
-clusterEvalQ( cl, source("Difusion_function.R") )
-clusterEvalQ( cl, source("Takeover_function.R") )
+clusterEvalQ( cl, source("Build_world_function.R") )
+clusterEvalQ( cl, source("Difusion_module.R") )
+clusterEvalQ( cl, source("Extinction_module.R") )
 clusterEvalQ( cl, source("Speciate_function.R") )
-clusterEvalQ( cl, source("Speciation_function.R") )
-clusterEvalQ( cl, source("Uniform_branchs.R") )
+clusterEvalQ( cl, source("Speciation_module.R") )
+clusterEvalQ( cl, source("Takeover_module.R") )
+
+
 
 # lset are the landscapes that we will run
 
