@@ -1,3 +1,4 @@
+# Speciation function used inside the speciation takeover
 Speciation <- function(NodeData, myWorld, i, P.speciation,
                        myT, PosTargets, mytree) {
   Row.In.Node.Data <- which(NodeData[, 2] == i)

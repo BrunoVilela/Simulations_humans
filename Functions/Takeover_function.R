@@ -21,8 +21,7 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   # If target is in the 
   Dom.in.For <- match.env.targ & source.trait.dom
   prob.to[Dom.in.For] <- prob.to[Dom.in.For] * multiplier
-  prob.to[Dom.in.For] <- prob.to[Dom.in.For] * multiplier
-  
+
   # How good is the env for me
   good <- myWorld[i, 6] == myWorld[PosTargets, 7] & source.trait.dom
   
