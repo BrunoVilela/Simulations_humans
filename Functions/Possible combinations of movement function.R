@@ -60,8 +60,8 @@ mode_Appear <- "Random_new_origin"
 
 
 
-chosen_combo <- combo_of_choice(4, FALSE)
-do.call(chosen_combo[[2]], args = list())
+#chosen_combo <- combo_of_choice(31, FALSE)
+#do.call(chosen_combo[[2]], args = list())
 
 
 
