@@ -54,17 +54,11 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     }
     
     # Extinction time!!! buuuuu
-    if (sum(P.extinction) != 0) {
-      input <- Extinction(input)
-    }
-    
+    input <- Extinction(input)
     # Diffusion: passing the know-how to my neighbors
-    if (sum(P.diffusion) != 0) {
-      input <- Diffusion(input)
-    }
+    input <- Diffusion(input)
     # Speciation / takeover
     input <- SpeciationTakeOver(input)
-  
     # Arisal
     input <- Arisal(input)
   }

@@ -2,6 +2,7 @@
 TakeOver <- function(myWorld, mytree, P.TakeOver, 
                      NodeData, myT, multiplier = 1.3,
                      i) {
+  
   extinct.list <- NULL
   myHex <- myWorld[i, 1:3]
   PosTargets <- getTargets(myHex, myWorld, empty = FALSE)

@@ -20,7 +20,7 @@ P.extinction <- parameters(0.05, 0.3, 0.3, 0.05, "For", "Dom",
                            "For", "Dom") 
 
 # P of coming up with a novel subsistence mode
-P.Arisal <-  parameters(0, 0, 0.001, 0, "For", "Dom",
+P.Arisal <-  parameters(0, 0, 0.1, 0, "For", "Dom",
                         "Env.For", "Env.Dom") 
 
 #==================================================================
