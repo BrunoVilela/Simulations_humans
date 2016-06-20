@@ -1,5 +1,4 @@
 # Specitaion function
-
 speciate <- function(myT, Parent, PosTargets, myWorld,
                      mytree, NodeData) {
   # Create descendant lineage

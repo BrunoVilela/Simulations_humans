@@ -2,10 +2,10 @@
 
 #==================================================================
 # Plot output (single tree)
-myplot <- function(RunSim.Output, i) {
+myplot <- function(RunSim.Output) {
   par(oma = c(1, 1, 3, 1))
-  mytree <- RunSim.Output[[1]][[i]]
-  myWorld <- RunSim.Output[[2]][[1]]
+  mytree <- RunSim.Output[[1]]
+  myWorld <- RunSim.Output[[3]]
   row.names(myWorld) <- paste0('t', myWorld[, 8])
   myWorld2 <- myWorld[, 6:7]
   colors <- list("Trait" = c('blue', 'red'), 
