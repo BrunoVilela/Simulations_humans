@@ -27,16 +27,3 @@ getExtinct <- function(myWorld, mytree, P.extinction, NodeData) {
               "NodeData" = NodeData))  
 }  
 
-#==================================================================
-extinct <- function(mytree, remove, myWorld) {
-  mytree <- drop.tip(mytree, tip = paste0("t", myWorld[remove, 8]))
-  myWorld[remove, 4:6] <- NA
-  # update NodeData
-  tip.length <- Ntip(mytree)
-  NodeData <- matrix(NA, tip.length, 2)
-  colnames(NodeData) <- c('Node', 'Tip')
-  NodeData[, 1] <- 1:tip.length
-  NodeData[, 2] <- as.numeric(gsub("t", "", mytree$tip.label))
-  return(list("mytree" = mytree, "myWorld" = myWorld,
-              "NodeData" = NodeData))  
-}

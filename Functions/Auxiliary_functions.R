@@ -60,8 +60,6 @@ getTargets <- function(myHex, myWorld, empty) {
   return(PosTargets)
 }
 
-
-
 #==================================================================
 # First some simple hexagonal grid functions
 # Returns the coordinates of all possible neighbors 
@@ -80,4 +78,39 @@ neighbors <- function(myHex, inside = TRUE, myWorld) {
   }
   colnames(myNeighbors) <- c('x', 'y', 'z')
   return(myNeighbors)
+}
+
+#==================================================================
+# Extend the tips of branches that did not reproduce to maintain
+# an ultrametric tree
+uniformBranchs <- function(mytree, myT) {
+  # mytree the phylogenetic tree
+  # myT the current time step
+  if (!is.null(mytree)) {
+    for (i in 1:length(mytree$tip.label)) {
+      dist.root <- distRoot(mytree, tips = i, method = "patristic")
+      if (dist.root < myT) {
+        ThisBranch <- which(mytree$edge[, 2] == i)
+        sub <- (myT - dist.root)
+        mytree$edge.length[ThisBranch] <- mytree$edge.length[ThisBranch] + sub
+      }
+    }
+  }
+  return(mytree)
+}
+
+#==================================================================
+# Function to remove the species from the world and the 
+# phylogenetic tree
+extinct <- function(mytree, remove, myWorld) {
+  mytree <- drop.tip(mytree, tip = paste0("t", myWorld[remove, 8]))
+  myWorld[remove, 4:6] <- NA
+  # update NodeData
+  tip.length <- Ntip(mytree)
+  NodeData <- matrix(NA, tip.length, 2)
+  colnames(NodeData) <- c('Node', 'Tip')
+  NodeData[, 1] <- 1:tip.length
+  NodeData[, 2] <- as.numeric(gsub("t", "", mytree$tip.label))
+  return(list("mytree" = mytree, "myWorld" = myWorld,
+              "NodeData" = NodeData))  
 }
