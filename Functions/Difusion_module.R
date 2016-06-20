@@ -1,5 +1,4 @@
 # Diffusion function
-
 Diffusion <- function(myWorld, P.diffusion, multiplier = 2) {
   
   trait.nonNA <- !is.na(myWorld[, 6])
@@ -18,12 +17,13 @@ Diffusion <- function(myWorld, P.diffusion, multiplier = 2) {
         if (l.targets > 1) {
           PosTargets <- sample(PosTargets, 1)
         }
-        source.trait <- myWorld[i, 6] == 1
+        source.trait <- myWorld[i, 6] == 2
         prob.dif <- numeric(1)
         prob.dif[source.trait] <- P.diffusion[2, 1] # Prob of
         prob.dif[!source.trait] <- P.diffusion[1, 2] # Prob of
         # HERE MULTIPLE THE PROBABILITY BY THE ENV MATCH
-        prob.dif <- ifelse(myWorld[PosTargets, 6] == myWorld[PosTargets, 7],
+        prob.dif <- ifelse(myWorld[PosTargets, 6] == myWorld[PosTargets, 7] &
+                           myWorld[PosTargets, 6] == 2,
                            prob.dif/multiplier, prob.dif)
         if (prob.dif > runif(1)) {
           myWorld[PosTargets, 6] <- myWorld[i, 6]

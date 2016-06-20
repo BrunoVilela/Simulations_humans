@@ -49,7 +49,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     
     # Extinction time!!! buuuuu
     if (sum(P.extinction) != 0) {
-      after.ext <- getExtinct(myWorld, mytree, P.extinction, NodeData)
+      after.ext <- Extinction(myWorld, mytree, P.extinction, NodeData)
       mytree <- after.ext$mytree
       myWorld <- after.ext$myWorld
       NodeData <- after.ext$NodeData
@@ -59,23 +59,15 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     if (sum(P.diffusion) != 0) {
       myWorld <- Diffusion(myWorld, P.diffusion, multiplier = 2)
     }
+    # Speciation / takeover
+    after.god.invasion <- SpeciationTakeOver(myWorld, mytree, P.speciation,
+                                             P.TakeOver, NodeData, myT)
     
-    # TakeOver (war time)!
-    if (sum(P.TakeOver) != 0) {
-      after.invasion <- TakeOver(myWorld, mytree, P.TakeOver, 
-                                 NodeData, myT, multiplier = 2)
-      mytree <- after.invasion$mytree
-      myWorld <- after.invasion$myWorld
-      NodeData <- after.invasion$NodeData
-      myT <- after.invasion$myT
-    }
-    # Speciation (god making his job)
-    after.god <- Speciation(myWorld, mytree, P.speciation, NodeData, myT)
-    mytree <- after.god$mytree
-    myWorld <- after.god$myWorld
-    NodeData <- after.god$NodeData
-    myT <- after.god$myT
-    
+    mytree <- after.god.invasion$mytree
+    myWorld <- after.god.invasion$myWorld
+    NodeData <- after.god.invasion$NodeData
+    myT <- after.god.invasion$myT
+    # Arisal
     myWorld <- Arisal(myWorld, P.Arisal)
   }
   return(list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
