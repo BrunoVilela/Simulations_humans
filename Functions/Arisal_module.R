@@ -5,7 +5,7 @@ Arisal <- function(myWorld, P.Arisal) {
   prob.ar <- numeric(trait.length)
   index.tips <- which(trait.nonNA)  
   env.match <- myWorld[trait.nonNA, 7] == myWorld[trait.nonNA, 6]
-  env.D <- myWorld[trait.nonNA, 7] == 1
+  env.D <- myWorld[trait.nonNA, 7] == 2
   prob.ar[env.D & !env.match] <- P.Arisal[2, 1] # Prob of
   prob.ar[!env.D & !env.match] <- P.Arisal[1, 2] # Prob of
   prob.ar[env.D & env.match] <- P.Arisal[2, 2] # Prob of

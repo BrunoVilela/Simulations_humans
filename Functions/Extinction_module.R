@@ -1,12 +1,12 @@
 # Extinction function
-getExtinct <- function(myWorld, mytree, P.extinction, NodeData) {
+Extinction <- function(myWorld, mytree, P.extinction, NodeData) {
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
   if (trait.length > 2) { # Only occurs if there is more than 5 societies
     prob.ext <- numeric(trait.length)
     index.tips <- which(trait.nonNA)  
     env.match <- myWorld[trait.nonNA, 7] == myWorld[trait.nonNA, 6]
-    domesticator <- myWorld[trait.nonNA, 6] == 1
+    domesticator <- myWorld[trait.nonNA, 6] == 2
     prob.ext[env.match & domesticator] <- P.extinction[1, 1] # Prob of 
     prob.ext[env.match & !domesticator] <- P.extinction[2, 2] # Prob of
     prob.ext[!env.match & domesticator] <- P.extinction[1, 2] # Prob of

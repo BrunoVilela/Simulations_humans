@@ -4,22 +4,11 @@
 rm(list = ls())
 #setwd("~/Box Sync/colliding ranges/Simulations_humans")
 # Load the functions
-source("SimulationFunctions.R")
-source("Auxiliary_functions.R")
-source("Extinction_function.R")
-source("Difusion_function.R")
-source("Takeover_function.R")
-source("Speciate_function.R")
-source("Speciation_function.R")
-source("Uniform_branchs.R")
-source("Plot_output.R")
-source("Arisal_function.R")
-
-
-#==================================================================
-# Start function for cluster to call
-#run_simulation <- function(i) {
-
+load.files <- list.files(path = "Functions", pattern = ".R",
+                         full.names = TRUE)
+for (i in 1:length(load.files)) {
+  source(load.files[i])
+}
 
 #==================================================================
 # Start with simple simulation 

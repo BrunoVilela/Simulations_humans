@@ -37,7 +37,7 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
   myWorld[PosTargets, 4] <- Parent
   myWorld[PosTargets, 5] <- myT
   myWorld[PosTargets, 6] <- myWorld[Parent, 6]
-
+  
   
   return(list("myWorld" = myWorld, "mytree" = mytree,
               "NodeData" = NodeData))
