@@ -66,7 +66,10 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     input <- SpeciationTakeOver(input)
   
     # Arisal
-    myWorld <- Arisal(input)
+    input <- Arisal(input)
   }
+  myWorld <- input[[6]]
+  mytree <- input[[7]]
+  NodeData <- input[[8]]
   return(list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
 }
