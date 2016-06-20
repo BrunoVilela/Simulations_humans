@@ -14,5 +14,4 @@ myplot <- function(RunSim.Output) {
                  "Environment" = c('Good4For', 'Good4Dom'))
   trait.plot(mytree, dat = as.data.frame(myWorld2), cols = colors,
              lab = labels, type = 'p', w = 1/70)
-  title(paste(deparse(substitute(RunSim.Output)), i), outer = TRUE)
 }
