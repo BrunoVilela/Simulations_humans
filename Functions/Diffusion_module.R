@@ -1,5 +1,15 @@
 # Diffusion function
-Diffusion <- function(myWorld, P.diffusion, multiplier = multiplier) {
+Diffusion  <- function(input) {
+  P.speciation <- input[[1]]
+  P.Arisal <- input[[2]]
+  P.diffusion <- input[[3]]
+  P.extinction <- input[[4]]
+  P.TakeOver <- input[[5]]
+  myWorld <- input[[6]]
+  mytree <- input[[7]]
+  NodeData <- input[[8]]
+  myT <- input[[9]]
+  multiplier <- input[[10]]
   
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
@@ -31,5 +41,6 @@ Diffusion <- function(myWorld, P.diffusion, multiplier = multiplier) {
       }
     }
   }
-  return(myWorld)  
-}
+  output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
+                 myWorld, mytree, NodeData, myT, multiplier)
+  return(output)}

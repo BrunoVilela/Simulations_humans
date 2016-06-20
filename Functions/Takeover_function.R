@@ -7,16 +7,17 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   PosTargets <- getTargets(myHex, myWorld, empty = FALSE)
   source.trait.dom <- myWorld[i, 6] == 2
   target.trait.dom <- myWorld[PosTargets, 6] == 2
+  P.TakeOver2 <- P.TakeOver
   # If I am at the rigth place give me more chances!
   if (myWorld[i, 6] == myWorld[i, 7] & source.trait.dom) { 
-    P.TakeOver * multiplier
+    P.TakeOver2 <- P.TakeOver * multiplier
   }
   # How easy is to takeover
   prob.to <- numeric(1)
-  prob.to[source.trait.dom & target.trait.dom] <- P.TakeOver[2, 2] 
-  prob.to[source.trait.dom & !target.trait.dom] <- P.TakeOver[2, 1] 
-  prob.to[!source.trait.dom & target.trait.dom] <- P.TakeOver[1, 2] 
-  prob.to[!source.trait.dom & !target.trait.dom] <- P.TakeOver[1, 1] 
+  prob.to[source.trait.dom & target.trait.dom] <- P.TakeOver2[2, 2] 
+  prob.to[source.trait.dom & !target.trait.dom] <- P.TakeOver2[2, 1] 
+  prob.to[!source.trait.dom & target.trait.dom] <- P.TakeOver2[1, 2] 
+  prob.to[!source.trait.dom & !target.trait.dom] <- P.TakeOver2[1, 1] 
   match.env.targ <- myWorld[PosTargets, 6] != myWorld[PosTargets, 7]
   # If target is in the 
   Dom.in.For <- match.env.targ & source.trait.dom

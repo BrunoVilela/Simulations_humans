@@ -37,6 +37,12 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   
   mytree <- NULL
   myT <- 0
+  
+  
+  input <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
+                myWorld, mytree, NodeData, myT, multiplier)
+  
+  
   cat("0% [")
   
   for (steps in 1:N.steps) {
@@ -49,26 +55,18 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     
     # Extinction time!!! buuuuu
     if (sum(P.extinction) != 0) {
-      after.ext <- Extinction(myWorld, mytree, P.extinction, NodeData)
-      mytree <- after.ext$mytree
-      myWorld <- after.ext$myWorld
-      NodeData <- after.ext$NodeData
+      input <- Extinction(input)
     }
     
     # Diffusion: passing the know-how to my neighbors
     if (sum(P.diffusion) != 0) {
-      myWorld <- Diffusion(myWorld, P.diffusion, multiplier)
+      input <- Diffusion(input)
     }
     # Speciation / takeover
-    after.god.invasion <- SpeciationTakeOver(myWorld, mytree, P.speciation,
-                                             P.TakeOver, NodeData, myT, multiplier)
-    
-    mytree <- after.god.invasion$mytree
-    myWorld <- after.god.invasion$myWorld
-    NodeData <- after.god.invasion$NodeData
-    myT <- after.god.invasion$myT
+    input <- SpeciationTakeOver(input)
+  
     # Arisal
-    myWorld <- Arisal(myWorld, P.Arisal)
+    myWorld <- Arisal(input)
   }
   return(list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
 }

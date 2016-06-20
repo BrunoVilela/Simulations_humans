@@ -1,5 +1,16 @@
 # Extinction function
-Extinction <- function(myWorld, mytree, P.extinction, NodeData) {
+Extinction <- function(input) {
+  P.speciation <- input[[1]]
+  P.Arisal <- input[[2]]
+  P.diffusion <- input[[3]]
+  P.extinction <- input[[4]]
+  P.TakeOver <- input[[5]]
+  myWorld <- input[[6]]
+  mytree <- input[[7]]
+  NodeData <- input[[8]]
+  myT <- input[[9]]
+  multiplier <- input[[10]]
+  
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
   if (trait.length > 2) { # Only occurs if there is more than 5 societies
@@ -23,7 +34,8 @@ Extinction <- function(myWorld, mytree, P.extinction, NodeData) {
       NodeData <- temp$NodeData
     }
   }
-  return(list("mytree" = mytree, "myWorld" = myWorld,
-              "NodeData" = NodeData))  
+  output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
+                myWorld, mytree, NodeData, myT, multiplier)
+  return(output)
 }  
 
