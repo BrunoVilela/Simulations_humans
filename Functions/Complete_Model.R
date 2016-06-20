@@ -21,7 +21,7 @@ library(diversitree)
 #==================================================================
 RunSim <- function(myWorld, P.extinction, P.speciation, 
                    P.diffusion, P.Arisal, P.TakeOver,
-                   N.steps = 250) {
+                   N.steps = 250, multiplier = 1.3) {
   
   world.size <- nrow(myWorld)
   # Initialize parameters we will use later to build the phylogeny
@@ -57,11 +57,11 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     
     # Diffusion: passing the know-how to my neighbors
     if (sum(P.diffusion) != 0) {
-      myWorld <- Diffusion(myWorld, P.diffusion, multiplier = 2)
+      myWorld <- Diffusion(myWorld, P.diffusion, multiplier)
     }
     # Speciation / takeover
     after.god.invasion <- SpeciationTakeOver(myWorld, mytree, P.speciation,
-                                             P.TakeOver, NodeData, myT)
+                                             P.TakeOver, NodeData, myT, multiplier)
     
     mytree <- after.god.invasion$mytree
     myWorld <- after.god.invasion$myWorld

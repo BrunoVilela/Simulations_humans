@@ -2,6 +2,7 @@
 TakeOver <- function(myWorld, mytree, P.TakeOver, 
                      NodeData, myT, multiplier = 1.3,
                      i) {
+  extinct.list <- NULL
   myHex <- myWorld[i, 1:3]
   PosTargets <- getTargets(myHex, myWorld, empty = FALSE)
   source.trait.dom <- myWorld[i, 6] == 2
@@ -30,27 +31,22 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
     prob.to <- prob.to[good]
   }
   
-  l.pos <- length(Postargets)
+  l.pos <- length(PosTargets)
   if (l.pos > 1) {
-    choice <- sample(1:l.pos)
-    Postargets <- Postargets[choice]
+    choice <- sample(1:l.pos, 1)
+    PosTargets <- PosTargets[choice]
     prob.to <- prob.to[choice]
   }
-  
+
   if (prob.to > runif(1)) {
-    takeover <- TRUE
-  } else {
-    takeover <- FALSE
-  }
-  if (takeover) {
-    extinct.list <- extinct.list
+    extinct.list <- PosTargets
     temp <- sub.TakeOver(mytree, index.tips = PosTargets, 
                          myWorld, myT, i, NodeData)
     mytree <- temp$mytree
     myWorld <- temp$myWorld
     NodeData <- temp$NodeData
   }
-mytree <- uniformBranchs(mytree, myT)
+  
 return(list("mytree" = mytree, "myWorld" = myWorld,
             "NodeData" = NodeData, "extinct.list" = extinct.list))  
 }

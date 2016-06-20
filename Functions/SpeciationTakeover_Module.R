@@ -1,6 +1,6 @@
 # Speciation function!
 SpeciationTakeOver <- function(myWorld, mytree, P.speciation,
-                               P.TakeOver, NodeData, myT) {
+                               P.TakeOver, NodeData, myT, multiplier = multiplier) {
   
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
@@ -32,7 +32,7 @@ SpeciationTakeOver <- function(myWorld, mytree, P.speciation,
       # If yes go to take over
       if (emptyORtakeover) {
         temp <- TakeOver(myWorld, mytree, P.TakeOver, 
-                         NodeData, myT, multiplier = 1.3,
+                         NodeData, myT, multiplier = multiplier,
                          i)
         mytree <- temp$mytree
         myWorld <- temp$myWorld

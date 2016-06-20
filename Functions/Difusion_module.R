@@ -1,5 +1,5 @@
 # Diffusion function
-Diffusion <- function(myWorld, P.diffusion, multiplier = 2) {
+Diffusion <- function(myWorld, P.diffusion, multiplier = multiplier) {
   
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
