@@ -1,5 +1,6 @@
 # The arisal of a new trait state
 Arisal <- function(input) {
+  
   P.speciation <- input[[1]]
   P.Arisal <- input[[2]]
   P.diffusion <- input[[3]]
@@ -10,6 +11,7 @@ Arisal <- function(input) {
   NodeData <- input[[8]]
   myT <- input[[9]]
   multiplier <- input[[10]]
+  
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
   prob.ar <- numeric(trait.length)
@@ -21,11 +23,14 @@ Arisal <- function(input) {
   prob.ar[env.D & env.match] <- P.Arisal[2, 2] # Prob of
   prob.ar[!env.D & env.match] <- P.Arisal[1, 1] # Prob of
   arisal <- runif(trait.length) < prob.ar
+  
   if (any(arisal)) {
     myWorld[index.tips[arisal], 6] <- ifelse(myWorld[index.tips[arisal], 6] == 1, 2, 1)
   }
+  
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
                  myWorld, mytree, NodeData, myT, multiplier)
+  
   return(output)
 }
 
