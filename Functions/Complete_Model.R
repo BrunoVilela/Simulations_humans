@@ -44,6 +44,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   
   
   cat("0% [")
+  rand_order_func_run <- list("Extinction", "Diffusion", "SpeciationTakeOver", "Arisal")
   
   for (steps in 1:N.steps) {
     if (steps %% (N.steps/10) == 0) { 
@@ -52,15 +53,12 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
     if (steps == N.steps) { 
       cat("] 100 %\n")
     }
+    rand_order <- sample(rand_order_func_run)
+    input <- do.call(rand_order[[1]], list(input = input))
+    input <- do.call(rand_order[[2]], list(input = input))
+    input <- do.call(rand_order[[3]], list(input = input))
+    input <- do.call(rand_order[[4]], list(input = input))
     
-    # Extinction time!!! buuuuu
-    input <- Extinction(input)
-    # Diffusion: passing the know-how to my neighbors
-    input <- Diffusion(input)
-    # Speciation / takeover
-    input <- SpeciationTakeOver(input)
-    # Arisal
-    input <- Arisal(input)
   }
   myWorld <- input[[6]]
   mytree <- input[[7]]
