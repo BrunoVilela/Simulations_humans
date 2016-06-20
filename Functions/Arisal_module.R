@@ -1,5 +1,5 @@
 # The arisal of a new trait state
-Arisal <-  <- function(input) {
+Arisal <- function(input) {
   P.speciation <- input[[1]]
   P.Arisal <- input[[2]]
   P.diffusion <- input[[3]]
