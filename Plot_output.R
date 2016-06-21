@@ -2,7 +2,7 @@
 
 #==================================================================
 # Plot output (single tree)
-myplot <- function(RunSim.Output) {
+myplot <- function(RunSim.Output, ...) {
   par(oma = c(1, 1, 3, 1))
   mytree <- RunSim.Output[[1]]
   myWorld <- RunSim.Output[[3]]
@@ -13,5 +13,5 @@ myplot <- function(RunSim.Output) {
   labels <- list("Trait" = c('Forager', 'Domesticator'),
                  "Environment" = c('Good4For', 'Good4Dom'))
   trait.plot(mytree, dat = as.data.frame(myWorld2), cols = colors,
-             lab = labels, type = 'p', w = 1/70)
+             lab = labels, type = 'p', w = 1/70, ...)
 }

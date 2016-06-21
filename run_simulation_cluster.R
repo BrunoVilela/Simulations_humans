@@ -22,26 +22,26 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
   }
   
   if (any(chosen_combo[[2]] == "Diffusion")) {
-    P.diffusion <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom") 
+    P.diffusion <- parameters(0.01, 0.01, 0.01, 0.01, "For", "Dom", "For", "Dom") 
   } else {
     P.diffusion <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (chosen_combo[[2]] == "Takeover") {
-    P.TakeOver <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom")
+    P.TakeOver <- parameters(0.5, 0.5, 0.5, 0.5, "For", "Dom", "For", "Dom")
   } else {
     P.TakeOver <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (any(chosen_combo[[2]] == "Random_new_origin")) {
-    P.Arisal <- parameters(0.1, 0.1, 0.01, 0.01, "For", "Dom", "For", "Dom") 
+    P.Arisal <- parameters(0.05, 0.05, 0.01, 0.01, "For", "Dom", "For", "Dom") 
   } else {
     P.Arisal <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver,
-                          N.steps = 30, multiplier = 1.3)
+                          N.steps = 50, multiplier = 1.3)
   
   save(myOut, file = paste0("cluster outputs/myOut_replicate_", formatC(replicate_cycle, width = 2,flag = 0), 
                             "_function_combination_type_", formatC(combo_number, width = 2,flag = 0), "_",
