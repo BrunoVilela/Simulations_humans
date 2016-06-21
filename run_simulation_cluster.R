@@ -3,6 +3,7 @@ rm(list = ls())
 source("Functions/Build_world_function.R")
 source("Functions/Auxiliary_functions.R")
 myWorld <- BuildWorld(R = 3, P = 0.8)
+source('Functions/Possible_combinations_of_movement_function.R')
 
 sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
   
@@ -15,11 +16,11 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
   }
   
   if (chosen_combo[[2]] == "Extinct") {
-<<<<<<< HEAD
+#<<<<<<< HEAD
     P.extinction  <- parameters(0, 0, 0.01, 0.01, "For", "Dom", "For", "Dom")
-=======
+#=======
     P.extinction  <- parameters(0.01, 0.1, 0.1, 0.01, "For", "Dom", "For", "Dom")
->>>>>>> 0fcc7b64bc6b1c00b254ddbbdbae02201075966f
+#>>>>>>> 0fcc7b64bc6b1c00b254ddbbdbae02201075966f
   } else {
     P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
@@ -45,8 +46,8 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
                           P.diffusion, P.Arisal, P.TakeOver,
                           N.steps = 50)
   
-  save(myOut, file = paste0("cluster outputs/myOut_replicate_", format(replicate_cycle, digits = 2), 
-                            "_function_combination_type_", format(combo_number, digits = 2), "_",
+  save(myOut, file = paste0("cluster outputs/myOut_replicate_", formatC(replicate_cycle, width = 2,flag = 0), 
+                            "_function_combination_type_", formatC(combo_number, width = 2,flag = 0), "_",
                             as.integer(Sys.time()), " Results.Rdata"))
 }
 
@@ -93,4 +94,3 @@ difftime(c, b)
 
 stopCluster(cl)
 
-2.5 /16
