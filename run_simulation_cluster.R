@@ -42,7 +42,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
                           N.steps = 50)
   
   save(myOut, file = paste0("cluster outputs/myOut replicate_", replicate_cycle, 
-                            " function_combination_type_", combo_number,
+                            " function_combination_type_", combo_number, "_",
                             Sys.time(), " Results.Rdata"))
 }
 
