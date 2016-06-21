@@ -64,16 +64,29 @@ phenogram(myOut[[1]],x,add=TRUE, colors=adjustcolor("cornflowerblue", alpha=.1),
 polygon(x = c(50,50,70,70), y=c(-20,20,20,-20), col="white", border="white")
 
 
-tree<-pbtree(n=20,scale=2)
-x<-fastBM(tree)
-phenogram(tree,x)
-# or, simulate a discrete character history
-tree<-sim.history(tree,Q=matrix(c(-1,1,1,-1),2,2),anc="1")
-# simulate in which the rate depends on the state
-x<-sim.rates(tree,c(1,10))
-phenogram(tree,x)
-# now use spread.labels
-tree<-pbtree(n=40)
-x<-fastBM(tree)
-phenogram(tree,x,spread.labels=TRUE,spread.cost=c(1,0))
+
+
+tree<-myOut[[1]]
+x<-fastBM(myOut[[1]])
+plotTree(tree)
+
+nodelabels(node = as.numeric(rownames(fitER$marginal.anc)), pie = fitER$marginal.anc, 
+    piecol = c("blue", "red", "yellow"), cex = 0.6)
+tiplabels(pie = to.matrix(x, sort(unique(x))), piecol = c("blue", "red", "yellow"), 
+    cex = 0.3)
+
+library(diversitree)
+myplot(myOut)
+
+
+
+rem <- is.na(myOut$myWorld[, 6])
+trait <- myOut$myWorld[!rem, 6]
+names(trait) <- paste0("t", myOut$myWorld[!rem, 8])
+phenogram(myOut$mytree, trait, ylab = "Domestication", spread.cost=c(1,0))
+
+
+
+
+
 
