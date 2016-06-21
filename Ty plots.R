@@ -83,7 +83,25 @@ boxplot( tci_list,border=adjustcolor("cornflowerblue", alpha=1), pch=19, add=TRU
 
 
 
-
-
+dat=get(data(whales))
+    phy=dat$phy
+    richness=dat$richness
+    
+    ## USING AICc as STOPPING CRITERION
+    res1=medusa(phy, richness, warnings=FALSE)
+    print(names(res1)) # output list elements
+    print(res1$summary) # show 'summary' object
+    summary(res1, criterion="aicc") # select best model based on AICc
+    
+    ## PLOTTING RESULTS
+    # plot breakpoints for the best model chosen by AICc
+    # invoking plot.medusa()
+    plot(res1, cex=0.5,label.offset=1, edge.width=2) 
+combo_number <- 31
+replicate_cycle <- 3
+paste0("cluster outputs/myOut_replicate_", formatC(replicate_cycle, width = 2,flag = 0), 
+                            "_function_combination_type_", formatC(combo_number, width = 2,flag = 0), "_",
+                            "parameters", "_P.speciation_" , paste(P.speciation, collapse="_"), "_P.extinction_",paste(P.extinction, collapse="_"), "_P.diffusion_",paste(P.diffusion, collapse="_"), "_P.TakeOver_",paste(P.TakeOver, collapse="_"), "_P.Arisal_", paste(P.Arisal, collapse="_"), "_",
+                            as.integer(Sys.time()), " Results.Rdata")
 
 

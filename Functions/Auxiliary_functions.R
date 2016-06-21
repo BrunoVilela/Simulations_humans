@@ -33,7 +33,7 @@ is.inside <- function(x, y, response = "logical") {
 
 #==================================================================
 # Function to select targets for difusion and takeover
-getTargets <- function(myHex, myWorld, empty) {
+getTargets <- function(myHex, myWorld, empty, traits = FALSE) {
   # empty if TRUE will keep targets with no trait, 
   #       if false will keep only targets with traits
 
@@ -56,6 +56,9 @@ getTargets <- function(myHex, myWorld, empty) {
   }
   if (length(PosTargets) == 0) {
     PosTargets <- NULL
+  }
+  if (traits) {
+    PosTargets <- myWorld[PosTargets, 6]
   }
   return(PosTargets)
 }
