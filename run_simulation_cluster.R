@@ -28,18 +28,19 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
   
   if (chosen_combo[[2]] == "Takeover") {
     P.TakeOver <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom")
-  } else {P.TakeOver <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
+  } else {
+    P.TakeOver <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (chosen_combo[[2]] == "Random_new_origin") {
-    P.Arisal <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom") 
+    P.Arisal <- parameters(0.05, 0.05, 0.01, 0.01, "For", "Dom", "For", "Dom") 
   } else {
     P.Arisal <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver,
-                          N.steps = 50)
+                          N.steps = 100, multiplier = 1.3)
   
   save(myOut, file = paste0("cluster outputs/myOut_replicate_", format(replicate_cycle, digits = 2), 
                             "_function_combination_type_", format(combo_number, digits = 2), "_",
