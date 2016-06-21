@@ -10,6 +10,11 @@ for (i in 1:length(load.files)) {
   source(load.files[i])
 }
 source("Plot_output.R")
+library(gtools)
+library(ape)
+library(adephylo)
+library(diversitree)
+
 #==================================================================
 # Start with simple simulation 
 
