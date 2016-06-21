@@ -10,8 +10,6 @@ library(ape)
 library(adephylo)
 library(diversitree)
 
-
-
 # Load the results
 myfiles <- list.files("cluster outputs", full.names = TRUE)
 
@@ -35,8 +33,6 @@ for (i in 1:l.myfiles) {
       compdata <- comparative.data(myOut$mytree, traits, tips)
       signal[i] <- phylo.d(compdata, binvar = trait)$DEstimate
     }
-    myplot(myOut)
-    mtext(signal[i])
   }
   colnames(spatial) <- c("DF", "FF", "DD")
 }
