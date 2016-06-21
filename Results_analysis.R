@@ -17,6 +17,8 @@ myfiles <- list.files("cluster outputs", full.names = TRUE)
 l.myfiles <- length(myfiles)
 signal <- rep(NA, l.myfiles)
 spatial <- matrix(ncol = 3, nrow = l.myfiles)
+colnames(spatial) <- c("DF", "FF", "DD")
+
 # Loop
 for (i in 1:l.myfiles) {
   print(i)
@@ -24,7 +26,7 @@ for (i in 1:l.myfiles) {
     load(myfiles[i])
     rem <- is.na(myOut$myWorld[, 6])
     myWorld <- myOut$myWorld[!rem, ]
-    spatial[i, ] <- JoinCount(myWorld)
+    spatial[i, ] <- JoinCount(myWorld, repetitions = 100)
     
     # Phylogenetic signal for binary traits (D of Fritz and Purvis 2010)
     if (length(unique(myWorld[, 6])) == 2) {
@@ -34,7 +36,6 @@ for (i in 1:l.myfiles) {
       signal[i] <- phylo.d(compdata, binvar = trait)$DEstimate
     }
   }
-  colnames(spatial) <- c("DF", "FF", "DD")
 }
 
 
