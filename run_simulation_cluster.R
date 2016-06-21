@@ -15,7 +15,11 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
   }
   
   if (chosen_combo[[2]] == "Extinct") {
+<<<<<<< HEAD
     P.extinction  <- parameters(0, 0, 0.01, 0.01, "For", "Dom", "For", "Dom")
+=======
+    P.extinction  <- parameters(0.01, 0.1, 0.1, 0.01, "For", "Dom", "For", "Dom")
+>>>>>>> 0fcc7b64bc6b1c00b254ddbbdbae02201075966f
   } else {
     P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
@@ -41,9 +45,9 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
                           P.diffusion, P.Arisal, P.TakeOver,
                           N.steps = 50)
   
-  save(myOut, file = paste0("cluster outputs/myOut replicate_", replicate_cycle, 
-                            " function_combination_type_", combo_number, "_",
-                            Sys.time(), " Results.Rdata"))
+  save(myOut, file = paste0("cluster outputs/myOut_replicate_", replicate_cycle, 
+                            "_function_combination_type_", combo_number, "_",
+                            as.integer(Sys.time()), " Results.Rdata"))
 }
 
 
