@@ -1,7 +1,10 @@
 # Run the full model in a cluster. This version writes files to a cluster output folder.
+rm(list = ls())
+source("Functions/Build_world_function.R")
+source("Functions/Auxiliary_functions.R")
+myWorld <- BuildWorld(R = 3, P = 0.8)
 
-
-sim_run_cluster <- function(replicate_cycle, combo_number){
+sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
   
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
@@ -34,52 +37,47 @@ sim_run_cluster <- function(replicate_cycle, combo_number){
     P.Arisal <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
-  #setwd("~/Box Sync/colliding ranges/Simulations_humans")
-  myWorld <- BuildWorld(R = 3, P = 0.8)
-  system.time (
-    myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
-                            P.diffusion, P.Arisal, P.TakeOver,
-                            N.steps = 50)
-  )
-  #)
+  myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
+                          P.diffusion, P.Arisal, P.TakeOver,
+                          N.steps = 50)
   
-  
-  setwd("~/Box Sync/colliding ranges/Simulations_humans/cluster outputs")
-  save(myOut, file = paste("myOut replicate_", replicate_cycle, 
-                           " function_combination_type_", combo_number,
-                           Sys.time(), " Results.Rdata", sep=""))
+  save(myOut, file = paste0("cluster outputs/myOut replicate_", replicate_cycle, 
+                            " function_combination_type_", combo_number,
+                            Sys.time(), " Results.Rdata"))
 }
 
 
 a <- Sys.time()
 library(parallel)
-setwd("~/Box Sync/colliding ranges/Simulations_humans/Functions")
+
 
 # Set up cluster
-cl <- makeCluster(detectCores() -1, type = "PSOCK")
+cl <- makeCluster(detectCores() - 1, type = "PSOCK")
 
 # Push resources out to cluster
 clusterEvalQ(cl, library(gtools))
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(adephylo))
 clusterEvalQ(cl, library(diversitree))
-clusterEvalQ(cl, source("Arisal_module.R"))
-clusterEvalQ(cl, source("Auxiliary_functions.R"))
-clusterEvalQ(cl, source("Build_world_function.R"))
-clusterEvalQ(cl, source("Complete_Model.R"))
-clusterEvalQ(cl, source("Diffusion_module.R"))
-clusterEvalQ(cl, source("Extinction_module.R"))
-clusterEvalQ(cl, source("Speciate_function.R"))
-clusterEvalQ(cl, source("Speciation_function.R"))
-clusterEvalQ(cl, source("Takeover_function.R"))
-clusterEvalQ(cl, source("SpeciationTakeover_Module.R"))
-clusterEvalQ(cl, source("Possible_combinations_of_movement_function.R"))
+clusterEvalQ(cl, source("Functions/Arisal_module.R"))
+clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
+clusterEvalQ(cl, source("Functions/Build_world_function.R"))
+clusterEvalQ(cl, source("Functions/Complete_Model.R"))
+clusterEvalQ(cl, source("Functions/Diffusion_module.R"))
+clusterEvalQ(cl, source("Functions/Extinction_module.R"))
+clusterEvalQ(cl, source("Functions/Speciate_function.R"))
+clusterEvalQ(cl, source("Functions/Speciation_function.R"))
+clusterEvalQ(cl, source("Functions/Takeover_function.R"))
+clusterEvalQ(cl, source("Functions/SpeciationTakeover_Module.R"))
+clusterEvalQ(cl, source("Functions/Possible_combinations_of_movement_function.R"))
+clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 
 
 # lset are the landscapes that we will run
 b <- Sys.time()
 replicate_cycle <- c(1:12)
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, combo_number = 31) 
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 31, myWorld = myWorld) 
 c <- Sys.time()
 
 
