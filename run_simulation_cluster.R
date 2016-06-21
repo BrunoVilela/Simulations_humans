@@ -41,8 +41,8 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
                           P.diffusion, P.Arisal, P.TakeOver,
                           N.steps = 50)
   
-  save(myOut, file = paste0("cluster outputs/myOut_replicate_", replicate_cycle, 
-                            "_function_combination_type_", combo_number, "_",
+  save(myOut, file = paste0("cluster outputs/myOut_replicate_", format(replicate_cycle, digits = 2), 
+                            "_function_combination_type_", format(combo_number, digits = 2), "_",
                             as.integer(Sys.time()), " Results.Rdata"))
 }
 
