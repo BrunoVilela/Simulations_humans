@@ -2,15 +2,12 @@ P.extinction <- parameters(0.4, 0.4, 0.4, 0.4, "For", "Dom",
                            "For", "Dom") 
 myWorld <- BuildWorld(R = 2, P = 0.5)
 
-
-
-
-
 repetitions <- 10
 y <- 0
 x <- 0
 results <- list(repetitions)
 limit <- 200
+
 while (y != repetitions & x < limit) {
   x <- x + 1
   check <- try(
@@ -20,7 +17,7 @@ while (y != repetitions & x < limit) {
     silent = TRUE)
   if (class(check) != "try-error") {
     y <- y + 1
-    results[[y]] <- myOut
+    myWorlds[[y]] <- myOut
   }
   names(check)
 }
