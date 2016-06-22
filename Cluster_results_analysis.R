@@ -73,11 +73,7 @@ data.result <- cluster_input_files[1:analyze_this_many,]
   colnames(weibull) <- c("shape", "scale")
   
   for (i in 1:l.myfiles) {
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 0b28f013b08b6dd66779b5d3ad83dac2a4f152c3
     load(myfiles[i])
     
     if (!is.na(myOut)[1]) {
@@ -212,12 +208,3 @@ difftime(c, b)
 
 stopCluster(cl)
 
-
-<<<<<<< HEAD
-load('~/Box Sync/colliding ranges/Simulations_humans/results cluster output/Results_for_25_simulated_for_ 50_time_steps_analysis.R')
-=======
-# Run the code
-a <- cluster_results_analysis(cluster_input_files[1:10, 1],
-                              cluster_input_files[1:10, ])
-head(a)
->>>>>>> 0b28f013b08b6dd66779b5d3ad83dac2a4f152c3
