@@ -10,13 +10,13 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
   if (chosen_combo[[2]] == "Speciate") {
-    P.speciation <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom")
+    P.speciation <- parameters(0.3, 0.3, 0.3, 0.3, "For", "Dom", "For", "Dom")
   } else {
     P.speciation <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (chosen_combo[[2]] == "Extinct") {
-    P.extinction  <- parameters(0.01, 0.1, 0.1, 0.01, "For", "Dom", "For", "Dom")
+    P.extinction  <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom")
   } else {
     P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
@@ -42,10 +42,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
                           P.diffusion, P.Arisal, P.TakeOver,
                           N.steps = 50)
   
-  paste0("cluster outputs/myOut_replicate_", formatC(replicate_cycle, width = 2,flag = 0), 
-                            "_function_combination_type_", formatC(combo_number, width = 2,flag = 0), "_",
-                            "parameters", "_P.speciation_" , paste(P.speciation, collapse="_"), "_P.extinction_",paste(P.extinction, collapse="_"), "_P.diffusion_",paste(P.diffusion, collapse="_"), "_P.TakeOver_",paste(P.TakeOver, collapse="_"), "_P.Arisal_", paste(P.Arisal, collapse="_"), "_",
-                            as.integer(Sys.time()), " Results.Rdata")
+ save(myOut, file= paste0("cluster outputs/myOut_replicate_", formatC(replicate_cycle, width = 2,flag = 0), "_function_combination_type_", formatC(combo_number, width = 2,flag = 0), "_","parameters", "_P.speciation_" , paste(P.speciation, collapse="_"), "_P.extinction_",paste(P.extinction, collapse="_"), "_P.diffusion_",paste(P.diffusion, collapse="_"), "_P.TakeOver_", paste(P.TakeOver, collapse="_"),"_P.Arisal_", paste(P.Arisal, collapse="_"), "_", as.integer(Sys.time()), " Results.Rdata"))
 
 }
 
@@ -78,7 +75,7 @@ clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:16)
+replicate_cycle <- c(1:20)
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 31, myWorld = myWorld) 
 c <- Sys.time()
