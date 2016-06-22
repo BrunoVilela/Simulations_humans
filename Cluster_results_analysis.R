@@ -66,18 +66,8 @@ cluster_results_analysis <- function(myfiles, data.result) {
   weibull <- matrix(ncol = 2, nrow = l.myfiles)
   colnames(weibull) <- c("shape", "scale")
   
-  # Loop
-  if (!"tools:rstudio" %in% search()) {
-    dev.new(width = 2, height = 2, pointsize = 12)
-    par(mar = c(0, 0, 0, 0))
-  }
-  
   for (i in 1:l.myfiles) {
-    plot.new()
-    text(0.5, 0.5, paste(paste("Total:", l.myfiles, "\n",
-                               "Runs to go: ",
-                               (l.myfiles - i))))
-    
+
     load(myfiles[i])
     
     if (!is.na(myOut)[1]) {
@@ -140,6 +130,6 @@ cluster_results_analysis <- function(myfiles, data.result) {
 
 
 # Run the code
-a <- cluster_results_analysis(cluster_input_files[1, 1],
-                              cluster_input_files[1, ])
+a <- cluster_results_analysis(cluster_input_files[1:10, 1],
+                              cluster_input_files[1:10, ])
 head(a)
