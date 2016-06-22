@@ -92,11 +92,11 @@ data.result <- cluster_input_files[1:analyze_this_many,]
       MS[i] <- bd.ms(myOut$mytree)
       KM[i] <- bd.km(myOut$mytree)
       TCI[i] <- tci(myOut$mytree)
-      temp.medusa <- try(nrow(medusa(myOut$mytree, warnings = FALSE)$summary), silent = TRUE)
+      temp.medusa <- try(medusa(myOut$mytree, warnings = FALSE), silent = TRUE)
       if (class(temp.medusa) == "try-error") {
         Medusa.BP[i] <- 1
       } else {
-        Medusa.BP[i] <- temp.medusa
+        Medusa.BP[i] <- length(unique(temp.medusa$summary[, 2]))
       }
       weibull[i, ] <- fitdist(myOut$mytree$edge.length, "weibull")$estimate
       
