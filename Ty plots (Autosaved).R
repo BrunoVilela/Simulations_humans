@@ -34,6 +34,7 @@ arisal_4 <- sapply(split_file_name, "[", 30)
 
 b <- cbind(available_files, replicate, combo, speciation_1, speciation_2, speciation_3, speciation_4, extinction_1, extinction_2, extinction_3, extinction_4, diffusion_1, diffusion_2, diffusion_3, diffusion_4, takeover_1, takeover_2, takeover_3, takeover_4, arisal_1, arisal_2, arisal_3, arisal_4)
 
+head(b)
 
 
 par(mfrow=c(1,5))
