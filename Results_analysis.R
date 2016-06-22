@@ -106,8 +106,6 @@ if (!"tools:rstudio" %in% search()) {
         # Trasition rates
         traits <- traits[match(myOut$mytree$tip.label, traits[, 2]), ]
         Trasition.rates[i] <- ace(x = traits[, 1], phy = myOut$mytree, type = "discrete")$rates
-        
-        
       }
     }
   }
@@ -118,8 +116,8 @@ data.result <- cbind(data.result, spatial)
 data.result$Phy_Signal <- signal
 data.result$N.nodes <- N.nodes
 data.result$N.tips <- N.tips
-data.result$gamma <- gamma
 data.result$Colless <- Colless
+data.result$gamma <- gamma
 data.result$MS <- MS
 data.result$KM <- KM
 data.result$TCI <- TCI
