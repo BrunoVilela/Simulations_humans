@@ -19,10 +19,16 @@ library(fitdistrplus)
 library(geiger)
 library(caper)
 
+
+
+cluster_results_analysis <- function( analyze_this_many, combo, Timesteps_pass) {
+
 # Load the results
 myfiles <- list.files("cluster outputs", full.names = TRUE)
 split.file.name <- strsplit(myfiles, split = "_") 
-positions <- c(3, 7, 10:13, 15:18, 20:23, 25:28, 30:33, 34) #should be 35 next
+positions <- c(3, 7, 10:13, 15:18, 20:23, 25:28, 30:33, 34) #should be 35 next once underscore is fixed
+
+
 data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles)))
 colnames(data.result) <- c("File_path", "replicate", "combo",
                            "speciation_1", "speciation_2", "speciation_3", "speciation_4",
@@ -32,17 +38,17 @@ colnames(data.result) <- c("File_path", "replicate", "combo",
                            "arisal_1", "arisal_2", "arisal_3", "arisal_4",
                            "Timesteps")
 data.result[, 1] <- myfiles
-
+head(data.result)
 
 for (i in 1:length(positions)) {
   data.result[, i + 1] <- sapply(split.file.name, "[", positions[i])
 }
 
-cluster_input_files <- subset(data.result, combo == "31" & Timesteps == "50")
-data.result$Timesteps
-cluster_input_files$Timesteps
+cluster_input_files <- subset(data.result, combo == combo & Timesteps == Timesteps_pass )
 
-cluster_results_analysis <- function(myfiles, data.result) {
+if(analyze_this_many > length(myfiles)){analyze_this_many <- length(myfiles)}
+myfiles <- cluster_input_files[1:analyze_this_many,1]
+data.result <- cluster_input_files[1:analyze_this_many,]
   
   
   # Empty results
@@ -73,10 +79,6 @@ cluster_results_analysis <- function(myfiles, data.result) {
   }
   
   for (i in 1:l.myfiles) {
-    plot.new()
-    text(0.5, 0.5, paste(paste("Total:", l.myfiles, "\n",
-                               "Runs to go: ",
-                               (l.myfiles - i))))
     
     load(myfiles[i])
     
@@ -135,11 +137,82 @@ cluster_results_analysis <- function(myfiles, data.result) {
   data.result$Medusa.BP <- Medusa.BP
   data.result$Trasition.rates <- Trasition.rates
   data.result <- cbind(data.result, weibull)
-  return(data.result)
+  #return(data.result)
+  
+  save(data.result, file=paste0("results cluster output/", "Results_for_",combo, "_" , "simulated_for_ ",Timesteps_pass , "_time_steps_analysis.R"))
 }
 
+#rm(data.result)
+#load(paste0(combo_type, "_" , Timesteps_pass , "_analysis.R") )
 
-# Run the code
-a <- cluster_results_analysis(cluster_input_files[1, 1],
-                              cluster_input_files[1, ])
-head(a)
+
+library(gtools)
+library(ape)
+library(adephylo)
+library(diversitree)
+library(TotalCopheneticIndex)
+library(phytools)
+library(apTreeshape)
+library(plyr)
+library(fitdistrplus)
+library(geiger)
+library(caper)
+
+library(parallel)
+
+# Set up cluster
+cl <- makeCluster(detectCores() , type = "PSOCK")
+
+# Push resources out to cluster
+clusterEvalQ(cl, library(gtools))
+clusterEvalQ(cl, library(ape))
+clusterEvalQ(cl, library(adephylo))
+clusterEvalQ(cl, library(diversitree))
+clusterEvalQ(cl, library( TotalCopheneticIndex))
+clusterEvalQ(cl, library(phytools ))
+clusterEvalQ(cl, library(apTreeshape ))
+clusterEvalQ(cl, library( plyr))
+clusterEvalQ(cl, library( fitdistrplus))
+clusterEvalQ(cl, library(geiger ))
+clusterEvalQ(cl, library(caper ))
+clusterEvalQ(cl, library(spdep ))
+
+clusterEvalQ(cl, source("Functions/Arisal_module.R"))
+clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
+clusterEvalQ(cl, source("Functions/Build_world_function.R"))
+clusterEvalQ(cl, source("Functions/Complete_Model.R"))
+clusterEvalQ(cl, source("Functions/Diffusion_module.R"))
+clusterEvalQ(cl, source("Functions/Extinction_module.R"))
+clusterEvalQ(cl, source("Functions/Speciate_function.R"))
+clusterEvalQ(cl, source("Functions/Speciation_function.R"))
+clusterEvalQ(cl, source("Functions/Takeover_function.R"))
+clusterEvalQ(cl, source("Functions/SpeciationTakeover_Module.R"))
+clusterEvalQ(cl, source("Functions/Possible_combinations_of_movement_function.R"))
+clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
+clusterEvalQ(cl, source("Functions/Plot_output.R"))
+clusterEvalQ(cl, source("Functions/spatial_join.R"))
+
+# lset are the landscapes that we will run
+b <- Sys.time()
+
+combo_type <- c(25,28,29,31)
+Timesteps_pass <-50
+analyze_this_many <- 1
+
+
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= Timesteps_pass) 
+c <- Sys.time()
+
+
+
+
+difftime(b, a)
+# Time to load packages
+
+difftime(c, b)
+# Time to run combo 31
+
+stopCluster(cl)
+
+
+load('~/Box Sync/colliding ranges/Simulations_humans/results cluster output/Results_for_25_simulated_for_ 50_time_steps_analysis.R')
