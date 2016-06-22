@@ -130,6 +130,6 @@ cluster_results_analysis <- function(myfiles, data.result) {
 
 
 # Run the code
-a <- cluster_results_analysis(cluster_input_files[1:10, 1],
-                              cluster_input_files[1:10, ])
+a <- cluster_results_analysis(cluster_input_files[1:20, 1],
+                              cluster_input_files[1:20, ])
 head(a)
