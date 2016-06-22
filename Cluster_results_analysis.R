@@ -1,5 +1,5 @@
 # Code to evaluate the outputs
-setwd("~/Box Sync/colliding ranges/Simulations_humans")
+# setwd("~/Box Sync/colliding ranges/Simulations_humans")
 # Required packages and functions
 load.files <- list.files(path = "Functions", pattern = ".R",
                          full.names = TRUE)
@@ -37,42 +37,41 @@ data.result[, 1] <- myfiles
 for (i in 1:length(positions)) {
   data.result[, i + 1] <- sapply(split.file.name, "[", positions[i])
 }
-split.file.name[1]
 
 cluster_input_files <- subset(data.result, combo == "31" & Timesteps == "50")
 data.result$Timesteps
 cluster_input_files$Timesteps
 
-cluster_results_analysis <- function(myfiles, data.result){
-
-
-# Empty results
-l.myfiles <- length(myfiles)
-## Data metrics
-difference <- rep(NA, l.myfiles)
-## Spatial metrics
-spatial <- matrix(ncol = 3, nrow = l.myfiles)
-colnames(spatial) <- c("DF", "FF", "DD")
-## Phylogenetic metrics
-signal <- rep(NA, l.myfiles)
-N.nodes <- rep(NA, l.myfiles)
-N.tips <- rep(NA, l.myfiles)
-gamma <- rep(NA, l.myfiles)
-Colless <- rep(NA, l.myfiles)
-KM <- rep(NA, l.myfiles)
-MS <- rep(NA, l.myfiles)
-TCI <- rep(NA, l.myfiles)
-Medusa.BP <- rep(NA, l.myfiles)
-Trasition.rates <- rep(NA, l.myfiles)
-weibull <- matrix(ncol = 2, nrow = l.myfiles)
-colnames(weibull) <- c("shape", "scale")
-
-# Loop
-if (!"tools:rstudio" %in% search()) {
-  dev.new(width = 2, height = 2, pointsize = 12)
-  par(mar = c(0, 0, 0, 0))
-}
-
+cluster_results_analysis <- function(myfiles, data.result) {
+  
+  
+  # Empty results
+  l.myfiles <- length(myfiles)
+  ## Data metrics
+  difference <- rep(NA, l.myfiles)
+  ## Spatial metrics
+  spatial <- matrix(ncol = 3, nrow = l.myfiles)
+  colnames(spatial) <- c("DF", "FF", "DD")
+  ## Phylogenetic metrics
+  signal <- rep(NA, l.myfiles)
+  N.nodes <- rep(NA, l.myfiles)
+  N.tips <- rep(NA, l.myfiles)
+  gamma <- rep(NA, l.myfiles)
+  Colless <- rep(NA, l.myfiles)
+  KM <- rep(NA, l.myfiles)
+  MS <- rep(NA, l.myfiles)
+  TCI <- rep(NA, l.myfiles)
+  Medusa.BP <- rep(NA, l.myfiles)
+  Trasition.rates <- rep(NA, l.myfiles)
+  weibull <- matrix(ncol = 2, nrow = l.myfiles)
+  colnames(weibull) <- c("shape", "scale")
+  
+  # Loop
+  if (!"tools:rstudio" %in% search()) {
+    dev.new(width = 2, height = 2, pointsize = 12)
+    par(mar = c(0, 0, 0, 0))
+  }
+  
   for (i in 1:l.myfiles) {
     plot.new()
     text(0.5, 0.5, paste(paste("Total:", l.myfiles, "\n",
@@ -121,28 +120,26 @@ if (!"tools:rstudio" %in% search()) {
       }
     }
   }
-
-# Combine with the result data frame
-data.result$Difference <- difference
-data.result <- cbind(data.result, spatial)
-data.result$Phy_Signal <- signal
-data.result$N.nodes <- N.nodes
-data.result$N.tips <- N.tips
-data.result$Colless <- Colless
-data.result$gamma <- gamma
-data.result$MS <- MS
-data.result$KM <- KM
-data.result$TCI <- TCI
-data.result$Medusa.BP <- Medusa.BP
-data.result$Trasition.rates <- Trasition.rates
-data.result <- cbind(data.result, weibull)
-return(data.result)
+  
+  # Combine with the result data frame
+  data.result$Difference <- difference
+  data.result <- cbind(data.result, spatial)
+  data.result$Phy_Signal <- signal
+  data.result$N.nodes <- N.nodes
+  data.result$N.tips <- N.tips
+  data.result$Colless <- Colless
+  data.result$gamma <- gamma
+  data.result$MS <- MS
+  data.result$KM <- KM
+  data.result$TCI <- TCI
+  data.result$Medusa.BP <- Medusa.BP
+  data.result$Trasition.rates <- Trasition.rates
+  data.result <- cbind(data.result, weibull)
+  return(data.result)
 }
 
 
-
-
-
-
-a <- cluster_results_analysis(cluster_input_files[1,1], cluster_input_files[1,1])
+# Run the code
+a <- cluster_results_analysis(cluster_input_files[1, 1],
+                              cluster_input_files[1, ])
 head(a)
