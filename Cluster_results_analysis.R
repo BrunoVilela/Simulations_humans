@@ -190,14 +190,18 @@ clusterEvalQ(cl, source("Functions/spatial_join.R"))
 b <- Sys.time()
 
 combo_type <- c(25,28,29,31)
-Timesteps_pass <-50
-analyze_this_many <- 1
+#Timesteps_pass <-50
+analyze_this_many <- 500
 
 
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= Timesteps_pass) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 100) 
 c <- Sys.time()
 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 75) 
 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 50) 
+
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 25) 
 
 
 difftime(b, a)
