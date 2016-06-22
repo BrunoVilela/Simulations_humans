@@ -87,7 +87,7 @@ for( j in 1:length(b[,1])){
 #number of nodes
 nodes_list <- NULL
 plot(0,0,xlim=c(0.5,1.5), ylim=c(0,40), type="n", xlab="", ylab="Number of nodes", xaxt="n")
-for( j in 1:length(b[,1])){
+for( j in 1:length(b[,1])) {
   load(b[j,1])
   nodes_list <- c(  nodes_list , myOut[[1]]$Nnode)
   
@@ -130,7 +130,9 @@ combo_number <- 31
 replicate_cycle <- 3
 paste0("cluster outputs/myOut_replicate_", formatC(replicate_cycle, width = 2,flag = 0), 
        "_function_combination_type_", formatC(combo_number, width = 2,flag = 0), "_",
-       "parameters", "_P.speciation_" , paste(P.speciation, collapse="_"), "_P.extinction_",paste(P.extinction, collapse="_"), "_P.diffusion_",paste(P.diffusion, collapse="_"), "_P.TakeOver_",paste(P.TakeOver, collapse="_"), "_P.Arisal_", paste(P.Arisal, collapse="_"), "_",
+       "parameters", "_P.speciation_" , paste(P.speciation, collapse="_"), 
+       "_P.extinction_",paste(P.extinction, collapse="_"), "_P.diffusion_",paste(P.diffusion, collapse="_"),
+       "_P.TakeOver_",paste(P.TakeOver, collapse="_"), "_P.Arisal_", paste(P.Arisal, collapse="_"), "_",
        as.integer(Sys.time()), " Results.Rdata")
 
 

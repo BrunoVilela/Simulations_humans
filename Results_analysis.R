@@ -14,7 +14,7 @@ library(diversitree)
 
 # Load the results
 myfiles <- list.files("cluster outputs", full.names = TRUE)
-split.file.name <- strsplit(myfiles, split="_") 
+split.file.name <- strsplit(myfiles, split = "_") 
 positions <- c(3, 7, 10:13, 15:18, 20:23, 25:28, 30:33)
 data.result <- data.frame(matrix(ncol = 23, nrow = length(myfiles)))
 colnames(data.result) <- c("available_files", "replicate", "combo",
