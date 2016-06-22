@@ -9,30 +9,30 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
-  if (chosen_combo[[2]] == "Speciate") {
+  if (any(chosen_combo[[2]] == "Speciate")) {
     P.speciation <- parameters(0.3, 0.3, 0.3, 0.3, "For", "Dom", "For", "Dom")
   } else {
     P.speciation <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
-  if (chosen_combo[[2]] == "Extinct") {
+  if (any(chosen_combo[[2]] == "Extinct")) {
     P.extinction  <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom")
   } else {
     P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
-  if (chosen_combo[[2]] == "Diffusion") {
+  if (any(chosen_combo[[2]] == "Diffusion")) {
     P.diffusion <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom") 
   } else {
     P.diffusion <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
-  if (chosen_combo[[2]] == "Takeover") {
+  if (any(chosen_combo[[2]] == "Takeover")) {
     P.TakeOver <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom")
   } else {P.TakeOver <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
-  if (chosen_combo[[2]] == "Random_new_origin") {
+  if (any(chosen_combo[[2]] == "Random_new_origin")) {
     P.Arisal <- parameters(0.1, 0.1, 0.1, 0.1, "For", "Dom", "For", "Dom") 
   } else {
     P.Arisal <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
