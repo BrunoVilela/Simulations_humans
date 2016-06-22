@@ -15,11 +15,12 @@ library(TotalCopheneticIndex)
 library(phytools)
 library(apTreeshape)
 library(plyr)
+library(fitdistrplus)
 
 # Load the results
 myfiles <- list.files("cluster outputs", full.names = TRUE)
 split.file.name <- strsplit(myfiles, split = "_") 
-positions <- c(3, 7, 10:13, 15:18, 20:23, 25:28, 30:33, 35)
+positions <- c(3, 7, 10:13, 15:18, 20:23, 25:28, 30:33, 35) #should be 35 next
 data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles)))
 colnames(data.result) <- c("File_path", "replicate", "combo",
                            "speciation_1", "speciation_2", "speciation_3", "speciation_4",
@@ -50,6 +51,9 @@ KM <- rep(NA, l.myfiles)
 MS <- rep(NA, l.myfiles)
 TCI <- rep(NA, l.myfiles)
 Medusa.BP <- rep(NA, l.myfiles)
+Trasition.rates <- rep(NA, l.myfiles)
+weibull <- matrix(ncol = 2, nrow = l.myfiles)
+colnames(weibull) <- c("shape", "scale")
 
 # Loop
 if (!"tools:rstudio" %in% search()) {
@@ -57,43 +61,56 @@ if (!"tools:rstudio" %in% search()) {
   par(mar = c(0, 0, 0, 0))
 }
 
-for (i in 1:l.myfiles) {
-  plot.new()
-  text(0.5, 0.5, paste(paste("Total:", l.myfiles, "\n",
-                             "Runs to go: ",
-                             (l.myfiles - i))))
-  
-  load(myfiles[i])
-  
-  if (!is.na(myOut)[1]) {
-    rem <- is.na(myOut$myWorld[, 6])
-    myWorld <- myOut$myWorld[!rem, ]
-    # Data metrics
-    equals2 <- sum(myWorld[, 6] == 2)
-    equals1 <- sum(myWorld[, 6] == 1)
-    difference[i] <- equals1 - equals2
+  for (i in 1:l.myfiles) {
+    plot.new()
+    text(0.5, 0.5, paste(paste("Total:", l.myfiles, "\n",
+                               "Runs to go: ",
+                               (l.myfiles - i))))
     
-    # Tree metrics
-    N.nodes[i] <- Nnode(myOut$mytree)
-    N.tips[i] <- Ntip(myOut$mytree)
-    gamma[i] <- ltt(myOut$mytree, plot = FALSE)$gamma
-    Colless[i] <- colless(as.treeshape(myOut$mytree))
-    MS[i] <- bd.ms(myOut$mytree)
-    KM[i] <- bd.km(myOut$mytree)
-    TCI[i] <- tci(myOut$mytree)
-    Medusa.BP[i] <- nrow(invisible(medusa(myOut$mytree,  warnings = FALSE))$summary)
-    # Metrics that requires both states of the trait
-    if (equals1 != 0 & equals2 != 0) {
-      traits <- data.frame("trait" = myWorld[, 6], 
-                           "tips" = paste0("t", myWorld[, 8]))
-      compdata <- comparative.data(myOut$mytree, traits, tips)
-      # Phylogenetic signal for binary traits (D of Fritz and Purvis 2010)
-      signal[i] <- phylo.d(compdata, binvar = trait)$DEstimate
-      # Spatial signal
-      spatial[i, ] <- JoinCount(myWorld, repetitions = 100)
+    load(myfiles[i])
+    
+    if (!is.na(myOut)[1]) {
+      rem <- is.na(myOut$myWorld[, 6])
+      myWorld <- myOut$myWorld[!rem, ]
+      # Data metrics
+      equals2 <- sum(myWorld[, 6] == 2)
+      equals1 <- sum(myWorld[, 6] == 1)
+      difference[i] <- equals1 - equals2
+      
+      # Tree metrics
+      N.nodes[i] <- Nnode(myOut$mytree)
+      N.tips[i] <- Ntip(myOut$mytree)
+      gamma[i] <- ltt(myOut$mytree, plot = FALSE)$gamma
+      Colless[i] <- colless(as.treeshape(myOut$mytree))
+      MS[i] <- bd.ms(myOut$mytree)
+      KM[i] <- bd.km(myOut$mytree)
+      TCI[i] <- tci(myOut$mytree)
+      temp.medusa <- try(nrow(medusa(myOut$mytree, warnings = FALSE)$summary), silent = TRUE)
+      if (class(temp.medusa) == "try-error") {
+        Medusa.BP[i] <- 1
+      } else {
+        Medusa.BP[i] <- temp.medusa
+      }
+      weibull[i, ] <- fitdist(myOut$mytree$edge.length, "weibull")$estimate
+      
+      
+      # Metrics that requires both states of the trait
+      if (equals1 != 0 & equals2 != 0) {
+        traits <- data.frame("trait" = myWorld[, 6], 
+                             "tips" = paste0("t", myWorld[, 8]))
+        compdata <- comparative.data(myOut$mytree, traits, tips)
+        # Phylogenetic signal for binary traits (D of Fritz and Purvis 2010)
+        signal[i] <- phylo.d(compdata, binvar = trait)$DEstimate
+        # Spatial signal
+        spatial[i, ] <- JoinCount(myWorld, repetitions = 100)
+        # Trasition rates
+        traits <- traits[match(myOut$mytree$tip.label, traits[, 2]), ]
+        Trasition.rates[i] <- ace(x = traits[, 1], phy = myOut$mytree, type = "discrete")$rates
+        
+        
+      }
     }
   }
-}
 
 # Combine with the result data frame
 data.result$Difference <- difference
@@ -107,3 +124,5 @@ data.result$MS <- MS
 data.result$KM <- KM
 data.result$TCI <- TCI
 data.result$Medusa.BP <- Medusa.BP
+data.result$Trasition.rates <- Trasition.rates
+data.result <- cbind(data.result, wiebull)
