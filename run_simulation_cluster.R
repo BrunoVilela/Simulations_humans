@@ -88,7 +88,7 @@ clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:20)
+replicate_cycle <- c(1:500)
 number_of_time_steps <- 50
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
