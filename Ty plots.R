@@ -37,6 +37,7 @@ b <- cbind(available_files, replicate, combo,
            takeover_1, takeover_2, takeover_3, takeover_4,
            arisal_1, arisal_2, arisal_3, arisal_4)
 
+head(b)
 
 
 par(mfrow=c(1,5))
