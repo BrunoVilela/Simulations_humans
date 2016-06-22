@@ -21,7 +21,7 @@ myfiles <- list.files("cluster outputs", full.names = TRUE)
 split.file.name <- strsplit(myfiles, split = "_") 
 positions <- c(3, 7, 10:13, 15:18, 20:23, 25:28, 30:33, 35)
 data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles)))
-colnames(data.result) <- c("available_files", "replicate", "combo",
+colnames(data.result) <- c("File_path", "replicate", "combo",
                            "speciation_1", "speciation_2", "speciation_3", "speciation_4",
                            "extinction_1", "extinction_2", "extinction_3", "extinction_4",
                            "diffusion_1", "diffusion_2", "diffusion_3", "diffusion_4",
@@ -49,14 +49,23 @@ Colless <- rep(NA, l.myfiles)
 KM <- rep(NA, l.myfiles)
 MS <- rep(NA, l.myfiles)
 TCI <- rep(NA, l.myfiles)
+Medusa.BP <- rep(NA, l.myfiles)
 
 # Loop
+if (!"tools:rstudio" %in% search()) {
+  dev.new(width = 2, height = 2, pointsize = 12)
+  par(mar = c(0, 0, 0, 0))
+}
+
 for (i in 1:l.myfiles) {
-  cat(i)
-  cat(" ")
+  plot.new()
+  text(0.5, 0.5, paste(paste("Total:", l.myfiles, "\n",
+                             "Runs to go: ",
+                             (l.myfiles - i))))
+  
   load(myfiles[i])
   
-  if (!is.na(myOut)) {
+  if (!is.na(myOut)[1]) {
     rem <- is.na(myOut$myWorld[, 6])
     myWorld <- myOut$myWorld[!rem, ]
     # Data metrics
@@ -72,6 +81,7 @@ for (i in 1:l.myfiles) {
     MS[i] <- bd.ms(myOut$mytree)
     KM[i] <- bd.km(myOut$mytree)
     TCI[i] <- tci(myOut$mytree)
+    Medusa.BP[i] <- nrow(invisible(medusa(myOut$mytree,  warnings = FALSE))$summary)
     # Metrics that requires both states of the trait
     if (equals1 != 0 & equals2 != 0) {
       traits <- data.frame("trait" = myWorld[, 6], 
@@ -86,5 +96,14 @@ for (i in 1:l.myfiles) {
 }
 
 # Combine with the result data frame
-data.result$Phy_Signal <- signal
+data.result$Difference <- difference
 data.result <- cbind(data.result, spatial)
+data.result$Phy_Signal <- signal
+data.result$N.nodes <- N.nodes
+data.result$N.tips <- N.tips
+data.result$gamma <- gamma
+data.result$Colless <- Colless
+data.result$MS <- MS
+data.result$KM <- KM
+data.result$TCI <- TCI
+data.result$Medusa.BP <- Medusa.BP
