@@ -92,19 +92,23 @@ replicate_cycle <- c(1:20)
 number_of_time_steps <- 50
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 31, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+               combo_number = 31, number_of_time_steps = number_of_time_steps,
+               myWorld = myWorld) 
 c <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 29, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+               combo_number = 29, number_of_time_steps = number_of_time_steps,
+               myWorld = myWorld) 
 d <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 28, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+               combo_number = 28, number_of_time_steps = number_of_time_steps,
+               myWorld = myWorld) 
 e <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 25, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+               combo_number = 25, number_of_time_steps = number_of_time_steps,
+               myWorld = myWorld) 
 f <- Sys.time()
 
 
