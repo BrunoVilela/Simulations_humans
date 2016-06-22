@@ -90,7 +90,7 @@ nodes_list <- NULL
 plot(0,0,xlim=c(0.5,1.5), ylim=c(0,40), type="n", xlab="", ylab="Number of nodes", xaxt="n")
 for( j in 1:length(b[,1])) {
   load(b[j,1])
-  nodes_list <- c(  nodes_list , myOut[[1]]$Nnode)
+  nodes_list <- c(nodes_list , myOut[[1]]$Nnode)
   
 }
 

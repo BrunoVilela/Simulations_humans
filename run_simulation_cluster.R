@@ -53,7 +53,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
                           paste(P.diffusion, collapse="_"), "_P.TakeOver_",
                           paste(P.TakeOver, collapse="_"),"_P.Arisal_",
                           paste(P.Arisal, collapse="_"),
-                          "timesteps_", number_of_time_steps,
+                          "_timesteps_", number_of_time_steps,
                           "_", as.integer(Sys.time()),
                           " Results.Rdata"))
 
@@ -92,19 +92,23 @@ replicate_cycle <- c(1:500)
 number_of_time_steps <- 50
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 31, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+               combo_number = 31, number_of_time_steps = number_of_time_steps,
+               myWorld = myWorld) 
 c <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 29, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+               combo_number = 29, number_of_time_steps = number_of_time_steps,
+               myWorld = myWorld) 
 d <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 28, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+               combo_number = 28, number_of_time_steps = number_of_time_steps,
+               myWorld = myWorld) 
 e <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 25, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+               combo_number = 25, number_of_time_steps = number_of_time_steps,
+               myWorld = myWorld) 
 f <- Sys.time()
 
 
