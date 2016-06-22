@@ -42,7 +42,18 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
                           P.diffusion, P.Arisal, P.TakeOver,
                           N.steps = 50)
   
- save(myOut, file= paste0("cluster outputs/myOut_replicate_", formatC(replicate_cycle, width = 2,flag = 0), "_function_combination_type_", formatC(combo_number, width = 2,flag = 0), "_","parameters", "_P.speciation_" , paste(P.speciation, collapse="_"), "_P.extinction_",paste(P.extinction, collapse="_"), "_P.diffusion_",paste(P.diffusion, collapse="_"), "_P.TakeOver_", paste(P.TakeOver, collapse="_"),"_P.Arisal_", paste(P.Arisal, collapse="_"), "_", as.integer(Sys.time()), " Results.Rdata"))
+ save(myOut, file= paste0("cluster outputs/myOut_replicate_", 
+                          formatC(replicate_cycle, width = 2,flag = 0),
+                          "_function_combination_type_",
+                          formatC(combo_number, width = 2,flag = 0),
+                          "_","parameters", "_P.speciation_",
+                          paste(P.speciation, collapse="_"), "_P.extinction_",
+                          paste(P.extinction, collapse="_"), "_P.diffusion_",
+                          paste(P.diffusion, collapse="_"), "_P.TakeOver_",
+                          paste(P.TakeOver, collapse="_"),"_P.Arisal_",
+                          paste(P.Arisal, collapse="_"),
+                          "_", as.integer(Sys.time()),
+                          " Results.Rdata"))
 
 }
 
