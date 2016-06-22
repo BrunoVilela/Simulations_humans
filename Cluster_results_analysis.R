@@ -17,6 +17,7 @@ library(apTreeshape)
 library(plyr)
 library(fitdistrplus)
 library(geiger)
+library(caper)
 
 # Load the results
 myfiles <- list.files("cluster outputs", full.names = TRUE)
@@ -31,6 +32,8 @@ colnames(data.result) <- c("File_path", "replicate", "combo",
                            "arisal_1", "arisal_2", "arisal_3", "arisal_4",
                            "Timesteps")
 data.result[, 1] <- myfiles
+
+
 for (i in 1:length(positions)) {
   data.result[, i + 1] <- sapply(split.file.name, "[", positions[i])
 }
@@ -40,7 +43,7 @@ cluster_input_files <- subset(data.result, combo == "31" & Timesteps == "50")
 data.result$Timesteps
 cluster_input_files$Timesteps
 
-cluster_results_analysis <- function(myfiles){
+cluster_results_analysis <- function(myfiles, data.result){
 
 
 # Empty results
@@ -115,8 +118,6 @@ if (!"tools:rstudio" %in% search()) {
         # Trasition rates
         traits <- traits[match(myOut$mytree$tip.label, traits[, 2]), ]
         Trasition.rates[i] <- ace(x = traits[, 1], phy = myOut$mytree, type = "discrete")$rates
-        
-        
       }
     }
   }
@@ -127,16 +128,14 @@ data.result <- cbind(data.result, spatial)
 data.result$Phy_Signal <- signal
 data.result$N.nodes <- N.nodes
 data.result$N.tips <- N.tips
-data.result$gamma <- gamma
 data.result$Colless <- Colless
+data.result$gamma <- gamma
 data.result$MS <- MS
 data.result$KM <- KM
 data.result$TCI <- TCI
 data.result$Medusa.BP <- Medusa.BP
 data.result$Trasition.rates <- Trasition.rates
-data.result <- cbind(data.result, wiebull)
-
-
+data.result <- cbind(data.result, weibull)
 return(data.result)
 }
 
@@ -145,9 +144,5 @@ return(data.result)
 
 
 
-cluster_results_analysis(cluster_input_files[,1])
-
-
-
-
-
+a <- cluster_results_analysis(cluster_input_files[1,1], cluster_input_files[1,1])
+head(a)
