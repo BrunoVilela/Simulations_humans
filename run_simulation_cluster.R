@@ -5,7 +5,7 @@ source("Functions/Auxiliary_functions.R")
 myWorld <- BuildWorld(R = 3, P = 0.8)
 source('Functions/Possible_combinations_of_movement_function.R')
 
-sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
+sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps) {
   
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
@@ -40,9 +40,9 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld) {
   
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver,
-                          N.steps = 50)
+                          N.steps = number_of_time_steps)
   
- save(myOut, file= paste0("cluster outputs/myOut_replicate_", formatC(replicate_cycle, width = 2,flag = 0), "_function_combination_type_", formatC(combo_number, width = 2,flag = 0), "_","parameters", "_P.speciation_" , paste(P.speciation, collapse="_"), "_P.extinction_",paste(P.extinction, collapse="_"), "_P.diffusion_",paste(P.diffusion, collapse="_"), "_P.TakeOver_", paste(P.TakeOver, collapse="_"),"_P.Arisal_", paste(P.Arisal, collapse="_"), "_", as.integer(Sys.time()), " Results.Rdata"))
+ save(myOut, file= paste0("cluster outputs/myOut_replicate_", formatC(replicate_cycle, width = 2,flag = 0), "_function_combination_type_", formatC(combo_number, width = 2,flag = 0), "_","parameters", "_P.speciation_" , paste(P.speciation, collapse="_"), "_P.extinction_",paste(P.extinction, collapse="_"), "_P.diffusion_",paste(P.diffusion, collapse="_"), "_P.TakeOver_", paste(P.TakeOver, collapse="_"),"_P.Arisal_", paste(P.Arisal, collapse="_"), "_", "timesteps_", number_of_time_steps, as.integer(Sys.time()), " Results.Rdata"))
 
 }
 
@@ -76,16 +76,39 @@ clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 # lset are the landscapes that we will run
 b <- Sys.time()
 replicate_cycle <- c(1:20)
+number_of_time_steps <- 50
+
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 31, myWorld = myWorld) 
+               combo_number = 31, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
 c <- Sys.time()
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 29, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+d <- Sys.time()
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 28, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+e <- Sys.time()
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 25, number_of_time_steps = number_of_time_steps, myWorld = myWorld) 
+f <- Sys.time()
 
 
 difftime(b, a)
 # Time to load packages
 
 difftime(c, b)
-# Time to run cluster
+# Time to run combo 31
+
+difftime(d, c)
+# Time to run combo 29
+
+difftime(e, d)
+# Time to run combo 28
+
+difftime(f, e)
+# Time to run combo 25
 
 stopCluster(cl)
 
