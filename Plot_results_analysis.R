@@ -54,22 +54,13 @@ plot.output <- function(c, col = c("cornflowerblue", "firebrick", "limegreen", "
   plot(c$KM ~ combinations, 
        ylab = "Net Diversification rates",
        xlab = "", col = col, ...)
-  plot(c$Medusa.BP ~ combinations, 
-       ylab = "Diversification shifts",
-       xlab = "", col = col, ...)
+  # plot(c$Medusa.BP ~ combinations, 
+  #      ylab = "Diversification shifts",
+  #      xlab = "", col = col, ...)
   plot(c$Trasition.rates ~ combinations, 
        ylab = "Transtion rates",
        xlab = "", log = "y", col = col, ...)
 }
-
-titles < c("Predominance (F - D)", "Spatial signal in DF",
-           "Spatial signal in DD", "Spatial signal in FF",
-           "Number of nodes", "BL distribuiton shape",
-           "BL distribuiton scale", "BL distribuiton Gamma",
-           "Tree balance (Colless)", "Tree balance (TCI)",
-           "Phylogenetic signal (D)", "Net Diversification rates",
-           "Diversification shifts", "Transtion rates")
-
 
 # Plot Results analysis
 plot.data.25 <- NULL
@@ -80,25 +71,33 @@ combo.type <- c(25, 28, 29, 31)
 
 for (i in combo.type) {
   load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
-              50, "_time_steps_analysis.R"))
-  plot.data.25 <- rbind(plot.data.25, data.result)#CHANGE
+              25, "_time_steps_analysis.R"))
+  plot.data.25 <- rbind(plot.data.25, data.result)
   load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
               50, "_time_steps_analysis.R"))
   plot.data.50 <- rbind(plot.data.50, data.result)
   load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
-              50, "_time_steps_analysis.R"))
+              75, "_time_steps_analysis.R"))
   plot.data.75 <- rbind(plot.data.75, data.result)
   load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
-              50, "_time_steps_analysis.R"))#CHANGE
+              100, "_time_steps_analysis.R"))
   plot.data.100 <- rbind(plot.data.100, data.result)
 }
 
+titles <- c("Predominance (F - D)", "Spatial signal in DF",
+            "Spatial signal in DD", "Spatial signal in FF",
+            "Number of nodes", "BL distribuiton shape",
+            "BL distribuiton scale", "BL distribuiton Gamma",
+            "Tree balance (Colless)", "Tree balance (TCI)",
+            "Phylogenetic signal (D)", "Net Diversification rates",
+            "Transtion rates")
+
 pdf(file="tree analysis figure.pdf", width = 50, height = 15)
 par(mar = c(1, 1, 1, 1))
-mat <- matrix(c(1:56), ncol = 14, nrow = 4, byrow = TRUE)
+mat <- matrix(c(1:52), ncol = 13, nrow = 4, byrow = TRUE)
 mat <- rbind(57:70, mat)
-mat <- cbind(c(71:75), mat)
-cols.size <- rep(1, 15)
+mat <- cbind(c(71:74), mat)
+cols.size <- rep(1, 14)
 cols.size[1] <- 0.4
 rows.size <- rep(1, 5)
 rows.size[1] <- 0.4
@@ -113,16 +112,43 @@ plot.output(plot.data.75, border = c("darkblue", "darkred", "darkgreen", "yellow
 plot.output(plot.data.100, border = c("darkblue", "darkred", "darkgreen", "yellow3"),
             xaxt = "n", cex.lab = 2, bg = "gray90")
 
-for (i in 1:titles) {
+for (i in titles) {
   plot(c(0, 1), c(0, 1), ann = F, bty = 'n',
        type = 'n', xaxt = 'n', yaxt = 'n')
-  text(x = 0.5, y = 0.5, titles[i], cex = 2)
+  text(x = 0.5, y = 0.5, i, cex = 2.8)
 }
-times <- c(25, 50, 75, 100)
-for (i in 1:4) {
+times <- c("", 25, 50, 75, 100)
+for (i in times) {
   plot(c(0, 1), c(0, 1), ann = F, bty = 'n',
        type = 'n', xaxt = 'n', yaxt = 'n')
-  text(x = 0.5, y = 0.5, paste(times[i]), cex = 2)
+  text(x = 0.5, y = 0.5, paste(i), cex = 4)
 }
-
 dev.off()
+
+
+
+#==================================================================
+data.analysis <- rbind(plot.data.25, plot.data.50, plot.data.75, plot.data.100)
+
+library(nnet)
+combinations <- data.analysis$combo
+combinations[combinations == 25] <- "S+E+A"
+combinations[combinations == 28] <- "S+E+A+D"
+combinations[combinations == 29] <- "S+E+A+T"
+combinations[combinations == 31] <- "S+E+A+D+T"
+combinations <- factor(combinations, labels = c("S+E+A", "S+E+A+D", "S+E+A+T", "S+E+A+D+T"))
+data.analysis$combinations <- combinations
+
+test <- multinom(combinations ~ (gamma + Colless + Phy_Signal + shape +
+                                   Trasition.rates + KM),
+                 data = data.analysis)
+z <- summary(test)$coefficients/summary(test)$standard.errors
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+p <- p.adjust(p, method = "holm")
+p <- matrix(p, nrow = 3)
+colnames(p) <- colnames(z)
+rownames(p) <- rownames(z)
+
+summary(test)
+
+

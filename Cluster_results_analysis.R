@@ -1,12 +1,12 @@
 # Code to evaluate the outputs
-# setwd("~/Box Sync/colliding ranges/Simulations_humans")
+ setwd("~/Desktop")
 # Required packages and functions
 load.files <- list.files(path = "Functions", pattern = ".R",
                          full.names = TRUE)
 for (i in 1:length(load.files)) {
   source(load.files[i])
 }
-source("Plot_output.R")
+#source("Plot_output.R")
 library(gtools)
 library(ape)
 library(adephylo)
@@ -19,14 +19,16 @@ library(fitdistrplus)
 library(geiger)
 library(caper)
 
+combo_pass <- 31 
+analyze_this_many <-10  
+Timesteps_pass <- 50
 
-
-cluster_results_analysis <- function( analyze_this_many, combo, Timesteps_pass) {
+cluster_results_analysis <- function(combo_pass, analyze_this_many,  Timesteps_pass) {
 
 # Load the results
 myfiles <- list.files("cluster outputs", full.names = TRUE)
 split.file.name <- strsplit(myfiles, split = "_") 
-positions <- c(3, 7, 10:13, 15:18, 20:23, 25:28, 30:33, 34) #should be 35 next once underscore is fixed
+positions <- c(3, 7, 10:13, 15:18, 20:23, 25:28, 30:33, 35) #should be 35 next once underscore is fixed
 
 
 data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles)))
@@ -44,7 +46,7 @@ for (i in 1:length(positions)) {
   data.result[, i + 1] <- sapply(split.file.name, "[", positions[i])
 }
 
-cluster_input_files <- subset(data.result, combo == combo & Timesteps == Timesteps_pass )
+cluster_input_files <- subset(data.result, combo == combo_pass & Timesteps == Timesteps_pass )
 
 if(analyze_this_many > length(myfiles)){analyze_this_many <- length(myfiles)}
 myfiles <- cluster_input_files[1:analyze_this_many,1]
@@ -67,7 +69,6 @@ data.result <- cluster_input_files[1:analyze_this_many,]
   KM <- rep(NA, l.myfiles)
   MS <- rep(NA, l.myfiles)
   TCI <- rep(NA, l.myfiles)
-  Medusa.BP <- rep(NA, l.myfiles)
   Trasition.rates <- rep(NA, l.myfiles)
   weibull <- matrix(ncol = 2, nrow = l.myfiles)
   colnames(weibull) <- c("shape", "scale")
@@ -92,12 +93,6 @@ data.result <- cluster_input_files[1:analyze_this_many,]
       MS[i] <- bd.ms(myOut$mytree)
       KM[i] <- bd.km(myOut$mytree)
       TCI[i] <- tci(myOut$mytree)
-      temp.medusa <- try(medusa(myOut$mytree, warnings = FALSE), silent = TRUE)
-      if (class(temp.medusa) == "try-error") {
-        Medusa.BP[i] <- 1
-      } else {
-        Medusa.BP[i] <- length(unique(temp.medusa$summary[, 2]))
-      }
       weibull[i, ] <- fitdist(myOut$mytree$edge.length, "weibull")$estimate
       
       
@@ -128,17 +123,18 @@ data.result <- cluster_input_files[1:analyze_this_many,]
   data.result$MS <- MS
   data.result$KM <- KM
   data.result$TCI <- TCI
-  data.result$Medusa.BP <- Medusa.BP
   data.result$Trasition.rates <- Trasition.rates
   data.result <- cbind(data.result, weibull)
   #return(data.result)
   
-  save(data.result, file=paste0("results cluster output/", "Results_for_",combo, "_" , "simulated_for_ ",Timesteps_pass , "_time_steps_analysis.R"))
+  save(data.result, file=paste0("results cluster output/", "Results_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass , "_time_steps_analysis.R"))
 }
 
 #rm(data.result)
 #load(paste0(combo_type, "_" , Timesteps_pass , "_analysis.R") )
+cluster_results_analysis(31, 10, 50)
 
+a <- Sys.time()
 
 library(gtools)
 library(ape)
@@ -187,21 +183,25 @@ clusterEvalQ(cl, source("Functions/Plot_output.R"))
 clusterEvalQ(cl, source("Functions/spatial_join.R"))
 
 # lset are the landscapes that we will run
-b <- Sys.time()
+
 
 combo_type <- c(25,28,29,31)
 #Timesteps_pass <-50
-analyze_this_many <- 500
+analyze_this_many <- 10
 
-
+b <- Sys.time()
 clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 100) 
-c <- Sys.time()
 
+c <- Sys.time()
 clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 75) 
 
+d <- Sys.time()
 clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 50) 
 
+e <- Sys.time()
 clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 25) 
+
+ f <- Sys.time()
 
 
 difftime(b, a)
@@ -209,6 +209,18 @@ difftime(b, a)
 
 difftime(c, b)
 # Time to run combo 31
+
+difftime(d, c)
+# Time to run combo 29
+
+difftime(e, d)
+# Time to run combo 28
+
+difftime(f, e)
+# Time to run combo 25
+
+difftime(f, a)
+# Total time
 
 stopCluster(cl)
 

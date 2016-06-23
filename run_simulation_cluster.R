@@ -1,3 +1,5 @@
+setwd("~/Desktop")
+
 # Run the full model in a cluster. This version writes files to a cluster output folder.
 rm(list = ls())
 source("Functions/Build_world_function.R")
@@ -88,27 +90,82 @@ clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:500)
-number_of_time_steps <- 50
+replicate_cycle <- c(1:2000)
+number_of_time_steps_a <- 50
+number_of_time_steps_b <- 100
+number_of_time_steps_c <- 200
+number_of_time_steps_d <- 500
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 31, number_of_time_steps = number_of_time_steps,
+               combo_number = 31, number_of_time_steps = number_of_time_steps_a,
                myWorld = myWorld) 
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 31, number_of_time_steps = number_of_time_steps_b,
+               myWorld = myWorld) 
+               
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 31, number_of_time_steps = number_of_time_steps_c,
+               myWorld = myWorld) 
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 31, number_of_time_steps = number_of_time_steps_d,
+               myWorld = myWorld) 
+             
 c <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 29, number_of_time_steps = number_of_time_steps,
+               combo_number = 29, number_of_time_steps = number_of_time_steps_a,
                myWorld = myWorld) 
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 29, number_of_time_steps = number_of_time_steps_b,
+               myWorld = myWorld) 
+               
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 29, number_of_time_steps = number_of_time_steps_c,
+               myWorld = myWorld) 
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 29, number_of_time_steps = number_of_time_steps_d,
+               myWorld = myWorld) 
+
 d <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 28, number_of_time_steps = number_of_time_steps,
+               combo_number = 28, number_of_time_steps = number_of_time_steps_a,
                myWorld = myWorld) 
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 28, number_of_time_steps = number_of_time_steps_b,
+               myWorld = myWorld) 
+               
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 28, number_of_time_steps = number_of_time_steps_c,
+               myWorld = myWorld) 
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 28, number_of_time_steps = number_of_time_steps_d,
+               myWorld = myWorld) 
+ 
 e <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 25, number_of_time_steps = number_of_time_steps,
+               combo_number = 25, number_of_time_steps = number_of_time_steps_a,
                myWorld = myWorld) 
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 25, number_of_time_steps = number_of_time_steps_b,
+               myWorld = myWorld) 
+               
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 25, number_of_time_steps = number_of_time_steps_c,
+               myWorld = myWorld) 
+
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 25, number_of_time_steps = number_of_time_steps_d,
+               myWorld = myWorld) 
+
 f <- Sys.time()
 
 
