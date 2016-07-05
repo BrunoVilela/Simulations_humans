@@ -94,12 +94,16 @@ titles <- c("Predominance (F - D)", "Spatial signal in DF",
 
 pdf(file="tree analysis figure.pdf", width = 50, height = 15)
 par(mar = c(1, 1, 1, 1))
-mat <- matrix(c(1:52), ncol = 13, nrow = 4, byrow = TRUE)
-mat <- rbind(57:70, mat)
-mat <- cbind(c(71:74), mat)
-cols.size <- rep(1, 14)
+times <- c("", 25, 50, 75, 100)
+nvars <- 13
+ntimes <- length(times) - 1
+n.plots <- (nvars * ntimes)
+mat <- matrix(c(1:n.plots), ncol = nvars, nrow = ntimes, byrow = TRUE)
+mat <- rbind((n.plots + 1):((n.plots) + nvars), mat)
+mat <- cbind(((n.plots + 1) + nvars):((((n.plots + 1) + nvars)) + ntimes), mat)
+cols.size <- rep(1, (nvars + 1))
 cols.size[1] <- 0.4
-rows.size <- rep(1, 5)
+rows.size <- rep(1, (ntimes + 1))
 rows.size[1] <- 0.4
 nf <- layout(mat, cols.size, rows.size, TRUE)
 #layout.show(nf)
@@ -117,7 +121,6 @@ for (i in titles) {
        type = 'n', xaxt = 'n', yaxt = 'n')
   text(x = 0.5, y = 0.5, i, cex = 2.8)
 }
-times <- c("", 25, 50, 75, 100)
 for (i in times) {
   plot(c(0, 1), c(0, 1), ann = F, bty = 'n',
        type = 'n', xaxt = 'n', yaxt = 'n')
