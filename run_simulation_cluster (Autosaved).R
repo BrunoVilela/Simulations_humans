@@ -103,7 +103,8 @@ library(parallel)
 # Set up cluster
 cl <- makeCluster(detectCores() , type = "PSOCK")
 
-# Push resources out to cluster
+# Push resources out to cluster'
+clusterEvalQ(cl, library(msm))
 clusterEvalQ(cl, library(gtools))
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(adephylo))

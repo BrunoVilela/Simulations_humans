@@ -182,7 +182,7 @@ clusterEvalQ(cl, library(survival ))
 clusterEvalQ(cl, library(maps ))
 
 
-setwd("~/Box Sync/colliding ranges/Simulations_humans/")
+setwd("~/Box Sync/colliding ranges/Simulations_humans")
 clusterEvalQ(cl, source("Functions/Arisal_module.R"))
 clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
 clusterEvalQ(cl, source("Functions/Build_world_function.R"))
