@@ -3,7 +3,7 @@ i <- 99
 # Code to evaluate the outputs
  setwd("~/Desktop")
 # Required packages and functions
-load.files <- list.files(path = "Functions", pattern = ".R",
+load.files <- list.files(path = "~/Box Sync/colliding ranges/Simulations_humans/Functions", pattern = ".R",
                          full.names = TRUE)
 for (i in 1:length(load.files)) {
   source(load.files[i])
@@ -24,20 +24,15 @@ library(survival)
 library(maps)
 
 combo_pass <- 31 
-<<<<<<< HEAD
+
 analyze_this_many <-99  
 Timesteps_pass <- 100
 
 cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass ) {
-=======
-analyze_this_many <-10  
-Timesteps_pass <- 50
 
-cluster_results_analysis <- function(combo_pass, analyze_this_many,  Timesteps_pass) {
->>>>>>> 210a7577fa3140026948482f9d846b4b25cfce9b
 
 # Load the results
-myfiles <- list.files("big world cluster output", full.names = TRUE)
+myfiles <- list.files("big world cluster outputs", full.names = TRUE)
 split.file.name <- strsplit(myfiles, split = "_") 
 
 positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28:31, 33) #should be 35 next once underscore is fixed
@@ -86,7 +81,7 @@ data.result <- cluster_input_files[1:analyze_this_many,]
   colnames(weibull) <- c("shape", "scale")
   
   for (i in 1:l.myfiles) {
-i <- 1
+#i <- 1
     if(file.exists(myfiles[i])){load(myfiles[i])}else{myOut <- NA}
     
     if (!is.na(myOut)[1]) {
@@ -149,8 +144,7 @@ i <- 1
 #load(paste0(combo_type, "_" , Timesteps_pass , "_analysis.R") )
 
 #cluster_results_analysis(31, 10, 100)
-=======
-cluster_results_analysis(31, 10, 50)
+
 
 a <- Sys.time()
 
@@ -211,37 +205,19 @@ combo_type <- c(25,28,29,31)
 
 
 
-analyze_this_many <- 10000
-
-b <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 100) 
-
-c <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 200) 
-
-d <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 500) 
-
-e <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 25) 
-
- f <- Sys.time()
-=======
-#Timesteps_pass <-50
 analyze_this_many <- 10
 
 b <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 100) 
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 100) 
 
 c <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 75) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300) 
 
 d <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 50) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 600) 
 
 e <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 25) 
-
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 25) 
 
  f <- Sys.time()
 

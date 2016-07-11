@@ -10,7 +10,7 @@ load("Results_for_29_simulated_for_ 100_time_steps_analysis.R")
 c <- data.result
 load("Results_for_31_simulated_for_ 100_time_steps_analysis.R")
 d <- data.result
-=======
+
 
 #==================================================================
 # Function to check if a cell is inside the world
