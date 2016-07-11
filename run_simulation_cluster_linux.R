@@ -1,4 +1,4 @@
-setwd("~/Desktop")
+#setwd("~/Desktop")
 
 # Run the full model in a cluster. This version writes files to a cluster output folder.
 rm(list = ls())
@@ -124,11 +124,11 @@ clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:100)
-number_of_time_steps_a <- 100
-number_of_time_steps_b <- 300
-number_of_time_steps_c <- 600
-number_of_time_steps_d <- 1000
+replicate_cycle <- c(1:10)
+number_of_time_steps_a <- 10
+number_of_time_steps_b <- 3
+number_of_time_steps_c <- 6
+number_of_time_steps_d <- 1
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 31, number_of_time_steps = number_of_time_steps_a,

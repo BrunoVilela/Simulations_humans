@@ -1,4 +1,10 @@
-# Diffusion function
+## Function controlling the diffusion of a trait through space
+
+## Last updated: 5 July 2016
+## input and output are a standardized data hub containing information about the current state of the world and the probabilities of different events taking place. 
+## RULE SET: The act of diffusion is when one trait, in one cell, switches the trait of an occupied adjoining cell to match its own but does not alter the phylogenetic tree when it does so. 
+
+
 Diffusion  <- function(input) {
   P.speciation <- input[[1]]
   P.Arisal <- input[[2]]

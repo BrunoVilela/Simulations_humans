@@ -1,11 +1,13 @@
+setwd("~/Box Sync/colliding ranges/Simulations_humans/results cluster output")
+
 # Plot Results analysis
-load("25_50_analysis.R")
+load("Results_for_25_simulated_for_ 100_time_steps_analysis.R")
 a <- data.result
-load("28_50_analysis.R")
+load("Results_for_28_simulated_for_ 100_time_steps_analysis.R")
 b <- data.result
-load("29_50_analysis.R")
+load("Results_for_29_simulated_for_ 100_time_steps_analysis.R")
 c <- data.result
-load("31_50_analysis.R")
+load("Results_for_31_simulated_for_ 100_time_steps_analysis.R")
 d <- data.result
 
 c <- rbind(a, b, c, d)

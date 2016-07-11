@@ -1,4 +1,8 @@
-# The arisal of a new trait state
+## Function controlling the random arisal of a new trait somewhere in space
+
+## Last updated: 5 July 2016
+## input is a standardized data hub containing information about the current state of the world and the probabilities of different events taking place. 
+
 Arisal <- function(input) {
   
   P.speciation <- input[[1]]
