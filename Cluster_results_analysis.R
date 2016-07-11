@@ -24,16 +24,23 @@ library(survival)
 library(maps)
 
 combo_pass <- 31 
+<<<<<<< HEAD
 analyze_this_many <-99  
 Timesteps_pass <- 100
 
 cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass ) {
+=======
+analyze_this_many <-10  
+Timesteps_pass <- 50
+
+cluster_results_analysis <- function(combo_pass, analyze_this_many,  Timesteps_pass) {
+>>>>>>> 210a7577fa3140026948482f9d846b4b25cfce9b
 
 # Load the results
 myfiles <- list.files("big world cluster output", full.names = TRUE)
 split.file.name <- strsplit(myfiles, split = "_") 
-positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28:31, 33) #should be 35 next once underscore is fixed
 
+positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28:31, 33) #should be 35 next once underscore is fixed
 
 data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles)))
 colnames(data.result) <- c("File_path", "replicate", "combo",
@@ -74,7 +81,6 @@ data.result <- cluster_input_files[1:analyze_this_many,]
   KM <- rep(NA, l.myfiles)
   MS <- rep(NA, l.myfiles)
   TCI <- rep(NA, l.myfiles)
-  Medusa.BP <- rep(NA, l.myfiles)
   Trasition.rates <- rep(NA, l.myfiles)
   weibull <- matrix(ncol = 2, nrow = l.myfiles)
   colnames(weibull) <- c("shape", "scale")
@@ -99,12 +105,7 @@ i <- 1
       MS[i] <- bd.ms(myOut$mytree)
       KM[i] <- bd.km(myOut$mytree)
       TCI[i] <- tci(myOut$mytree)
-     # temp.medusa <- try(medusa(myOut$mytree, warnings = FALSE), silent = TRUE)
-      #if (class(temp.medusa) == "try-error") {
-     #   Medusa.BP[i] <- 1
-      #} else {
-      #  Medusa.BP[i] <- length(unique(temp.medusa$summary[, 2]))
-      #}
+
       weibull[i, ] <- fitdist(myOut$mytree$edge.length, "weibull")$estimate
       
       
@@ -135,7 +136,8 @@ i <- 1
   data.result$MS <- MS
   data.result$KM <- KM
   data.result$TCI <- TCI
-  #data.result$Medusa.BP <- Medusa.BP
+
+
   data.result$Trasition.rates <- Trasition.rates
   data.result <- cbind(data.result, weibull)
   #return(data.result)
@@ -145,7 +147,10 @@ i <- 1
 
 #rm(data.result)
 #load(paste0(combo_type, "_" , Timesteps_pass , "_analysis.R") )
+
 #cluster_results_analysis(31, 10, 100)
+=======
+cluster_results_analysis(31, 10, 50)
 
 a <- Sys.time()
 
@@ -205,6 +210,7 @@ clusterEvalQ(cl, source("Functions/spatial_join.R"))
 combo_type <- c(25,28,29,31)
 
 
+
 analyze_this_many <- 10000
 
 b <- Sys.time()
@@ -218,6 +224,24 @@ d <- Sys.time()
 
 e <- Sys.time()
 #clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 25) 
+
+ f <- Sys.time()
+=======
+#Timesteps_pass <-50
+analyze_this_many <- 10
+
+b <- Sys.time()
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 100) 
+
+c <- Sys.time()
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 75) 
+
+d <- Sys.time()
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 50) 
+
+e <- Sys.time()
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 25) 
+
 
  f <- Sys.time()
 
