@@ -182,7 +182,7 @@ clusterEvalQ(cl, library(survival ))
 clusterEvalQ(cl, library(maps ))
 
 
-setwd("~/Box Sync/colliding ranges/Simulations_humans/")
+setwd("~/Box Sync/colliding ranges/Simulations_humans")
 clusterEvalQ(cl, source("Functions/Arisal_module.R"))
 clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
 clusterEvalQ(cl, source("Functions/Build_world_function.R"))
@@ -205,16 +205,16 @@ combo_type <- c(25,28,29,31)
 
 
 
-analyze_this_many <- 10
+analyze_this_many <- 10000
 
 b <- Sys.time()
 clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 100) 
 
 c <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300) 
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300) 
 
 d <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 600) 
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 600) 
 
 e <- Sys.time()
 #clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 25) 

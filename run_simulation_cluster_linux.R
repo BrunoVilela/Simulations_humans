@@ -1,4 +1,4 @@
-#setwd("~/Desktop")
+setwd("~/Desktop")
 
 # Run the full model in a cluster. This version writes files to a cluster output folder.
 rm(list = ls())
@@ -19,7 +19,7 @@ library(plyr)
 library(fitdistrplus)
 library(geiger)
 library(caper)
-
+library(msm)
 
 
 system.time(
@@ -44,7 +44,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   if (any(chosen_combo[[2]] == "Extinct")) {
-  	prob_choose <- as.numeric(formatC(rnorm(1, mean = .1, sd =.1), width = 3,flag = 0, digits=2)) #prob of extinction
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.3, lower=0, upper=1), width = 3,flag = 0, digits=2)) #prob of extinction
     P.extinction  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
   } else {
     P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
@@ -64,7 +64,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   if (any(chosen_combo[[2]] == "Random_new_origin")) {
-  	prob_choose <- as.numeric(formatC(rnorm(1, mean = .01, sd =.1), width = 3,flag = 0)) # prob of Arisal
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .01, sd =.1, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
     P.Arisal <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom") 
   } else {
     P.Arisal <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
@@ -75,7 +75,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
                           N.steps = number_of_time_steps)
   
 
- save(myOut, file= paste0("big cluster outputs/myOut_replicate_", 
+ save(myOut, file= paste0("big world cluster outputs/myOut_replicate_", 
                           formatC(replicate_cycle, width = 2,flag = 0),
                           "_combination_",
                           formatC(combo_number, width = 2,flag = 0),
@@ -91,9 +91,9 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 
 }
 
-system.time(
+#system.time(
 #sim_run_cluster(1, 31, myWorld, 100)
-	)
+#	)
 	
 	
 a <- Sys.time()
@@ -103,7 +103,8 @@ library(parallel)
 # Set up cluster
 cl <- makeCluster(detectCores() , type = "PSOCK")
 
-# Push resources out to cluster
+# Push resources out to cluster'
+clusterEvalQ(cl, library(msm))
 clusterEvalQ(cl, library(gtools))
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(adephylo))
@@ -124,11 +125,10 @@ clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:10)
-number_of_time_steps_a <- 10
-number_of_time_steps_b <- 3
-number_of_time_steps_c <- 6
-number_of_time_steps_d <- 1
+replicate_cycle <- c(1:100)
+number_of_time_steps_a <- 100
+#number_of_time_steps_b <- 300
+
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 31, number_of_time_steps = number_of_time_steps_a,
@@ -148,59 +148,24 @@ clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster,
              
 c <- Sys.time()
 
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 31, number_of_time_steps = number_of_time_steps_b,
-               myWorld = myWorld) 
+#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+#               combo_number = 31, number_of_time_steps = number_of_time_steps_b,
+#               myWorld = myWorld) 
 
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 29, number_of_time_steps = number_of_time_steps_b,
-               myWorld = myWorld) 
+#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+#               combo_number = 29, number_of_time_steps = number_of_time_steps_b,
+#               myWorld = myWorld) 
                
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 28, number_of_time_steps = number_of_time_steps_b,
-               myWorld = myWorld) 
+#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+#               combo_number = 28, number_of_time_steps = number_of_time_steps_b,
+#               myWorld = myWorld) 
 
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 25, number_of_time_steps = number_of_time_steps_b,
-               myWorld = myWorld) 
+#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+#               combo_number = 25, number_of_time_steps = number_of_time_steps_b,
+#               myWorld = myWorld) 
 
 d <- Sys.time()
 
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 31, number_of_time_steps = number_of_time_steps_c,
-               myWorld = myWorld) 
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 29, number_of_time_steps = number_of_time_steps_c,
-               myWorld = myWorld) 
-               
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 28, number_of_time_steps = number_of_time_steps_c,
-               myWorld = myWorld) 
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 25, number_of_time_steps = number_of_time_steps_c,
-               myWorld = myWorld) 
- 
-e <- Sys.time()
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 31, number_of_time_steps = number_of_time_steps_d,
-               myWorld = myWorld) 
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 29, number_of_time_steps = number_of_time_steps_d,
-               myWorld = myWorld) 
-               
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 28, number_of_time_steps = number_of_time_steps_d,
-               myWorld = myWorld) 
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 25, number_of_time_steps = number_of_time_steps_d,
-               myWorld = myWorld) 
-
-f <- Sys.time()
 
 
 difftime(b, a)
