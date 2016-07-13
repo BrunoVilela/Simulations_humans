@@ -83,16 +83,16 @@ plot.data.100 <- NULL
 combo.type <- c(25, 28, 29, 31)
 
 for (i in combo.type) {
-  load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
-              25, "_time_steps_analysis.R"))
-  plot.data.25 <- rbind(plot.data.25, data.result)
-  load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
-              50, "_time_steps_analysis.R"))
-  plot.data.50 <- rbind(plot.data.50, data.result)
-  load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
-              75, "_time_steps_analysis.R"))
+  #load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
+  #            25, "_time_steps_analysis.R"))
+  #plot.data.25 <- rbind(plot.data.25, data.result)
+  #load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
+  #            50, "_time_steps_analysis.R"))
+  #plot.data.50 <- rbind(plot.data.50, data.result)
+  #load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
+  #            75, "_time_steps_analysis.R"))
   plot.data.75 <- rbind(plot.data.75, data.result)
-  load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
+  load(paste0("Results_for_", i,"_simulated_for_ ", 
               100, "_time_steps_analysis.R"))
   plot.data.100 <- rbind(plot.data.100, data.result)
 }
@@ -120,12 +120,12 @@ rows.size <- rep(1, (ntimes + 1))
 rows.size[1] <- 0.4
 nf <- layout(mat, cols.size, rows.size, TRUE)
 #layout.show(nf)
-plot.output(plot.data.25, border = c("darkblue", "darkred", "darkgreen", "yellow3"),
-            xaxt = "n", cex.lab = 2, bg = "white")
-plot.output(plot.data.50, border = c("darkblue", "darkred", "darkgreen", "yellow3"),
-            xaxt = "n", cex.lab = 2, bg = "gray90")
-plot.output(plot.data.75, border = c("darkblue", "darkred", "darkgreen", "yellow3"),
-            xaxt = "n", cex.lab = 2, bg = "gray90")
+#plot.output(plot.data.25, border = c("darkblue", "darkred", "darkgreen", "yellow3"),
+#            xaxt = "n", cex.lab = 2, bg = "white")
+#plot.output(plot.data.50, border = c("darkblue", "darkred", "darkgreen", "yellow3"),
+#            xaxt = "n", cex.lab = 2, bg = "gray90")
+#plot.output(plot.data.75, border = c("darkblue", "darkred", "darkgreen", "yellow3"),
+#            xaxt = "n", cex.lab = 2, bg = "gray90")
 plot.output(plot.data.100, border = c("darkblue", "darkred", "darkgreen", "yellow3"),
             xaxt = "n", cex.lab = 2, bg = "gray90")
 
