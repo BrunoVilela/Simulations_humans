@@ -6,8 +6,10 @@
 BuildWorld <- function(coords, conditions) {
   n <- nrow(coords)
   myWorld <- matrix(ncol = 8, nrow = n)
-  myWorld[, 2:3] <- coords
-  myWorld[, c(1, 8)] <- 1:n
+  myWorld[, 2] <- coords[, 1]
+  myWorld[, 3] <- coords[, 2]
+  myWorld[, 8] <- 1:n
+  myWorld[, 1] <- 1:n
   myWorld[, 7] <- conditions
   colnames(myWorld) <- c('cellID', 'Longitude', 'Latitude', 
                          "Parent", "BirthT", "Trait", 
