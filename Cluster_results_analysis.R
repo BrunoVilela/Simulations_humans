@@ -1,7 +1,9 @@
+i <- 99
+
 # Code to evaluate the outputs
  setwd("~/Desktop")
 # Required packages and functions
-load.files <- list.files(path = "Functions", pattern = ".R",
+load.files <- list.files(path = "~/Box Sync/colliding ranges/Simulations_humans/Functions", pattern = ".R",
                          full.names = TRUE)
 for (i in 1:length(load.files)) {
   source(load.files[i])
@@ -14,22 +16,26 @@ library(diversitree)
 library(TotalCopheneticIndex)
 library(phytools)
 library(apTreeshape)
-library(plyr)
+library(plyr) 
 library(fitdistrplus)
 library(geiger)
 library(caper)
+library(survival)
+library(maps)
 
 combo_pass <- 31 
-analyze_this_many <-10  
-Timesteps_pass <- 50
 
-cluster_results_analysis <- function(combo_pass, analyze_this_many,  Timesteps_pass) {
+analyze_this_many <-99  
+Timesteps_pass <- 100
+
+cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass ) {
+
 
 # Load the results
-myfiles <- list.files("cluster outputs", full.names = TRUE)
+myfiles <- list.files("big world cluster outputs", full.names = TRUE)
 split.file.name <- strsplit(myfiles, split = "_") 
-positions <- c(3, 7, 10:13, 15:18, 20:23, 25:28, 30:33, 35) #should be 35 next once underscore is fixed
 
+positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28:31, 33) #should be 35 next once underscore is fixed
 
 data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles)))
 colnames(data.result) <- c("File_path", "replicate", "combo",
@@ -41,6 +47,7 @@ colnames(data.result) <- c("File_path", "replicate", "combo",
                            "Timesteps")
 data.result[, 1] <- myfiles
 head(data.result)
+data.result.blank <- data.result
 
 for (i in 1:length(positions)) {
   data.result[, i + 1] <- sapply(split.file.name, "[", positions[i])
@@ -49,7 +56,7 @@ for (i in 1:length(positions)) {
 cluster_input_files <- subset(data.result, combo == combo_pass & Timesteps == Timesteps_pass )
 
 if(analyze_this_many > length(myfiles)){analyze_this_many <- length(myfiles)}
-myfiles <- cluster_input_files[1:analyze_this_many,1]
+myfiles <- cluster_input_files[1:analyze_this_many,1]  ## temporary parameter to start index vector
 data.result <- cluster_input_files[1:analyze_this_many,]
   
   
@@ -74,8 +81,8 @@ data.result <- cluster_input_files[1:analyze_this_many,]
   colnames(weibull) <- c("shape", "scale")
   
   for (i in 1:l.myfiles) {
-
-    load(myfiles[i])
+#i <- 1
+    if(file.exists(myfiles[i])){load(myfiles[i])}else{myOut <- NA}
     
     if (!is.na(myOut)[1]) {
       rem <- is.na(myOut$myWorld[, 6])
@@ -93,6 +100,7 @@ data.result <- cluster_input_files[1:analyze_this_many,]
       MS[i] <- bd.ms(myOut$mytree)
       KM[i] <- bd.km(myOut$mytree)
       TCI[i] <- tci(myOut$mytree)
+
       weibull[i, ] <- fitdist(myOut$mytree$edge.length, "weibull")$estimate
       
       
@@ -123,6 +131,8 @@ data.result <- cluster_input_files[1:analyze_this_many,]
   data.result$MS <- MS
   data.result$KM <- KM
   data.result$TCI <- TCI
+
+
   data.result$Trasition.rates <- Trasition.rates
   data.result <- cbind(data.result, weibull)
   #return(data.result)
@@ -132,7 +142,9 @@ data.result <- cluster_input_files[1:analyze_this_many,]
 
 #rm(data.result)
 #load(paste0(combo_type, "_" , Timesteps_pass , "_analysis.R") )
-cluster_results_analysis(31, 10, 50)
+
+#cluster_results_analysis(31, 10, 100)
+
 
 a <- Sys.time()
 
@@ -166,7 +178,11 @@ clusterEvalQ(cl, library( fitdistrplus))
 clusterEvalQ(cl, library(geiger ))
 clusterEvalQ(cl, library(caper ))
 clusterEvalQ(cl, library(spdep ))
+clusterEvalQ(cl, library(survival ))
+clusterEvalQ(cl, library(maps ))
 
+
+setwd("~/Box Sync/colliding ranges/Simulations_humans")
 clusterEvalQ(cl, source("Functions/Arisal_module.R"))
 clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
 clusterEvalQ(cl, source("Functions/Build_world_function.R"))
@@ -184,22 +200,24 @@ clusterEvalQ(cl, source("Functions/spatial_join.R"))
 
 # lset are the landscapes that we will run
 
-
+ setwd("~/Desktop")
 combo_type <- c(25,28,29,31)
-#Timesteps_pass <-50
-analyze_this_many <- 10
+
+
+
+analyze_this_many <- 10000
 
 b <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 100) 
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 100) 
 
 c <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 75) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300) 
 
 d <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 50) 
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 600) 
 
 e <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass= 25) 
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 25) 
 
  f <- Sys.time()
 

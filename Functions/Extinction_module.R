@@ -1,3 +1,10 @@
+## Function controlling the extinction of cells
+
+## Last updated: 5 July 2016
+## input and output are a standardized data hub containing information about the current state of the world and the probabilities of different events taking place. 
+## RULE SET: 
+
+
 # Extinction function
 Extinction <- function(input) {
   
