@@ -16,6 +16,7 @@ Diffusion  <- function(input) {
   NodeData <- input[[8]]
   myT <- input[[9]]
   multiplier <- input[[10]]
+  nbs <- input[[11]]
   
   if (sum(P.diffusion) != 0) {
     trait.nonNA <- !is.na(myWorld[, 6])
@@ -25,8 +26,8 @@ Diffusion  <- function(input) {
     if (trait.length > 1) { # Only occurs if there is more than 1 societies
       index.tips <- sample(index.tips)
       for (i in index.tips) { 
-        myHex <- myWorld[i, 1:3]
-        PosTargets <- getTargets(myHex, myWorld, empty = FALSE)
+        myHex <- myWorld[i, 1]
+        PosTargets <- getTargets(myHex, myWorld, nbs, empty = FALSE)
         PosTargets <- PosTargets[myWorld[PosTargets, 6] != myWorld[i, 6]]
         l.targets <- length(PosTargets)
         if (l.targets > 0) {
@@ -50,5 +51,5 @@ Diffusion  <- function(input) {
     }
   }
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
-                 myWorld, mytree, NodeData, myT, multiplier)
+                 myWorld, mytree, NodeData, myT, multiplier, nbs)
   return(output)}

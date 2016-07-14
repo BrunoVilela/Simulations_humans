@@ -4,8 +4,8 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
                      i) {
   
   extinct.list <- NULL
-  myHex <- myWorld[i, 1:3]
-  PosTargets <- getTargets(myHex, myWorld, empty = FALSE)
+  myHex <- myWorld[i, 1]
+  PosTargets <- getTargets(myHex, myWorld, nbs, empty = FALSE)
   source.trait.dom <- myWorld[i, 6] == 2
   target.trait.dom <- myWorld[PosTargets, 6] == 2
   P.TakeOver2 <- P.TakeOver

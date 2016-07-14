@@ -22,13 +22,14 @@ library(geiger)
 library(caper)
 library(survival)
 library(maps)
+library(spdep)
 
 combo_pass <- 31 
 
 analyze_this_many <-99  
 Timesteps_pass <- 100
 
-cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass ) {
+cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass, nbs) {
 
 
 # Load the results
@@ -56,8 +57,8 @@ for (i in 1:length(positions)) {
 cluster_input_files <- subset(data.result, combo == combo_pass & Timesteps == Timesteps_pass )
 
 if(analyze_this_many > length(myfiles)){analyze_this_many <- length(myfiles)}
-myfiles <- cluster_input_files[1:analyze_this_many,1]  ## temporary parameter to start index vector
-data.result <- cluster_input_files[1:analyze_this_many,]
+myfiles <- cluster_input_files[1:analyze_this_many, 1]  ## temporary parameter to start index vector
+data.result <- cluster_input_files[1:analyze_this_many, ]
   
   
   # Empty results
@@ -112,7 +113,7 @@ data.result <- cluster_input_files[1:analyze_this_many,]
         # Phylogenetic signal for binary traits (D of Fritz and Purvis 2010)
         signal[i] <- phylo.d(compdata, binvar = trait)$DEstimate
         # Spatial signal
-        spatial[i, ] <- JoinCount(myWorld, repetitions = 100)
+        spatial[i, ] <- JoinCount(myWorld, nbs, repetitions = 100)
         # Trasition rates
         traits <- traits[match(myOut$mytree$tip.label, traits[, 2]), ]
         Trasition.rates[i] <- ace(x = traits[, 1], phy = myOut$mytree, type = "discrete")$rates
@@ -175,12 +176,12 @@ clusterEvalQ(cl, library(phytools ))
 clusterEvalQ(cl, library(apTreeshape ))
 clusterEvalQ(cl, library( plyr))
 clusterEvalQ(cl, library( fitdistrplus))
-clusterEvalQ(cl, library(geiger ))
-clusterEvalQ(cl, library(caper ))
-clusterEvalQ(cl, library(spdep ))
-clusterEvalQ(cl, library(survival ))
-clusterEvalQ(cl, library(maps ))
-
+clusterEvalQ(cl, library(geiger))
+clusterEvalQ(cl, library(caper))
+clusterEvalQ(cl, library(spdep))
+clusterEvalQ(cl, library(survival))
+clusterEvalQ(cl, library(maps))
+clusterEvalQ(cl, library(spdep))
 
 setwd("~/Box Sync/colliding ranges/Simulations_humans")
 clusterEvalQ(cl, source("Functions/Arisal_module.R"))
@@ -204,20 +205,19 @@ clusterEvalQ(cl, source("Functions/spatial_join.R"))
 combo_type <- c(25,28,29,31)
 
 
-
 analyze_this_many <- 10000
 
 b <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 100) 
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 100, nbs) 
 
 c <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300, nbs) 
 
 d <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 600) 
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 600, nbs) 
 
 e <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 25) 
+#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 25, nbs) 
 
  f <- Sys.time()
 
