@@ -151,13 +151,13 @@ weibull_plots <- function(data.result_sub){
 
 
 # Plot Results analysis
-load("Results_for_25_simulated_for_ 100_time_steps_analysis.R")
+load("Results_for_25_simulated_for_ 300_time_steps_analysis.R")
 a <- data.result
-load("Results_for_29_simulated_for_ 100_time_steps_analysis.R")
+load("Results_for_29_simulated_for_ 300_time_steps_analysis.R")
 b <- data.result
-load("Results_for_28_simulated_for_ 100_time_steps_analysis.R")
+load("Results_for_28_simulated_for_ 300_time_steps_analysis.R")
 c <- data.result
-load("Results_for_31_simulated_for_ 100_time_steps_analysis.R")
+load("Results_for_31_simulated_for_ 300_time_steps_analysis.R")
 d <- data.result
 
 13*13
