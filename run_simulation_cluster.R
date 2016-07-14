@@ -22,15 +22,19 @@ library(caper)
 library(msm)
 library(spdep)
 
-coords <- as.matrix(read.csv("coords_test.csv")[sample(1:1200, 50), 2:1])
-conds <- sample(c(1, 2), nrow(coords), replace = TRUE)
-nbs <- knn2nb(knearneigh(coords, k = 10, longlat = TRUE)) # 10 neighbors
-
+coords <- as.matrix(read.csv("coords.csv", row.names = 1))
+conds <- as.matrix(read.csv("suitability.csv", row.names = 1))
+conds <- ifelse(conds <= 21, 1, 2)
+conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
+sub <- sample(1:nrow(coords), 50) # subsample
 system.time(
-myWorld <- BuildWorld(coords, conds)
+myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
-dim(myWorld)
+nbs <- knn2nb(knearneigh(coords[sub, ], k = 10, longlat = TRUE), sym = TRUE) # 10 neighbors
+#nbs <- graph2nb(relativeneigh(coords))
 
+
+dim(myWorld)
 
 number_of_time_steps <- 100
 replicate_cycle <- 3
@@ -41,7 +45,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
   if (any(chosen_combo[[2]] == "Speciate")) {
-  	prob_choose <- as.numeric(formatC(rnorm(1, mean = .2, sd =.1), width = 3,flag = 0, digits=2))  #prob speciation
+  	prob_choose <- as.numeric(formatC(rnorm(1, mean = .2, sd =.05), width = 3,flag = 0, digits=2))  #prob speciation
     P.speciation <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
   } else {
     P.speciation <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
@@ -68,7 +72,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   if (any(chosen_combo[[2]] == "Random_new_origin")) {
-  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .01, sd =.1, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .01, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
     P.Arisal <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom") 
   } else {
     P.Arisal <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
@@ -76,7 +80,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs,
-                          N.steps = number_of_time_steps, silent = FALSE)
+                          N.steps = number_of_time_steps, silent = F)
   
 
  save(myOut, file= paste0("big world cluster outputs/myOut_replicate_", 
@@ -99,6 +103,12 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 #sim_run_cluster(1, 31, myWorld, 100)
 #	)
 	
+
+map()
+plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
+points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
+points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
+
 	
 a <- Sys.time()
 library(parallel)
