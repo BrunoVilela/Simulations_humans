@@ -20,10 +20,14 @@ library(fitdistrplus)
 library(geiger)
 library(caper)
 library(msm)
+library(spdep)
 
+coords <- as.matrix(read.csv("coords_test.csv")[sample(1:1200, 50), 2:1])
+conds <- sample(c(1, 2), nrow(coords), replace = TRUE)
+nbs <- knn2nb(knearneigh(coords, k = 10, longlat = TRUE)) # 10 neighbors
 
 system.time(
-myWorld <- BuildWorld(R = 10, P = 0.5)
+myWorld <- BuildWorld(coords, conds)
 )
 dim(myWorld)
 
@@ -32,7 +36,7 @@ number_of_time_steps <- 100
 replicate_cycle <- 3
 combo_number <- 31
 
-sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps) {
+sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs) {
   
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
@@ -44,7 +48,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   if (any(chosen_combo[[2]] == "Extinct")) {
-  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.3, lower=0, upper=1), width = 3,flag = 0, digits=2)) #prob of extinction
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.05, lower=0, upper=1), width = 3,flag = 0, digits=2)) #prob of extinction
     P.extinction  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
   } else {
     P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
@@ -71,8 +75,8 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
-                          P.diffusion, P.Arisal, P.TakeOver,
-                          N.steps = number_of_time_steps)
+                          P.diffusion, P.Arisal, P.TakeOver, nbs,
+                          N.steps = number_of_time_steps, silent = FALSE)
   
 
  save(myOut, file= paste0("big world cluster outputs/myOut_replicate_", 

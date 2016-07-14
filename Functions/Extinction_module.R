@@ -7,7 +7,6 @@
 
 # Extinction function
 Extinction <- function(input) {
-  
   P.speciation <- input[[1]]
   P.Arisal <- input[[2]]
   P.diffusion <- input[[3]]
@@ -18,6 +17,7 @@ Extinction <- function(input) {
   NodeData <- input[[8]]
   myT <- input[[9]]
   multiplier <- input[[10]]
+  nbs <- input[[11]]
   
   if (sum(P.extinction) != 0) {
     trait.nonNA <- !is.na(myWorld[, 6])
@@ -45,7 +45,7 @@ Extinction <- function(input) {
     }
   }
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
-                 myWorld, mytree, NodeData, myT, multiplier)
+                 myWorld, mytree, NodeData, myT, multiplier, nbs)
   return(output)
 }  
 

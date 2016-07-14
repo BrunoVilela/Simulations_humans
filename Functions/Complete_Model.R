@@ -12,7 +12,7 @@
 # Washington University in Saint Louis
 #==================================================================
 RunSim <- function(myWorld, P.extinction, P.speciation, 
-                   P.diffusion, P.Arisal, P.TakeOver,
+                   P.diffusion, P.Arisal, P.TakeOver, nbs,
                    N.steps = 250, multiplier = 1.3) {
   # myWorld = The hexagonal world created with the function BuildWorld
   # P.extinction = Probability matrix of extinction
@@ -43,7 +43,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   
   # Common input and output for all the internal modules
   input <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
-                myWorld, mytree, NodeData, myT, multiplier) 
+                myWorld, mytree, NodeData, myT, multiplier, nbs) 
   
   # Functions order to be randomized
   rand_order_func_run <- list("Extinction", "Diffusion", "SpeciationTakeOver", "Arisal")

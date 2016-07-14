@@ -10,6 +10,8 @@ SpeciationTakeOver <- function(input) {
   NodeData <- input[[8]]
   myT <- input[[9]]
   multiplier <- input[[10]]
+  nbs <- input[[11]]
+  
   
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
@@ -25,8 +27,8 @@ SpeciationTakeOver <- function(input) {
     myT <- (1 / trait.length) + myT # Change time
     
     if (!i %in% extinct.list) {
-      myHex <- myWorld[i, 1:3]
-      PosTargets <- getTargets(myHex, myWorld, empty = TRUE)
+      myHex <- myWorld[i, 1]
+      PosTargets <- getTargets(myHex, myWorld, nbs, empty = TRUE)
       emptyORtakeover <- is.null(PosTargets)
       
       # If not null than Speciate going to an empty cell
@@ -52,7 +54,7 @@ SpeciationTakeOver <- function(input) {
   }
   mytree <- uniformBranchs(mytree, myT)
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
-                 myWorld, mytree, NodeData, myT, multiplier)
+                 myWorld, mytree, NodeData, myT, multiplier, nbs)
   return(output)
 }
 
