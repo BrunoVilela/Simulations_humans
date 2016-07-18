@@ -27,16 +27,16 @@ library(spdep)
 combo_pass <- 31 
 
 analyze_this_many <-99  
-Timesteps_pass <- 100
+Timesteps_pass <- 300
 
-cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass, nbs) {
+cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass) {
 
 
 # Load the results
-myfiles <- list.files("big world cluster outputs", full.names = TRUE)
+myfiles <- list.files("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs", full.names = TRUE)
 split.file.name <- strsplit(myfiles, split = "_") 
 
-positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28:31, 33) #should be 35 next once underscore is fixed
+positions <- c(3, 6, 8:11, 13:16, 18:21, 23:26, 28:31, 34) #should be 35 next once underscore is fixed
 
 data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles)))
 colnames(data.result) <- c("File_path", "replicate", "combo",
@@ -54,7 +54,9 @@ for (i in 1:length(positions)) {
   data.result[, i + 1] <- sapply(split.file.name, "[", positions[i])
 }
 
-cluster_input_files <- subset(data.result, combo == combo_pass & Timesteps == Timesteps_pass )
+which(data.result$Timesteps == '300')
+which(data.result$combo == '31')
+cluster_input_files <- subset(data.result, combo == as.character(combo_pass) & Timesteps == as.character(Timesteps_pass) )
 
 if(analyze_this_many > length(myfiles)){analyze_this_many <- length(myfiles)}
 myfiles <- cluster_input_files[1:analyze_this_many, 1]  ## temporary parameter to start index vector
@@ -113,7 +115,7 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
         # Phylogenetic signal for binary traits (D of Fritz and Purvis 2010)
         signal[i] <- phylo.d(compdata, binvar = trait)$DEstimate
         # Spatial signal
-        spatial[i, ] <- JoinCount(myWorld, nbs, repetitions = 100)
+        spatial[i, ] <- JoinCount(myWorld, repetitions = 100)
         # Trasition rates
         traits <- traits[match(myOut$mytree$tip.label, traits[, 2]), ]
         Trasition.rates[i] <- ace(x = traits[, 1], phy = myOut$mytree, type = "discrete")$rates
@@ -211,7 +213,7 @@ b <- Sys.time()
 #clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 100, nbs) 
 
 c <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300, nbs) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300) 
 
 d <- Sys.time()
 #clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 600, nbs) 
