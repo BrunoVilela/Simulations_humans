@@ -26,12 +26,12 @@ coords <- as.matrix(read.csv("coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 50) # subsample
+sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
 system.time(
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
-nbs <- knn2nb(knearneigh(coords[sub, ], k = 10, longlat = TRUE), sym = TRUE) # 10 neighbors
-#nbs <- graph2nb(relativeneigh(coords))
+nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
+              sym = TRUE) # 7 symmetric neighbors
 
 
 dim(myWorld)
