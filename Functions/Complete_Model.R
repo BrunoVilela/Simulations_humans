@@ -23,7 +23,8 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   # N.steps = Number of steps in the model
   # multiplier = The number that will multiply the probabilities according 
   # to environmetal fitness. 
-  # start = the ID of the point that will give risen to humans.
+  # start = the point ID in 'myWorld' that will give risen to humans. 
+  # (humans origin will be in one of the existing positions)
   
   
   
