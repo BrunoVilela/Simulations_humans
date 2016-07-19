@@ -54,7 +54,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   if (any(chosen_combo[[2]] == "Extinct")) {
   	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2)) #prob of extinction
     P.extinction  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
-    P.extinction["Dom", "For"] <- 0.4
+    P.extinction["For", "Dom"] <- 0.4
   } else {
     P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
