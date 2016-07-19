@@ -103,7 +103,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 }
 
 #system.time(
-#sim_run_cluster(1, 31, myWorld, 100)
+#sim_run_cluster(1, 28, myWorld, 300)
 #	)
 	
 
