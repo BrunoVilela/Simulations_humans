@@ -38,7 +38,7 @@ dim(myWorld)
 
 number_of_time_steps <- 300
 replicate_cycle <- 3
-combo_number <- 31
+combo_number <- 25
 
 sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs) {
   
@@ -103,7 +103,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 }
 
 #system.time(
-#sim_run_cluster(1, 28, myWorld, 300)
+#sim_run_cluster(1, 25, myWorld, 300, nbs)
 #	)
 	
 
