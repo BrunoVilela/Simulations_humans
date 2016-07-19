@@ -41,7 +41,7 @@ SpeciationTakeOver <- function(input) {
       }
       
       # If yes go to take over
-      if (emptyORtakeover & sum(P.diffusion) != 0) {
+      if (emptyORtakeover & sum(P.TakeOver) != 0) {
         temp <- TakeOver(myWorld, mytree, P.TakeOver, 
                          NodeData, myT, multiplier = multiplier,
                          i)

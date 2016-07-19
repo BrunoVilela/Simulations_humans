@@ -20,8 +20,8 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   prob.to[!source.trait.dom & target.trait.dom] <- P.TakeOver2[1, 2] 
   prob.to[!source.trait.dom & !target.trait.dom] <- P.TakeOver2[1, 1] 
 
+  # Adjust based on the missmatch of the source
   match.env.targ <- myWorld[PosTargets, 6] != myWorld[PosTargets, 7]
-  # If target is in the 
   Dom.in.For <- match.env.targ & target.trait.dom
   prob.to[Dom.in.For] <- prob.to[Dom.in.For] * multiplier
   
