@@ -53,8 +53,9 @@ mode_Appear <- "Random_new_origin"
 	
 	)
 	
-	if(list.combos == TRUE){print(possible_combos)}
-	return(list(paste("YOU HAVE CHOSEN '", names(possible_combos)[combo_number], "', which includes the following functions:", sep=""),
+	if(list.combos){print(possible_combos)}
+	return(list(paste("YOU HAVE CHOSEN '", names(possible_combos)[combo_number],
+	                  "', which includes the following functions:", sep=""),
 	possible_combos[[combo_number]]))
 }
 

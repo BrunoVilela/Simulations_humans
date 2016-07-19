@@ -53,7 +53,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   if (any(chosen_combo[[2]] == "Extinct")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .1, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2)) #prob of extinction
+    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2)) #prob of extinction
     P.extinction  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
     P.extinction["For", "Dom"] <- 0.4
   } else {
@@ -153,12 +153,12 @@ clusterEvalQ(cl, source("Functions/Speciation_function.R"))
 clusterEvalQ(cl, source("Functions/SpeciationTakeover_Module.R"))
 clusterEvalQ(cl, source("Functions/Takeover_function.R"))
 clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
-
+clusterExport(cl, varlist=ls())
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:15)
-number_of_time_steps_a <- 300
+replicate_cycle <- c(1:1)
+number_of_time_steps_a <- 50
 #number_of_time_steps_b <- 300
 replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs
 
@@ -173,6 +173,7 @@ clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster,
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 29, number_of_time_steps = number_of_time_steps_a,
                myWorld = myWorld, nbs=nbs) 
+
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 31, number_of_time_steps = number_of_time_steps_a,
