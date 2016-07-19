@@ -13,7 +13,7 @@
 #==================================================================
 RunSim <- function(myWorld, P.extinction, P.speciation, 
                    P.diffusion, P.Arisal, P.TakeOver, nbs,
-                   N.steps = 250, multiplier = 1.3) {
+                   N.steps = 250, multiplier = 1.3, start = NULL) {
   # myWorld = The hexagonal world created with the function BuildWorld
   # P.extinction = Probability matrix of extinction
   # P.speciation = Probability matrix of speciation
@@ -23,6 +23,8 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   # N.steps = Number of steps in the model
   # multiplier = The number that will multiply the probabilities according 
   # to environmetal fitness. 
+  # start = the point ID in 'myWorld' that will give risen to humans. 
+  # (humans origin will be in one of the existing positions)
   
   
   
@@ -31,7 +33,10 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   rootnode <-  world.size + 1 # standard convention for root node number
   
   # set the seed for simulation
+  if (is.null(start)) {
   start <- sample(1:world.size, 1)
+  }
+  
   myWorld[start, 4:6] <- c(0, 0, 1) # Setting root(0), time(0), ancestral(1, forager)
   
   # Keep track of the tip numbers for each position in myWorld (when colonized)
