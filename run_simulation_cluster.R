@@ -102,10 +102,10 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 
 #sim_run_cluster(1, 31, myWorld, 100, nbs)
 
-map()
-plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
-points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
-points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
+# map()
+# plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
+# points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
+# points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
 
 
 a <- Sys.time()
