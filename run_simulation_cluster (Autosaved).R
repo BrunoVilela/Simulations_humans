@@ -100,7 +100,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 
 }
 
-#sim_run_cluster(1, 28, myWorld, 300, nbs)
+#sim_run_cluster(1, 31, myWorld, 300, nbs)
 
 # map()
 # plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
