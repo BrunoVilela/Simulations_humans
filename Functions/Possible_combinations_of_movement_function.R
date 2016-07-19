@@ -44,10 +44,10 @@ mode_Appear <- "Random_new_origin"
 	triple_combo_10 = c(mode_Extinct, mode_Speciate, mode_Appear),
 	
 	quad_combo_1 = c(mode_Extinct, mode_Diffusion, mode_Takeover, mode_Speciate),
-	quad_combo_1 = c(mode_Extinct, mode_Diffusion, mode_Takeover, mode_Appear),
-	quad_combo_1 = c(mode_Extinct, mode_Diffusion, mode_Speciate, mode_Appear),
-	quad_combo_1 = c(mode_Extinct, mode_Takeover, mode_Speciate, mode_Appear),
-	quad_combo_1 = c(mode_Diffusion, mode_Takeover, mode_Speciate, mode_Appear),
+	quad_combo_2 = c(mode_Extinct, mode_Diffusion, mode_Takeover, mode_Appear),
+	quad_combo_3 = c(mode_Extinct, mode_Diffusion, mode_Speciate, mode_Appear),
+	quad_combo_4 = c(mode_Extinct, mode_Takeover, mode_Speciate, mode_Appear),
+	quad_combo_5 = c(mode_Diffusion, mode_Takeover, mode_Speciate, mode_Appear),
 	
 	all_modes = c(mode_Extinct, mode_Diffusion, mode_Takeover, mode_Speciate, mode_Appear)
 	
@@ -60,7 +60,7 @@ mode_Appear <- "Random_new_origin"
 
 
 
-#chosen_combo <- combo_of_choice(31, FALSE)
+#chosen_combo <- combo_of_choice(28, FALSE)
 #do.call(chosen_combo[[2]], args = list())
 
 
