@@ -43,7 +43,7 @@ Diffusion  <- function(input) {
           prob.dif <- ifelse(myWorld[PosTargets, 6] == myWorld[PosTargets, 7] &
                                myWorld[PosTargets, 6] == 2,
                              prob.dif / multiplier, prob.dif)
-          prob.dif <- ifelse(myWorld[i, 6] == myWorld[PosTargets, 7] &
+          prob.dif <- ifelse(myWorld[i, 6] != myWorld[PosTargets, 7] &
                                myWorld[i, 6] == 2, 
                              prob.dif / multiplier, prob.dif)
           

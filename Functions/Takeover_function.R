@@ -14,17 +14,15 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
     P.TakeOver2 <- P.TakeOver2 * multiplier
   }
   # How easy is to takeover
-  prob.to <- numeric(1)
+  prob.to <- numeric(length(PosTargets))
   prob.to[source.trait.dom & target.trait.dom] <- P.TakeOver2[2, 2] 
   prob.to[source.trait.dom & !target.trait.dom] <- P.TakeOver2[2, 1] 
   prob.to[!source.trait.dom & target.trait.dom] <- P.TakeOver2[1, 2] 
   prob.to[!source.trait.dom & !target.trait.dom] <- P.TakeOver2[1, 1] 
-  prob.to <- ifelse(myWorld[PosTargets, 6] == myWorld[PosTargets, 7], 
-                    prob.to / multiplier, prob.to)
-  
+
   match.env.targ <- myWorld[PosTargets, 6] != myWorld[PosTargets, 7]
   # If target is in the 
-  Dom.in.For <- match.env.targ & source.trait.dom
+  Dom.in.For <- match.env.targ & target.trait.dom
   prob.to[Dom.in.For] <- prob.to[Dom.in.For] * multiplier
   
   # How good is the env for me
