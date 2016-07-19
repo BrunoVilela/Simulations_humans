@@ -38,14 +38,14 @@ dim(myWorld)
 
 number_of_time_steps <- 100
 replicate_cycle <- 3
-combo_number <- 25
+combo_number <- 31
 
 sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs) {
   
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
   if (any(chosen_combo[[2]] == "Speciate")) {
-  	prob_choose <- as.numeric(formatC(rnorm(1, mean = .2, sd =.05), width = 3,flag = 0, digits=2))  #prob speciation
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2))  #prob speciation
     P.speciation <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
   } else {
     P.speciation <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
@@ -96,9 +96,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
                           paste(P.diffusion, collapse="_"), "_P.TakeOver_",
                           paste(P.TakeOver, collapse="_"),"_P.Arisal_",
                           paste(P.Arisal, collapse="_"),
-                          "_timesteps_", number_of_time_steps,
-                          "_", formatC(as.integer(Sys.time())/10000000000, width = 3) ,
-                          ".Rdata"))
+                          "_timesteps_", number_of_time_steps, ".Rdata"))
 
 }
 
@@ -162,40 +160,15 @@ clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster,
              
 c <- Sys.time()
 
-#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-#               combo_number = 31, number_of_time_steps = number_of_time_steps_b,
-#               myWorld = myWorld) 
-
-#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-#               combo_number = 29, number_of_time_steps = number_of_time_steps_b,
-#               myWorld = myWorld) 
-               
-#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-#               combo_number = 28, number_of_time_steps = number_of_time_steps_b,
-#               myWorld = myWorld) 
-
-#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-#               combo_number = 25, number_of_time_steps = number_of_time_steps_b,
-#               myWorld = myWorld) 
-
-d <- Sys.time()
-
 
 
 difftime(b, a)
 # Time to load packages
 
 difftime(c, b)
-# Time to run combo 31
+# Time to run 
 
-difftime(d, c)
-# Time to run combo 29
 
-difftime(e, d)
-# Time to run combo 28
-
-difftime(f, e)
-# Time to run combo 25
 
 stopCluster(cl)
 
