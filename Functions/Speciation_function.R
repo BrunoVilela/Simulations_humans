@@ -10,7 +10,7 @@ Speciation <- function(NodeData, myWorld, i, P.speciation,
   prob.sp[!env.match & domesticator] <- P.speciation[2, 1] # Prob of
   prob.sp[!env.match & !domesticator] <- P.speciation[1, 2] # Prob of
   
-  if (runif(1) > prob.sp) {
+  if (runif(1) < prob.sp) {
     # speciate (i.e., send diaspora to an adjacent empty cell)
     Temp <- speciate(myT = myT, Parent = i, PosTargets = PosTargets, 
                      myWorld = myWorld, mytree = mytree, NodeData = NodeData)
