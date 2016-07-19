@@ -22,8 +22,8 @@ library(caper)
 library(msm)
 library(spdep)
 
-coords <- as.matrix(read.csv("coords.csv", row.names = 1))
-conds <- as.matrix(read.csv("suitability.csv", row.names = 1))
+coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
+conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
 sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
@@ -107,12 +107,13 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 #	)
 	
 
-map()
-plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
-points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
-points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
-plot(myOut$mytree)
-	
+
+#map()
+#plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
+#points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
+#points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
+
+
 a <- Sys.time()
 library(parallel)
 
@@ -142,26 +143,26 @@ clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:200)
+replicate_cycle <- c(1:300)
 number_of_time_steps_a <- 300
 #number_of_time_steps_b <- 300
 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 31, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld) 
+               myWorld = myWorld, nbs=nbs) 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 29, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld) 
+               myWorld = myWorld, nbs=nbs) 
                
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 28, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld) 
+               myWorld = myWorld, nbs=nbs) 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 25, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld) 
+               myWorld = myWorld, nbs=nbs) 
              
 c <- Sys.time()
 

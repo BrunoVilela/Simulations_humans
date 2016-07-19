@@ -2,13 +2,13 @@
 setwd("~/Box Sync/colliding ranges/Simulations_humans/results cluster output")
 
 # Plot Results analysis
-load("Results_for_25_simulated_for_ 100_time_steps_analysis.R")
+load("Results_for_25_simulated_for_ 300_time_steps_analysis.R")
 a <- data.result
-load("Results_for_28_simulated_for_ 100_time_steps_analysis.R")
+load("Results_for_28_simulated_for_ 300_time_steps_analysis.R")
 b <- data.result
-load("Results_for_29_simulated_for_ 100_time_steps_analysis.R")
+load("Results_for_29_simulated_for_ 300_time_steps_analysis.R")
 c <- data.result
-load("Results_for_31_simulated_for_ 100_time_steps_analysis.R")
+load("Results_for_31_simulated_for_ 300_time_steps_analysis.R")
 d <- data.result
 
 
@@ -76,7 +76,7 @@ plot.output <- function(c, col = c("cornflowerblue", "firebrick", "limegreen", "
 }
 
 # Plot Results analysis
-times <- c("", 25, 50, 75, 100)
+times <- c(300)
 ntimes <- length(times) - 1
 
 
@@ -85,14 +85,14 @@ for (i in 1:ntimes) {
 }
 
 combo.type <- c(25, 28, 29, 31)
-
-for (i in combo.type) {
-  for (j in 1:ntimes) {
-    load(paste0("results cluster output/Results_for_", i,"_simulated_for_ ", 
-                times[j + 1], "_time_steps_analysis.R"))
+setwd("~/Box Sync/colliding ranges/Simulations_humans/results cluster output")
+for (k in combo.type) {
+  list.files()
+    load(paste0("Results_for_", k,"_simulated_for_ ", 
+                "300", "_time_steps_analysis.R"))
     assign(paste0("plot.data.", times[j + 1]), 
            rbind(get(paste0("plot.data.", times[j + 1])), data.result))
-  }
+  
 }
 
 titles <- c("Predominance (F - D)", "Spatial signal in DF",
