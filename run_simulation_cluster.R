@@ -26,7 +26,7 @@ coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 300) # subsample (remove when running for all)
 system.time(
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
@@ -100,7 +100,10 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 
 }
 
-#sim_run_cluster(1, 28, myWorld, 300, nbs)
+#sim_run_cluster(1, 31, myWorld, 300, nbs)
+
+
+
 
 # map()
 # plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
@@ -116,6 +119,18 @@ library(parallel)
 cl <- makeCluster(detectCores() , type = "PSOCK")
 
 # Push resources out to cluster'
+clusterEvalQ(cl, library(TotalCopheneticIndex))
+clusterEvalQ(cl, library(phytools))
+clusterEvalQ(cl, library(geiger))
+clusterEvalQ(cl, library(caper))
+clusterEvalQ(cl, library(spdep))
+clusterEvalQ(cl, library(msm))
+clusterEvalQ(cl, library(plyr))
+clusterEvalQ(cl, library(apTreeshape))
+clusterEvalQ(cl, library(gtools))
+clusterEvalQ(cl, library(ape))
+clusterEvalQ(cl, library(adephylo))
+clusterEvalQ(cl, library(diversitree))
 clusterEvalQ(cl, library(msm))
 clusterEvalQ(cl, library(gtools))
 clusterEvalQ(cl, library(ape))
@@ -141,7 +156,7 @@ b <- Sys.time()
 replicate_cycle <- c(1:15)
 number_of_time_steps_a <- 300
 #number_of_time_steps_b <- 300
-
+replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 25, number_of_time_steps = number_of_time_steps_a,
