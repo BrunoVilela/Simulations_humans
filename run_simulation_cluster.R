@@ -139,7 +139,7 @@ clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:300)
+replicate_cycle <- c(1:15)
 number_of_time_steps_a <- 300
 #number_of_time_steps_b <- 300
 
