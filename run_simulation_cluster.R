@@ -26,7 +26,7 @@ coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
 system.time(
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
@@ -60,14 +60,14 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   if (any(chosen_combo[[2]] == "Diffusion")) {
-  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=0.5, lower=0.05), width = 3,flag = 0, digits=2)) #prob of diffusion
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of diffusion
     P.diffusion <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom") 
   } else {
     P.diffusion <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (any(chosen_combo[[2]] == "Takeover")) {
-  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=0.5, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
     P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
   } else {
     P.TakeOver <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
@@ -102,10 +102,10 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 
 #sim_run_cluster(1, 31, myWorld, 100, nbs)
 
-# map()
-# plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
-# points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
-# points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
+map()
+plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
+points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
+points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
 
 
 a <- Sys.time()
