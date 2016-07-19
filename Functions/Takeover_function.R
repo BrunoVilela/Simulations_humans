@@ -10,8 +10,8 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   target.trait.dom <- myWorld[PosTargets, 6] == 2
   P.TakeOver2 <- P.TakeOver
   # If I am at the rigth place give me more chances!
-  if (myWorld[i, 6] == myWorld[i, 7] & source.trait.dom) { 
-    P.TakeOver2 <- P.TakeOver * multiplier
+  if (myWorld[i, 6] == myWorld[i, 7] & source.trait.dom) {
+    P.TakeOver2 <- P.TakeOver2 * multiplier
   }
   # How easy is to takeover
   prob.to <- numeric(1)
@@ -19,11 +19,14 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   prob.to[source.trait.dom & !target.trait.dom] <- P.TakeOver2[2, 1] 
   prob.to[!source.trait.dom & target.trait.dom] <- P.TakeOver2[1, 2] 
   prob.to[!source.trait.dom & !target.trait.dom] <- P.TakeOver2[1, 1] 
+  prob.to <- ifelse(myWorld[PosTargets, 6] == myWorld[PosTargets, 7], 
+                    prob.to / multiplier, prob.to)
+  
   match.env.targ <- myWorld[PosTargets, 6] != myWorld[PosTargets, 7]
   # If target is in the 
   Dom.in.For <- match.env.targ & source.trait.dom
   prob.to[Dom.in.For] <- prob.to[Dom.in.For] * multiplier
-
+  
   # How good is the env for me
   good <- myWorld[i, 6] == myWorld[PosTargets, 7] & source.trait.dom
   
@@ -38,7 +41,7 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
     PosTargets <- PosTargets[choice]
     prob.to <- prob.to[choice]
   }
-
+  
   if (prob.to > runif(1)) {
     extinct.list <- PosTargets
     temp <- sub.TakeOver(mytree, index.tips = PosTargets, 
@@ -48,8 +51,8 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
     NodeData <- temp$NodeData
   }
   
-return(list("mytree" = mytree, "myWorld" = myWorld,
-            "NodeData" = NodeData, "extinct.list" = extinct.list))  
+  return(list("mytree" = mytree, "myWorld" = myWorld,
+              "NodeData" = NodeData, "extinct.list" = extinct.list))  
 }
 
 

@@ -28,9 +28,10 @@ Extinction <- function(input) {
       env.match <- myWorld[trait.nonNA, 7] == myWorld[trait.nonNA, 6]
       domesticator <- myWorld[trait.nonNA, 6] == 2
       prob.ext[env.match & domesticator] <- P.extinction[1, 1] # Prob of 
-      prob.ext[env.match & !domesticator] <- P.extinction[2, 2] # Prob of
-      prob.ext[!env.match & domesticator] <- P.extinction[1, 2] # Prob of
-      prob.ext[!env.match & !domesticator] <- P.extinction[2, 1] # Prob of
+      prob.ext[env.match & !domesticator] <- P.extinction[2, 2] # Prob of 
+      prob.ext[!env.match & domesticator] <- P.extinction[1, 2] * multiplier# Prob of
+      prob.ext[!env.match & !domesticator] <- P.extinction[2, 1] * multiplier # Prob of
+      
       extinction <- runif(trait.length) < prob.ext
       survivors <- (trait.length - sum(extinction)) 
       if(survivors <= 1) {

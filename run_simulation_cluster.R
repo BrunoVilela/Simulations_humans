@@ -36,7 +36,7 @@ nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
 
 dim(myWorld)
 
-number_of_time_steps <- 100
+number_of_time_steps <- 300
 replicate_cycle <- 3
 combo_number <- 31
 
@@ -52,27 +52,29 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   if (any(chosen_combo[[2]] == "Extinct")) {
-  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.05, lower=0, upper=1), width = 3,flag = 0, digits=2)) #prob of extinction
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2)) #prob of extinction
     P.extinction  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
+    P.extinction["Dom", "For"] <- 0.4
   } else {
     P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (any(chosen_combo[[2]] == "Diffusion")) {
-  	prob_choose <- as.numeric(formatC(rnorm(1, mean = .3, sd =.1), width = 3,flag = 0, digits=2)) #prob of diffusion
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.05, upper=1, lower=0), width = 3,flag = 0, digits=2)) #prob of diffusion
     P.diffusion <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom") 
   } else {
     P.diffusion <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (any(chosen_combo[[2]] == "Takeover")) {
-  	prob_choose <- as.numeric(formatC(rnorm(1, mean = .3, sd =.1), width = 3,flag = 0, digits=2)) #prob of takeover
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .1, sd =.05, upper=1, lower=0), width = 3,flag = 0, digits=2)) #prob of takeover
     P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
-  } else {P.TakeOver <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
+  } else {
+    P.TakeOver <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (any(chosen_combo[[2]] == "Random_new_origin")) {
-  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .01, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
+  	prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
     P.Arisal <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom") 
   } else {
     P.Arisal <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
@@ -80,7 +82,8 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs,
-                          N.steps = number_of_time_steps, silent = F)
+                          N.steps = number_of_time_steps, silent = TRUE, 
+                          multiplier = 2)
   
 
  save(myOut, file= paste0("big world cluster outputs/myOut_replicate_", 
@@ -108,7 +111,7 @@ map()
 plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
 points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
 points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
-
+plot(myOut$mytree)
 	
 a <- Sys.time()
 library(parallel)

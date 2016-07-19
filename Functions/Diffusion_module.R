@@ -42,7 +42,11 @@ Diffusion  <- function(input) {
           # HERE MULTIPLE THE PROBABILITY BY THE ENV MATCH
           prob.dif <- ifelse(myWorld[PosTargets, 6] == myWorld[PosTargets, 7] &
                                myWorld[PosTargets, 6] == 2,
-                             prob.dif/multiplier, prob.dif)
+                             prob.dif / multiplier, prob.dif)
+          prob.dif <- ifelse(myWorld[i, 6] == myWorld[PosTargets, 7] &
+                               myWorld[i, 6] == 2, 
+                             prob.dif / multiplier, prob.dif)
+          
           if (prob.dif > runif(1)) {
             myWorld[PosTargets, 6] <- myWorld[i, 6]
           }
@@ -52,4 +56,5 @@ Diffusion  <- function(input) {
   }
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
                  myWorld, mytree, NodeData, myT, multiplier, nbs)
-  return(output)}
+  return(output)
+}
