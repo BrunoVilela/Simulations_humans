@@ -38,7 +38,7 @@ dim(myWorld)
 
 number_of_time_steps <- 100
 replicate_cycle <- 3
-combo_number <- 31
+combo_number <- 25
 
 sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs) {
   
@@ -102,10 +102,8 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 
 }
 
-#system.time(
 #sim_run_cluster(1, 31, myWorld, 100, nbs)
-#	)
-	
+
 # map()
 # plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
 # points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
