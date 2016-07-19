@@ -104,10 +104,10 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 #	)
 	
 
-map()
-plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
-points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
-points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
+#map()
+#plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
+#points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
+#points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
 
 	
 a <- Sys.time()
@@ -139,7 +139,7 @@ clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:200)
+replicate_cycle <- c(1:300)
 number_of_time_steps_a <- 300
 #number_of_time_steps_b <- 300
 
