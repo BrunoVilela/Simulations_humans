@@ -152,13 +152,13 @@ weibull_plots <- function(data.result_sub){
 
 # Plot Results analysis
 load("Results_for_25_simulated_for_ 300_time_steps_analysis.R")
-a <- data.result
+a <- data.result  ## S + E + A 
 load("Results_for_29_simulated_for_ 300_time_steps_analysis.R")
-b <- data.result
+b <- data.result  ## S + E + A + T
 load("Results_for_28_simulated_for_ 300_time_steps_analysis.R")
-c <- data.result
+c <- data.result  ## S + E + A + D
 load("Results_for_31_simulated_for_ 300_time_steps_analysis.R")
-d <- data.result
+d <- data.result ## S + E + A + D + T
 
 13*13
 pdf(file="~/Desktop/Phylogenetic Automaton Dashboard.pdf", height=11, width=8.5)
