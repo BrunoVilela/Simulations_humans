@@ -22,8 +22,8 @@ library(caper)
 library(msm)
 library(spdep)
 
-coords <- as.matrix(read.csv("coords.csv", row.names = 1))
-conds <- as.matrix(read.csv("suitability.csv", row.names = 1))
+coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
+conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
 sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
@@ -146,19 +146,19 @@ number_of_time_steps_a <- 300
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 31, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld) 
+               myWorld = myWorld, nbs=nbs) 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 29, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld) 
+               myWorld = myWorld, nbs=nbs) 
                
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 28, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld) 
+               myWorld = myWorld, nbs=nbs) 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 25, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld) 
+               myWorld = myWorld, nbs=nbs) 
              
 c <- Sys.time()
 
