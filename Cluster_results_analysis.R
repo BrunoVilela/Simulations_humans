@@ -32,7 +32,7 @@ for (i in 1:length(load.files)) {
 
 ###################################################
 #combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
-#analyze_this_many <- 40  
+#analyze_this_many <- 4000  
 #Timesteps_pass <- "300.Rdata"
 #i <- 99
 

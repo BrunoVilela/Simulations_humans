@@ -31,7 +31,7 @@ library(spdep)
 #replicate_cycle <- 3
 #combo_number <- 31
 
-sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs) {
+sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips) {
   
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
@@ -89,7 +89,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
                            paste(P.diffusion, collapse="_"), "_P.TakeOver_",
                            paste(P.TakeOver, collapse="_"),"_P.Arisal_",
                            paste(P.Arisal, collapse="_"),
-                           "_timesteps_", number_of_time_steps, "_.Rdata"))
+                           "_timesteps_", number_of_time_steps, "_ntips_", number_of_tips,"_.Rdata"))
   
 }
 
@@ -98,7 +98,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 ##### Specify simulation parameters #################################
 
 number_of_tips <- 300
-number_of_time_steps_a <- 300
+number_of_time_steps_a <- 3
 replicate_cycle <- c(1:15)  #number of replicates
 
 
@@ -163,20 +163,20 @@ b <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 25, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 28, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 29, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 31, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 c <- Sys.time()
 
