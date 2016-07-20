@@ -1,13 +1,6 @@
-i <- 99
 
-# Code to evaluate the outputs
- setwd("~/Desktop")
-# Required packages and functions
-load.files <- list.files(path = "~/Box Sync/colliding ranges/Simulations_humans/Functions", pattern = ".R",
-                         full.names = TRUE)
-for (i in 1:length(load.files)) {
-  source(load.files[i])
-}
+
+######Read in R libraries##############################
 #source("Plot_output.R")
 library(gtools)
 library(ape)
@@ -24,20 +17,35 @@ library(survival)
 library(maps)
 library(spdep)
 
-combo_pass <- 31 
 
-analyze_this_many <-99  
-Timesteps_pass <- 300
+######Read in R functions##############################
+
+ setwd("~/Desktop")
+# Required packages and functions
+load.files <- list.files(path = "~/Box Sync/colliding ranges/Simulations_humans/Functions", pattern = ".R",
+                         full.names = TRUE)
+for (i in 1:length(load.files)) {
+  source(load.files[i])
+}
+
+
+
+###################################################
+#combo_pass <- 31    #These are for testing the function. Do not use in actual model runs.
+#analyze_this_many <-99  
+#Timesteps_pass <- 300
+#i <- 99
 
 cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass) {
 
-
-# Load the results
+##### Load the results ########################
 myfiles <- list.files("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs", full.names = TRUE)
-split.file.name <- strsplit(myfiles, split = "_") 
 
-positions <- c(3, 6, 8:11, 13:16, 18:21, 23:26, 28:31, 34) #should be 35 next once underscore is fixed
+##### parse file names to retrieve simulation parameter info ########################
+split.file.name <- strsplit(myfiles, split = "_")   #split file name everywhere there is and underscore
 
+
+positions <- c(3, 6, 8:11, 13:16, 18:21, 23:26, 28:31, 34) #
 data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles)))
 colnames(data.result) <- c("File_path", "replicate", "combo",
                            "speciation_1", "speciation_2", "speciation_3", "speciation_4",
@@ -48,21 +56,24 @@ colnames(data.result) <- c("File_path", "replicate", "combo",
                            "Timesteps")
 data.result[, 1] <- myfiles
 head(data.result)
-data.result.blank <- data.result
+
+data.result.blank <- data.result # pass matrix to new object to be used seperatly below
 
 for (i in 1:length(positions)) {
   data.result[, i + 1] <- sapply(split.file.name, "[", positions[i])
 }
 
+##### Subset matrix of file information to pull out the files we want to analyze together ########################
 which(data.result$Timesteps == '300')
 which(data.result$combo == '31')
 cluster_input_files <- subset(data.result, combo == as.character(combo_pass) & Timesteps == as.character(Timesteps_pass) )
 
+##### assign each divided section of the file name to a column of a matrix ########################
 if(analyze_this_many > length(myfiles)){analyze_this_many <- length(myfiles)}
 myfiles <- cluster_input_files[1:analyze_this_many, 1]  ## temporary parameter to start index vector
 data.result <- cluster_input_files[1:analyze_this_many, ]
   
-  
+ ##### Reserve locations in the matrix for the analysis outputs ##################### 
   # Empty results
   l.myfiles <- length(myfiles)
   ## Data metrics
@@ -83,6 +94,199 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
   weibull <- matrix(ncol = 2, nrow = l.myfiles)
   colnames(weibull) <- c("shape", "scale")
   
+  
+ ##### Calculate each metric from the parameters provided by the file name and add them to the matrix  ###########
+############################################################################################
+
+##### (0) Pull necessary variables from simulated trees and organize into a single object for all the test below to pull from.
+
+## NOTE: need to deal with NAs here so we don't have to deal with them later with each function
+
+## Units: (1) Branch length, (2) pairwise distance, (3) Phylogenetic isolation, (4) tree topology
+
+
+##### (1) Spatial metrics ###################
+#######################################
+
+
+
+##### (2) Tree metric -- Richness - Sum ##################
+##################################################
+
+
+## 2a) Branch lengths -- Amount of evolutionary history
+
+	## 2a.1 Across species
+	
+		# Anchor test = PD (Faith's phylogenetic diversity) 
+
+	## 2a.2 Across individuals
+		
+		#delta nPD
+		
+	## 2a.3 Effective (q=0)
+	
+		#oD(T)*
+		
+		#oPD(T)*
+	
+	
+	## 2a.4 Per species PDab
+	
+		# endemic
+		
+		#PE
+
+
+
+## 2b) Pairwise distance -- Sum of pairwise distances
+
+
+
+## 2c) Phylogenetic isolation -- Sum of evolutionary distinctiveness
+
+
+
+##### (3) Tree metric -- Divergence - Mean ###############
+##################################################
+
+
+
+
+## 3a) Branch lengths 
+
+	## 3a.1 -- Sum of branch lengths divided by species richness
+
+		# avPD 
+		
+		# avPDab
+		
+
+	## 3a.2 -- Effective number of species given phylogenetic balance and abundance evenness (q>0)
+	
+		#qD(t)*
+		
+		
+		#qPD(T)*
+		
+	
+	## 3a.3 -- associated entropies
+	
+		#Hp*
+		
+		
+		#Lq*
+
+## 3b) Pairwise distance/ similarities of all
+
+	## 3b.1 -- Effective number of species given phylogenetic balance and abundance evenness 
+	
+		#qD^z(p)*
+	
+	## 3b.2 -- Mean of all distances including zero intra-species distances
+	
+		#Rao's QE
+		
+		#MPDab
+		
+		# PSE
+		
+		#J
+	
+	## 3b.3 -- Mean inter-species distances
+	
+		# Anchor test = MPD (mean pairwise distance)
+		
+		# AvTD
+		
+		# PSV
+		
+		#interMPDab
+		
+
+## 3c) Pairwise distance/ similarities of nearest neighbors -- Mean shortest distance between a species and all others
+
+	#MNTD
+	
+	#MNTDab
+	
+## 3d) Phylogenetic isolation -- Mean of species evolutionary distinctiveness
+
+	# mean(ED)
+	
+
+
+##### (4) Tree metric -- Regularity - Variance ##############
+##################################################
+
+
+
+ 
+## 4a) Tree topology -- Branching symmetry and distribution
+
+	#Ic
+	
+	#Upsilon (Y)
+	
+	#IAC
+
+## 4b) Pairwise distance/all distances -- Variance of pairwise distances 
+
+	# Anchor test = VPD (variation of pairwise distance)
+	
+	# A+
+
+	# VarTD
+	
+	# VPDab
+	
+	# interVPDab
+	
+
+## 4c) Pairwise distance/nearest neighbor -- Variance of nearest neighbour distance
+
+	# VNTD
+	
+	# VNTDab
+	
+	# PEve
+	
+## 4d) Phylogenetic isolation -- Variance of species isolation metrics
+
+	#var(ED)
+	
+	#Eed
+	
+	#Hed
+	
+	# Haed
+	
+	#qD(P)*
+	
+	#qD(AP)*
+	
+	
+
+
+##### (5) Tree metric -- Macroevolutionary  ###############
+##################################################
+
+
+## Phylogenetic signal
+
+
+## Speciation vs extinction rates
+
+
+## Transistion rates (variable rates)
+
+
+## Instantaneous rate or speciation and extinction from BAMM 
+
+
+
+
+
   for (i in 1:l.myfiles) {
 #i <- 1
     if(file.exists(myfiles[i])){load(myfiles[i])}else{myOut <- NA}
