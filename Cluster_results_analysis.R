@@ -20,7 +20,7 @@ library(spdep)
 
 ######Read in R functions##############################
 
- setwd("~/Desktop")
+ 
 # Required packages and functions
 load.files <- list.files(path = "~/Box Sync/colliding ranges/Simulations_humans/Functions", pattern = ".R",
                          full.names = TRUE)
@@ -31,22 +31,22 @@ for (i in 1:length(load.files)) {
 
 
 ###################################################
-#combo_pass <- 31    #These are for testing the function. Do not use in actual model runs.
-#analyze_this_many <-99  
-#Timesteps_pass <- 300
+#combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
+#analyze_this_many <- 40  
+#Timesteps_pass <- "300.Rdata"
 #i <- 99
 
 cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass) {
 
 ##### Load the results ########################
-myfiles <- list.files("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs", full.names = TRUE)
+myfiles_full <- list.files("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs", full.names = TRUE)
 
 ##### parse file names to retrieve simulation parameter info ########################
-split.file.name <- strsplit(myfiles, split = "_")   #split file name everywhere there is and underscore
+split.file.name <- strsplit(myfiles_full, split = "_")   #split file name everywhere there is and underscore
 
 
 positions <- c(3, 6, 8:11, 13:16, 18:21, 23:26, 28:31, 34) #
-data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles)))
+data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles_full)))
 colnames(data.result) <- c("File_path", "replicate", "combo",
                            "speciation_1", "speciation_2", "speciation_3", "speciation_4",
                            "extinction_1", "extinction_2", "extinction_3", "extinction_4",
@@ -54,7 +54,7 @@ colnames(data.result) <- c("File_path", "replicate", "combo",
                            "takeover_1", "takeover_2", "takeover_3", "takeover_4",
                            "arisal_1", "arisal_2", "arisal_3", "arisal_4",
                            "Timesteps")
-data.result[, 1] <- myfiles
+data.result[, 1] <- myfiles_full
 head(data.result)
 
 data.result.blank <- data.result # pass matrix to new object to be used seperatly below
@@ -67,9 +67,10 @@ for (i in 1:length(positions)) {
 which(data.result$Timesteps == '300')
 which(data.result$combo == '31')
 cluster_input_files <- subset(data.result, combo == as.character(combo_pass) & Timesteps == as.character(Timesteps_pass) )
+rownames(cluster_input_files) <- 1:length(cluster_input_files[,1])
 
 ##### assign each divided section of the file name to a column of a matrix ########################
-if(analyze_this_many > length(myfiles)){analyze_this_many <- length(myfiles)}
+if(analyze_this_many > length(cluster_input_files)){analyze_this_many <- length(cluster_input_files[,1])}
 myfiles <- cluster_input_files[1:analyze_this_many, 1]  ## temporary parameter to start index vector
 data.result <- cluster_input_files[1:analyze_this_many, ]
   
