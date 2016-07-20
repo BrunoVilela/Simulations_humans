@@ -22,11 +22,13 @@ library(caper)
 library(msm)
 library(spdep)
 
+number_of_tips <- 300
+
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), number_of_tips) # subsample (remove when running for all)
 
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
@@ -140,25 +142,12 @@ clusterEvalQ(cl, library(gtools))
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(adephylo))
 clusterEvalQ(cl, library(diversitree))
-clusterEvalQ(cl, source("Functions/Arisal_module.R"))
-clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
-clusterEvalQ(cl, source("Functions/Build_world_function.R"))
-clusterEvalQ(cl, source("Functions/Complete_Model.R"))
-clusterEvalQ(cl, source("Functions/Diffusion_module.R"))
-clusterEvalQ(cl, source("Functions/Extinction_module.R"))
-clusterEvalQ(cl, source("Functions/Possible_combinations_of_movement_function.R"))
-clusterEvalQ(cl, source("Functions/spatial_join.R"))
-clusterEvalQ(cl, source("Functions/Speciate_function.R"))
-clusterEvalQ(cl, source("Functions/Speciation_function.R"))
-clusterEvalQ(cl, source("Functions/SpeciationTakeover_Module.R"))
-clusterEvalQ(cl, source("Functions/Takeover_function.R"))
-clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 clusterExport(cl, varlist=ls())
 
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:1)
-number_of_time_steps_a <- 50
+replicate_cycle <- c(1:15)
+number_of_time_steps_a <- 300
 #number_of_time_steps_b <- 300
 replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs
 
