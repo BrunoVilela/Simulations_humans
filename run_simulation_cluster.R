@@ -95,7 +95,6 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 }
 
 
-#####################################################################
 
 
 #####################################################################
@@ -103,6 +102,18 @@ coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
+
+
+##### Specify simulation parameters #################################
+
+number_of_tips <- length(coords[,1])
+number_of_time_steps_a <- 300
+replicate_cycle <- c(1:16)  #number of replicates
+
+#####################################################################
+
+
+
 sub <- sample(1:nrow(coords), number_of_tips) # subsample (remove when running for all)
 
 system.time(
@@ -113,12 +124,6 @@ nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
 
 dim(myWorld)
 
-
-##### Specify simulation parameters #################################
-
-number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 300
-replicate_cycle <- c(1:15)  #number of replicates
 
 
 
