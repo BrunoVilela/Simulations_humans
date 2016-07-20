@@ -89,7 +89,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
                            paste(P.diffusion, collapse="_"), "_P.TakeOver_",
                            paste(P.TakeOver, collapse="_"),"_P.Arisal_",
                            paste(P.Arisal, collapse="_"),
-                           "_timesteps_", number_of_time_steps, ".Rdata"))
+                           "_timesteps_", number_of_time_steps, "_.Rdata"))
   
 }
 
