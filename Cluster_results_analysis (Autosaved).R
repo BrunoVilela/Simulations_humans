@@ -133,19 +133,17 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 	
 	## 2a.4 Per species PDab
 	
-		# endemic
-		
-		#PE
+		#PE  #IGNORED BECAUSE IT USES RANGE SIZE 
 
 
 
 ## 2b) Pairwise distance -- Sum of pairwise distances
 
-
+	# F -- Extensive quadratic entropy
 
 ## 2c) Phylogenetic isolation -- Sum of evolutionary distinctiveness
 
-
+	# ED - Summed evolutionary distinctiveness
 
 ##### (3) Tree metric -- Divergence - Mean ###############
 ##################################################
@@ -157,9 +155,9 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 
 	## 3a.1 -- Sum of branch lengths divided by species richness
 
-		# avPD 
+		# avPD -- Average phylogenetic diversity
 		
-		# avPDab
+		# avPDab #IGNORED BECAUSE IT USES ABUNDANCE
 		
 
 	## 3a.2 -- Effective number of species given phylogenetic balance and abundance evenness (q>0)
