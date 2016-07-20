@@ -25,6 +25,7 @@ library(geiger)
 library(caper)
 library(msm)
 library(spdep)
+library(parallel)
 
 #####################################################################
 #number_of_time_steps <- 100 ## these are for testing the function, not for the main code
@@ -95,12 +96,6 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 
 
 #####################################################################
-##### Specify simulation parameters #################################
-
-number_of_tips <- 300
-number_of_time_steps_a <- 3
-replicate_cycle <- c(1:15)  #number of replicates
-
 
 
 #####################################################################
@@ -118,6 +113,15 @@ nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
 
 dim(myWorld)
 
+
+##### Specify simulation parameters #################################
+
+number_of_tips <- length(coords[,1])
+number_of_time_steps_a <- 300
+replicate_cycle <- c(1:15)  #number of replicates
+
+
+
 #sim_run_cluster(1, 31, myWorld, 300, nbs)
 
 
@@ -129,7 +133,7 @@ dim(myWorld)
 
 #####################################################################
 a <- Sys.time()
-library(parallel)
+
 
 
 # Set up cluster

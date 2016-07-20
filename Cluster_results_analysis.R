@@ -99,7 +99,7 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
  ##### Calculate each metric from the parameters provided by the file name and add them to the matrix  ###########
 ############################################################################################
 
-##### (0) Pull necessary variables from simulated trees and organize into a single object for all the test below to pull from.
+##### (0) Pull necessary variables from simulated trees and organize into a single object for all the tests below to pull from.
 
 ## NOTE: need to deal with NAs here so we don't have to deal with them later with each function
 
