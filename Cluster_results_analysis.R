@@ -33,7 +33,7 @@ for (i in 1:length(load.files)) {
 ###################################################
 #combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
 #analyze_this_many <- 4000  
-#Timesteps_pass <- "300.Rdata"
+#Timesteps_pass <- 300
 #i <- 99
 
 cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass) {
@@ -65,7 +65,7 @@ for (i in 1:length(positions)) {
 
 ##### Subset matrix of file information to pull out the files we want to analyze together ########################
 which(data.result$Timesteps == '300')
-which(data.result$combo == '31')
+which(data.result$combo == '25')
 cluster_input_files <- subset(data.result, combo == as.character(combo_pass) & Timesteps == as.character(Timesteps_pass) )
 rownames(cluster_input_files) <- 1:length(cluster_input_files[,1])
 
@@ -96,14 +96,52 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
   colnames(weibull) <- c("shape", "scale")
   
   
- ##### Calculate each metric from the parameters provided by the file name and add them to the matrix  ###########
+ ##### Load the file specified by each row for independent analysis ###################
+#for (i in 1:l.myfiles) {
+	
+	all_trees <- vector("list",2)
+	class(all_trees) <- "multiPhylo"
+	
+	
+	
+	i <- 3
+	for(i in 1:length(myfiles)){
+    	if(file.exists(myfiles[i])){load(myfiles[i])}
+    		
+    	if(length(myOut) != 1){
+  	 		all_trees[[i]] <- myOut$mytree
+    	}
+    }
+    
+   
+    
+##### Calculate each metric from the parameters provided by the file name and add them to the matrix  ###########
 ############################################################################################
 
 ##### (0) Pull necessary variables from simulated trees and organize into a single object for all the tests below to pull from.
 
-## NOTE: need to deal with NAs here so we don't have to deal with them later with each function
+	str(all_trees)
 
-## Units: (1) Branch length, (2) pairwise distance, (3) Phylogenetic isolation, (4) tree topology
+	## 0a) Branch lengths
+	
+	a <- unlist(all_trees, use.names=TRUE, recursive=FALSE)
+    b <- which(names(a) == "edge.length")
+   	Branch_Lengths <- a[b]
+   	
+
+	## 0b) Pairwise distance between tips
+	
+	Pairwise_dist <- cophenetic(all_trees[[2]]) #R package ape
+	
+	
+	
+	
+	## 0c) Phylogenetic isoloation
+	
+
+	## 0d) tree topology
+
+## NOTE: need to deal with NAs here so we don't have to deal with them later with each function
 
 
 ##### (1) Spatial metrics ###################
@@ -120,6 +158,8 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 	## 2a.1 Across species
 	
 		# Anchor test = PD (Faith's phylogenetic diversity) 
+
+			Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, sum)))
 
 	## 2a.2 Across individuals
 		
@@ -140,7 +180,11 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 
 ## 2b) Pairwise distance -- Sum of pairwise distances
 
-	# F -- Extensive quadratic entropy
+
+	# F -- Extensive quadratic entropy 
+	
+	F_quadratic_entropy <- sum(Pairwise_dist)
+
 
 ## 2c) Phylogenetic isolation -- Sum of evolutionary distinctiveness
 
