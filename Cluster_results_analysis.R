@@ -7,7 +7,7 @@ library(phytools)
 library(picante)
 
 ######Read in R functions##############################
-
+start_time <- Sys.time()
  
 # Required packages and functions
 load.files <- list.files(path = "~/Box Sync/colliding ranges/Simulations_humans/Functions", pattern = ".R",
@@ -16,7 +16,7 @@ for (i in 1:length(load.files)) {
   source(load.files[i])
 }
 
-
+load_functions <- Sys.time()
 
 ###################################################
 #combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
@@ -25,6 +25,8 @@ for (i in 1:length(load.files)) {
 #i <- 99
 
 cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass) {
+
+start_functions <- Sys.time()
 
 ##### Load the results ########################
 myfiles_full <- list.files("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs", full.names = TRUE)
@@ -62,6 +64,9 @@ if(analyze_this_many > length(cluster_input_files)){analyze_this_many <- length(
 myfiles <- cluster_input_files[1:analyze_this_many, 1]  ## temporary parameter to start index vector
 data.result <- cluster_input_files[1:analyze_this_many, ]
   
+parse_file_names <- Sys.time()  
+  
+  
  ##### Reserve locations in the matrix for the analysis outputs ##################### 
   # Empty results
   l.myfiles <- length(myfiles)
@@ -98,6 +103,7 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
     	}
     }
     
+    load_files <- Sys.time()
 ##### Calculate each metric from the parameters provided by the file name and add them to the matrix  ###########
 ############################################################################################
 
@@ -110,6 +116,8 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 		Pre_Branch_Lengths <- unlist(all_trees, use.names=TRUE, recursive=FALSE)
    		Branch_Lengths <- Pre_Branch_Lengths[which(names(Pre_Branch_Lengths) == "edge.length")]
    	
+   	extract_branch_length <- Sys.time()
+   	
 	## 0b) Pairwise distance between tips
 	
 		Pairwise_dist <- list(NULL)
@@ -119,17 +127,21 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 			}
 			
 		Pairwise_dist <- Pairwise_dist[-1]
+	
+	calc_pairwise_dist <- Sys.time()	
 				
 	## 0c) Phylogenetic isoloation
 		
 		Evolutionary_distinctiveness <- list(NULL)
 	
 		for(h in 1:length(myfiles)){
-			try(Evolutionary_distinctiveness <- c(Evolutionary_distinctiveness, list(evol.distinct(all_trees[[h]], type="fair.proportion"))), silent=TRUE)
+			try(Evolutionary_distinctiveness <- c(Evolutionary_distinctiveness, list(evol.distinct(all_trees[[h]], type="fair.proportion")[,2])), silent=TRUE)
 			}
 			
 		Evolutionary_distinctiveness <- Evolutionary_distinctiveness[-1]
 		summary(Evolutionary_distinctiveness)
+	
+	calc_evolutionary_distinctiveness <- Sys.time()
 	
 	## 0d) tree topology
 
@@ -140,6 +152,8 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 #######################################
 
 
+
+calc_spatial_metrics <- Sys.time()
 
 ##### (2) Tree metric -- Richness - Sum ##################
 ##################################################
@@ -185,6 +199,8 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 		Phylogenetic_isolation <- as.vector(unlist(lapply(Evolutionary_distinctiveness, sum)))
 
 
+calc_richness_metrics <- Sys.time()
+
 ##### (3) Tree metric -- Divergence - Mean ###############
 ##################################################
 
@@ -196,6 +212,8 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 	## 3a.1 -- Sum of branch lengths divided by species richness
 
 		# avPD -- Average phylogenetic diversity
+		
+		Average_Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, mean)))
 		
 		# avPDab #IGNORED BECAUSE IT USES ABUNDANCE
 		
@@ -235,6 +253,8 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 	
 		# Anchor test = MPD (mean pairwise distance)
 		
+		Mean_pairwise_distance <- as.vector(unlist(lapply(Pairwise_dist, mean)))
+		
 		# AvTD
 		
 		# PSV
@@ -252,11 +272,16 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 
 	# mean(ED)
 	
+	mean_Phylogenetic_isolation <- as.vector(unlist(lapply(Evolutionary_distinctiveness, mean)))
 
+	
+
+calc_divergence_metrics <- Sys.time()
 
 ##### (4) Tree metric -- Regularity - Variance ##############
 ##################################################
 
+variance_Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, var)))
 
 
  
@@ -273,6 +298,8 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 ## 4b) Pairwise distance/all distances -- Variance of pairwise distances 
 
 	# Anchor test = VPD (variation of pairwise distance)
+	
+	variance_pairwise_distance <- as.vector(unlist(lapply(Pairwise_dist, var)))
 	
 	# A+
 
@@ -295,6 +322,9 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 
 	#var(ED)
 	
+	variance_Phylogenetic_isolation <- as.vector(unlist(lapply(Evolutionary_distinctiveness, var)))
+
+	
 	#Eed
 	
 	#Hed
@@ -306,7 +336,7 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 	#qD(AP)*
 	
 	
-
+calc_regularity_metrics <- Sys.time()
 
 ##### (5) Tree metric -- Macroevolutionary  ###############
 ##################################################
@@ -325,7 +355,7 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 
 
 
-
+calc_macroevolution_metrics <- Sys.time()
 
   for (i in 1:l.myfiles) {
 #i <- 1
@@ -385,6 +415,17 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
   #return(data.result)
   
   save(data.result, file=paste0("results cluster output/", "Results_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass , "_time_steps_analysis.R"))
+  
+  
+  save_time <- Sys.time()
+  
+  ### Calculate and return time stamps
+  time_vect <- c(start_time, load_functions, start_functions, parse_file_names, load_files, extract_branch_length, calc_pairwise_dist, calc_evolutionary_distinctiveness, calc_spatial_metrics, calc_richness_metrics, calc_divergence_metrics, calc_regularity_metrics, calc_macroevolution_metrics, save_time)
+  calc_times <- as.data.frame(difftime(time_vect[-1], time_vect[-(length(time_vect))], ))
+  rownames(calc_times) <-  c("load R functions", "start results calculation function", "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics", "save output file")
+  calc_times
+  return(calc_times)
+  
 }
 
 #rm(data.result)
