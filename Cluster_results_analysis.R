@@ -102,9 +102,6 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 	all_trees <- vector("list",2)
 	class(all_trees) <- "multiPhylo"
 	
-	
-	
-	i <- 3
 	for(i in 1:length(myfiles)){
     	if(file.exists(myfiles[i])){load(myfiles[i])}
     		
@@ -112,8 +109,6 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
   	 		all_trees[[i]] <- myOut$mytree
     	}
     }
-    
-   
     
 ##### Calculate each metric from the parameters provided by the file name and add them to the matrix  ###########
 ############################################################################################
@@ -124,18 +119,20 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 
 	## 0a) Branch lengths
 	
-	a <- unlist(all_trees, use.names=TRUE, recursive=FALSE)
-    b <- which(names(a) == "edge.length")
-   	Branch_Lengths <- a[b]
+	Pre_Branch_Lengths <- unlist(all_trees, use.names=TRUE, recursive=FALSE)
+   	Branch_Lengths <- Pre_Branch_Lengths[which(names(Pre_Branch_Lengths) == "edge.length")]
    	
-
 	## 0b) Pairwise distance between tips
 	
-	Pairwise_dist <- cophenetic(all_trees[[2]]) #R package ape
+	Pairwise_dist <- list(NULL)
 	
 	
-	
-	
+	for(h in 1:length(myfiles)){
+	Pairwise_dist <- c(Pairwise_dist,list(cophenetic(all_trees[[h]])))
+		}
+	Pairwise_dist <- Pairwise_dist[-1]
+			
+				
 	## 0c) Phylogenetic isoloation
 	
 
@@ -183,7 +180,7 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 
 	# F -- Extensive quadratic entropy 
 	
-	F_quadratic_entropy <- sum(Pairwise_dist)
+	F_quadratic_entropy <- as.vector(unlist(lapply(Pairwise_dist, sum)))
 
 
 ## 2c) Phylogenetic isolation -- Sum of evolutionary distinctiveness
