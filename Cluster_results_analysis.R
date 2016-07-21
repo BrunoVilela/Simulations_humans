@@ -2,21 +2,9 @@
 
 ######Read in R libraries##############################
 #source("Plot_output.R")
-library(gtools)
 library(ape)
-library(adephylo)
-library(diversitree)
-library(TotalCopheneticIndex)
 library(phytools)
-library(apTreeshape)
-library(plyr) 
-library(fitdistrplus)
-library(geiger)
-library(caper)
-library(survival)
-library(maps)
-library(spdep)
-
+library(picante)
 
 ######Read in R functions##############################
 
@@ -119,23 +107,30 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 
 	## 0a) Branch lengths
 	
-	Pre_Branch_Lengths <- unlist(all_trees, use.names=TRUE, recursive=FALSE)
-   	Branch_Lengths <- Pre_Branch_Lengths[which(names(Pre_Branch_Lengths) == "edge.length")]
+		Pre_Branch_Lengths <- unlist(all_trees, use.names=TRUE, recursive=FALSE)
+   		Branch_Lengths <- Pre_Branch_Lengths[which(names(Pre_Branch_Lengths) == "edge.length")]
    	
 	## 0b) Pairwise distance between tips
 	
-	Pairwise_dist <- list(NULL)
+		Pairwise_dist <- list(NULL)
 	
-	
-	for(h in 1:length(myfiles)){
-	Pairwise_dist <- c(Pairwise_dist,list(cophenetic(all_trees[[h]])))
-		}
-	Pairwise_dist <- Pairwise_dist[-1]
+		for(h in 1:length(myfiles)){
+			Pairwise_dist <- c(Pairwise_dist,list(cophenetic(all_trees[[h]])))
+			}
 			
+		Pairwise_dist <- Pairwise_dist[-1]
 				
 	## 0c) Phylogenetic isoloation
+		
+		Evolutionary_distinctiveness <- list(NULL)
 	
-
+		for(h in 1:length(myfiles)){
+			try(Evolutionary_distinctiveness <- c(Evolutionary_distinctiveness, list(evol.distinct(all_trees[[h]], type="fair.proportion"))), silent=TRUE)
+			}
+			
+		Evolutionary_distinctiveness <- Evolutionary_distinctiveness[-1]
+		summary(Evolutionary_distinctiveness)
+	
 	## 0d) tree topology
 
 ## NOTE: need to deal with NAs here so we don't have to deal with them later with each function
@@ -186,6 +181,9 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 ## 2c) Phylogenetic isolation -- Sum of evolutionary distinctiveness
 
 	# ED - Summed evolutionary distinctiveness
+
+		Phylogenetic_isolation <- as.vector(unlist(lapply(Evolutionary_distinctiveness, sum)))
+
 
 ##### (3) Tree metric -- Divergence - Mean ###############
 ##################################################
