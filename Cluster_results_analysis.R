@@ -67,7 +67,7 @@ for (i in 1:length(load.files)) {
 load_functions <- Sys.time()
 
 ###################################################
-combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
+combo_pass <- 31    #These are for testing the function. Do not use in actual model runs.
 #analyze_this_many <- 4000  
 #Timesteps_pass <- 300
 #i <- 99
@@ -115,11 +115,35 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 parse_file_names <- Sys.time()  
   
   
-   # Empty results
+
+##### Researve locations in output matrix for each metric ###################    
+  dim(data.result)
   l.myfiles <- length(myfiles)
+  
+  data.result[,25:41] <- rep(NA, l.myfiles)
+  colnames(data.result)[25:41] <- c(
+  	"Branch_Lengths", 
+  	"Pairwise_dist", 
+  	"Evolutionary_distinctiveness", 
+  	"Pylo_diversity",
+  	"F_quadratic_entropy",
+  	"Phylogenetic_isolation",
+  	"Average_Pylo_diversity",
+  	"Mean_pairwise_distance",
+  	"mean_Phylogenetic_isolation",
+  	"variance_Pylo_diversity",
+  	"Ic",
+  	"lineages_through_time",
+  	"time_steps",
+  	"gamma",
+  	"gamma_p_value",
+  	"variance_pairwise_distance",
+  	"variance_Phylogenetic_isolation")
+  
+  
     
   
- ##### Load the file specified by each row for independent analysis ###################
+##### Load the file specified by each row for independent analysis ###################
 #for (i in 1:l.myfiles) {
 	
 	all_trees <- vector("list",2)
@@ -144,8 +168,8 @@ parse_file_names <- Sys.time()
 	## 0a) Branch lengths
 	
 		Pre_Branch_Lengths <- unlist(all_trees, use.names=TRUE, recursive=FALSE)
-   		Branch_Lengths <- Pre_Branch_Lengths[which(names(Pre_Branch_Lengths) == "edge.length")]
-   	
+   		data.result$Branch_Lengths[1:length(Branch_Lengths),] <- Pre_Branch_Lengths[which(names(Pre_Branch_Lengths) == "edge.length")]
+   		
    	extract_branch_length <- Sys.time()
    	
 	## 0b) Pairwise distance between tips
@@ -156,7 +180,7 @@ parse_file_names <- Sys.time()
 			try(Pairwise_dist <- c(Pairwise_dist,list(cophenetic(all_trees[[h]]))), silent=TRUE)
 			}
 			
-		Pairwise_dist <- Pairwise_dist[-1]
+		data.result$Pairwise_dist[1:length(Pairwise_dist)]  <- Pairwise_dist[-1]
 	
 	calc_pairwise_dist <- Sys.time()	
 				
@@ -169,9 +193,8 @@ parse_file_names <- Sys.time()
 				type="fair.proportion")[,2])), silent=TRUE)
 			}
 			
-		Evolutionary_distinctiveness <- Evolutionary_distinctiveness[-1]
-		summary(Evolutionary_distinctiveness)
-	
+		data.result$Evolutionary_distinctiveness[1:length(Evolutionary_distinctiveness),] <- Evolutionary_distinctiveness[-1]
+		
 		calc_evolutionary_distinctiveness <- Sys.time()
 	
 	## 0d) tree topology
@@ -212,7 +235,7 @@ calc_spatial_metrics <- Sys.time()
 	
 		# Anchor test = PD (Faith's phylogenetic diversity) 
 
-			Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, sum)))
+			data.result$Pylo_diversity[1:length(Pylo_diversity)] <- as.vector(unlist(lapply(Branch_Lengths, sum)))
 
 	## 2a.2 Across individuals
 		
@@ -236,14 +259,14 @@ calc_spatial_metrics <- Sys.time()
 
 	# F -- Extensive quadratic entropy 
 	
-		F_quadratic_entropy <- as.vector(unlist(lapply(Pairwise_dist, sum)))
+		data.result$F_quadratic_entropy[1:length(as.vector(unlist(lapply(Pairwise_dist, sum))))] <- as.vector(unlist(lapply(Pairwise_dist, sum)))
 
 
 ## 2c) Phylogenetic isolation -- Sum of evolutionary distinctiveness
 
 	# ED - Summed evolutionary distinctiveness
 
-		Phylogenetic_isolation <- as.vector(unlist(lapply(Evolutionary_distinctiveness, sum)))
+		data.result$Phylogenetic_isolation[1:length(as.vector(unlist(lapply(Evolutionary_distinctiveness, sum))))] <- as.vector(unlist(lapply(Evolutionary_distinctiveness, sum)))
 
 
 calc_richness_metrics <- Sys.time()
@@ -260,7 +283,7 @@ calc_richness_metrics <- Sys.time()
 
 		# avPD -- Average phylogenetic diversity
 		
-		Average_Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, mean)))
+		data.result$Average_Pylo_diversity[1:length(as.vector(unlist(lapply(Branch_Lengths, mean))))] <- as.vector(unlist(lapply(Branch_Lengths, mean)))
 		
 		# avPDab #IGNORED BECAUSE IT USES ABUNDANCE
 		
@@ -300,7 +323,7 @@ calc_richness_metrics <- Sys.time()
 	
 		# Anchor test = MPD (mean pairwise distance)
 		
-		Mean_pairwise_distance <- as.vector(unlist(lapply(Pairwise_dist, mean)))
+		data.result$Mean_pairwise_distance <- as.vector(unlist(lapply(Pairwise_dist, mean)))
 		
 		# AvTD
 		
@@ -319,7 +342,7 @@ calc_richness_metrics <- Sys.time()
 
 	# mean(ED)
 	
-	mean_Phylogenetic_isolation <- as.vector(unlist(lapply(Evolutionary_distinctiveness, mean)))
+	data.result$mean_Phylogenetic_isolation <- as.vector(unlist(lapply(Evolutionary_distinctiveness, mean)))
 
 	
 
@@ -328,7 +351,7 @@ calc_divergence_metrics <- Sys.time()
 ##### (4) Tree metric -- Regularity - Variance ##############
 ##################################################
 
-variance_Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, var)))
+data.result$variance_Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, var)))
 
 
  
@@ -341,10 +364,12 @@ variance_Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, var)))
         try(Ic[i] <- colless(all_trees_as_treeshape[[i]], norm = NULL), silent=TRUE)
     }
 
-    Ic <- as.vector(na.omit(Ic))
-	Ic
+    data.result$Ic <- as.vector(na.omit(Ic))
 		
 	#Iw - Fusco and Cronk 1995 suggested by Simon Greenhill
+	
+	
+	
 	
 	#Gamma index
 	
@@ -354,8 +379,13 @@ variance_Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, var)))
   	 	
   	 	plot(0,0, type="n", xlim=c(0,300), ylim=c(1,8))
   	 	for(k in 1:length(gamma_list)){
-  	 	lines(gamma_list[[k]]$times, log(gamma_list[[k]]$ltt), col="blue")
+  	 	lines(gamma_list[[k]]$times, log(gamma_list[[k]]$ltt), col=rainbow(4)[4])
   	 	}
+  	 	
+  	lineages_through_time <- 	
+  	time_steps <- 
+  	gamma <- 
+  	gamma_p_value <-  	
   	 	
 	str(gamma_list)
 	class(all_trees)
