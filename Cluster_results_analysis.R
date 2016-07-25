@@ -235,7 +235,7 @@ calc_spatial_metrics <- Sys.time()
 
 	# F -- Extensive quadratic entropy 
 	
-	F_quadratic_entropy <- as.vector(unlist(lapply(Pairwise_dist, sum)))
+		F_quadratic_entropy <- as.vector(unlist(lapply(Pairwise_dist, sum)))
 
 
 ## 2c) Phylogenetic isolation -- Sum of evolutionary distinctiveness
