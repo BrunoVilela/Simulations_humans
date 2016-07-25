@@ -67,7 +67,7 @@ for (i in 1:length(load.files)) {
 load_functions <- Sys.time()
 
 ###################################################
-#combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
+combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
 #analyze_this_many <- 4000  
 #Timesteps_pass <- 300
 #i <- 99
@@ -102,8 +102,8 @@ for (i in 1:length(positions)) {
 }
 
 ##### Subset matrix of file information to pull out the files we want to analyze together ########################
-which(data.result$Timesteps == '300')
-which(data.result$combo == '25')
+
+
 cluster_input_files <- subset(data.result, combo == as.character(combo_pass) & Timesteps == as.character(Timesteps_pass) )
 rownames(cluster_input_files) <- 1:length(cluster_input_files[,1])
 
@@ -337,28 +337,28 @@ variance_Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, var)))
 	#Ic -- Colles test
 	
 	Ic <- rep(NA, l.myfiles)
-	for (i in 1:length(Ic)) {
+	for (i in available_trees) {
         try(Ic[i] <- colless(all_trees_as_treeshape[[i]], norm = NULL), silent=TRUE)
     }
 
     Ic <- as.vector(na.omit(Ic))
 	Ic
-	hist(Ic)
-	
+		
 	#Iw - Fusco and Cronk 1995 suggested by Simon Greenhill
 	
 	#Gamma index
 	
-	gamma <- rep(NA, l.myfiles)
-	gamma[i] <- ltt(all_trees[[1]], plot = FALSE)$gamma
-	gamma <- rep(NA, l.myfiles)
-	for (i in 1:length(Ic)) {
-        try(gamma[i] <- ltt(all_trees[[i]], plot = FALSE)$gamma, silent=TRUE)
-    }
-
-    gamma <- as.vector(na.omit(gamma))
-	gamma
- hist(gamma)
+	
+	 all_trees_gamma <- all_trees[!sapply(all_trees, is.null)]
+     gamma_list <- ltt(all_trees_gamma, gamma=TRUE, plot=FALSE)
+  	 	
+  	 	plot(0,0, type="n", xlim=c(0,300), ylim=c(1,8))
+  	 	for(k in 1:length(gamma_list)){
+  	 	lines(gamma_list[[k]]$times, log(gamma_list[[k]]$ltt), col="blue")
+  	 	}
+  	 	
+	str(gamma_list)
+	class(all_trees)
 	
 	#IAC
 
