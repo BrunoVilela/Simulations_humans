@@ -51,7 +51,9 @@ evol.distinct <- function(tree, type = c("equal.splits", "fair.proportion"),
 library(ape)
 library(phytools)
 library(picante)
-
+library(apTreeshape)
+		
+		
 ######Read in R functions##############################
 start_time <- Sys.time()
  
@@ -70,7 +72,7 @@ load_functions <- Sys.time()
 #Timesteps_pass <- 300
 #i <- 99
 
-cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass) {
+#cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass) {
 
 start_functions <- Sys.time()
 
@@ -113,27 +115,9 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
 parse_file_names <- Sys.time()  
   
   
- ##### Reserve locations in the matrix for the analysis outputs ##################### 
-  # Empty results
+   # Empty results
   l.myfiles <- length(myfiles)
-  ## Data metrics
-  difference <- rep(NA, l.myfiles)
-  ## Spatial metrics
-  spatial <- matrix(ncol = 3, nrow = l.myfiles)
-  colnames(spatial) <- c("DF", "FF", "DD")
-  ## Phylogenetic metrics
-  signal <- rep(NA, l.myfiles)
-  N.nodes <- rep(NA, l.myfiles)
-  N.tips <- rep(NA, l.myfiles)
-  gamma <- rep(NA, l.myfiles)
-  Colless <- rep(NA, l.myfiles)
-  KM <- rep(NA, l.myfiles)
-  MS <- rep(NA, l.myfiles)
-  TCI <- rep(NA, l.myfiles)
-  Trasition.rates <- rep(NA, l.myfiles)
-  weibull <- matrix(ncol = 2, nrow = l.myfiles)
-  colnames(weibull) <- c("shape", "scale")
-  
+    
   
  ##### Load the file specified by each row for independent analysis ###################
 #for (i in 1:l.myfiles) {
@@ -169,27 +153,44 @@ parse_file_names <- Sys.time()
 		Pairwise_dist <- list(NULL)
 	
 		for(h in 1:length(myfiles)){
-			Pairwise_dist <- c(Pairwise_dist,list(cophenetic(all_trees[[h]])))
+			try(Pairwise_dist <- c(Pairwise_dist,list(cophenetic(all_trees[[h]]))), silent=TRUE)
 			}
 			
 		Pairwise_dist <- Pairwise_dist[-1]
 	
 	calc_pairwise_dist <- Sys.time()	
 				
-	## 0c) Phylogenetic isoloation
+	## 0c) Phylogenetic isolation
 		
 		Evolutionary_distinctiveness <- list(NULL)
 	
 		for(h in 1:length(myfiles)){
-			try(Evolutionary_distinctiveness <- c(Evolutionary_distinctiveness, list(evol.distinct(all_trees[[h]], type="fair.proportion")[,2])), silent=TRUE)
+				try(Evolutionary_distinctiveness <- c(Evolutionary_distinctiveness, list(evol.distinct(all_trees[[h]], 							
+				type="fair.proportion")[,2])), silent=TRUE)
 			}
 			
 		Evolutionary_distinctiveness <- Evolutionary_distinctiveness[-1]
 		summary(Evolutionary_distinctiveness)
 	
-	calc_evolutionary_distinctiveness <- Sys.time()
+		calc_evolutionary_distinctiveness <- Sys.time()
 	
 	## 0d) tree topology
+
+		available_trees <- which(summary(all_trees)[,3] != "NULL")
+
+	
+
+	all_trees_as_treeshape <- list(nrow=length(all_trees))
+ 
+    for (i in available_trees) {
+        all_trees_as_treeshape[[i]] <- as.treeshape(all_trees[[i]])
+    }
+all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
+all_trees_as_treeshape
+
+str(all_trees_as_treeshape)
+summary(all_trees_as_treeshape)
+
 
 ## NOTE: need to deal with NAs here so we don't have to deal with them later with each function
 
@@ -335,9 +336,29 @@ variance_Pylo_diversity <- as.vector(unlist(lapply(Branch_Lengths, var)))
 
 	#Ic -- Colles test
 	
+	Ic <- rep(NA, l.myfiles)
+	for (i in 1:length(Ic)) {
+        try(Ic[i] <- colless(all_trees_as_treeshape[[i]], norm = NULL), silent=TRUE)
+    }
+
+    Ic <- as.vector(na.omit(Ic))
+	Ic
+	hist(Ic)
+	
 	#Iw - Fusco and Cronk 1995 suggested by Simon Greenhill
 	
 	#Gamma index
+	
+	gamma <- rep(NA, l.myfiles)
+	gamma[i] <- ltt(all_trees[[1]], plot = FALSE)$gamma
+	gamma <- rep(NA, l.myfiles)
+	for (i in 1:length(Ic)) {
+        try(gamma[i] <- ltt(all_trees[[i]], plot = FALSE)$gamma, silent=TRUE)
+    }
+
+    gamma <- as.vector(na.omit(gamma))
+	gamma
+ hist(gamma)
 	
 	#IAC
 
