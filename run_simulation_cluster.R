@@ -31,14 +31,14 @@ coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 500) # subsample (remove when running for all)
 
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
 dim(myWorld)
 #####################################################################
-#number_of_time_steps <- 100 ## these are for testing the function, not for the main code
+#number_of_time_steps <- 300 ## these are for testing the function, not for the main code
 #replicate_cycle <- 3
 #combo_number <- 31
 

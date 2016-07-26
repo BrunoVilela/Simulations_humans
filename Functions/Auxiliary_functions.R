@@ -50,7 +50,7 @@ uniformBranchs <- function(mytree, myT) {
   # mytree the phylogenetic tree
   # myT the current time step
   if (!is.null(mytree)) {
-      dist.root <- distRoot(mytree, tips = 1:Ntip(mytree), method = "patristic")
+      dist.root <- distRoot2(mytree)
       sub <- (myT - dist.root)
       n <- Ntip(mytree)
       tips <- sapply(1:n, function(x,y) which(y==x),y=mytree$edge[,2])
@@ -89,4 +89,28 @@ bind.tip <- function(tree, tip.label, edge.length, where,
   class(tip) <- "phylo"
   obj <- bind.tree(tree, tip, where = where)
   return(obj)
+}
+
+
+#==================================================================
+# Get the patristic distance to the root
+# x = phylogenetic tree
+distRoot2 <- function(x) {
+  N <- Ntip(x)
+  x <- as(x, "phylo4")
+  tips <- 1:N
+  tips <- getNode(x, tips)
+  tips.names <- names(tips)
+  root <- getNode(x, N + 1)
+  allPath <- lapply(tips, function(tip) .tipToRoot(x, tip, 
+                                                   root, include.root = TRUE))
+  allPath.names <- names(allPath)
+  allPath <- lapply(1:length(allPath), function(i) c(allPath[[i]], 
+                                                     tips[i]))
+  names(allPath) <- allPath.names
+  edge.idx <- lapply(allPath, function(e) getEdge(x, e))
+  allEdgeLength <- edgeLength(x)
+  res <- sapply(edge.idx, function(idx) sum(allEdgeLength[idx], 
+                                            na.rm = TRUE))
+  return(res)
 }
