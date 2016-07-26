@@ -17,6 +17,6 @@ ltt.custom <- function(x) {
 }
 
 
-par(mfrow = c(1, 2))
-plot(ltt.custom(tree), type = "l") # Tree must be your own tree from myOut
-ltt(tree, log.lineages = F, gamma = TRUE)
+#par(mfrow = c(1, 2))
+#plot(ltt.custom(tree), type = "l") # Tree must be your own tree from myOut
+#ltt(tree, log.lineages = F, gamma = TRUE)
