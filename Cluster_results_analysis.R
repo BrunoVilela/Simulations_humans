@@ -598,7 +598,7 @@ polygon(x= xc, y=yc, col=adjustcolor("limegreen", alpha= alpha_level), border="l
 lines(c[[2]][,1], ltt_mean_c, col="limegreen", lwd=3)
 
 
-legend(.5,300,legend=c("S+E+A",""))
+legend(0,300,legend=rev(c("S+E+A","S+E+A + Diffusion", "S+E+A + Takeover", "Full model")), col=c("firebrick", "cornflowerblue", "limegreen", "grey"), lty=1, lwd=3)
 
 
 dev.off()
