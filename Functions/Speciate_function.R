@@ -1,6 +1,6 @@
 # Specitaion function
 speciate <- function(myT, Parent, PosTargets, myWorld,
-                     mytree, NodeData) {
+                     mytree, NodeData, BL) {
   # Create descendant lineage
   if (length(PosTargets) > 1) {
     PosTargets <- sample(PosTargets, 1)
@@ -8,17 +8,11 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
   
   # Add a bifurcation to the node that used to be the parent
   if (!is.null(mytree)) {
-    BL <- myT - distRoot(mytree, 1, method = 'patristic')
-    newtips <- read.tree(text = paste0("(t", Parent, ":",
-                                       BL, ",t", PosTargets,
-                                       ":", BL, ");")) 
-    
     OldParentalNode <- NodeData[NodeData[, 2] == Parent, 1]
-    
-    mytree <- read.tree(text = write.tree(bind.tree(mytree, 
-                                                    newtips,
-                                                    where = OldParentalNode),
-                                          file = ''))
+    mytree <- bind.tip(mytree, c(paste0("t", Parent), 
+                                 paste0("t", PosTargets)), 
+                       edge.length = BL, where = OldParentalNode,
+                       Parent, PosTargets)
     
     # update NodeData
     tip.length <- Ntip(mytree)
