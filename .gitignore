@@ -4,3 +4,6 @@
 .Ruserdata
 .DS_Store
 cluster outputs/*
+figures/*
+results cluster outputs/*
+big world cluster outputs/*
