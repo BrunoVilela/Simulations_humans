@@ -26,6 +26,7 @@ library(caper)
 library(msm)
 library(spdep)
 library(parallel)
+library(phylobase)
 
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
@@ -172,6 +173,7 @@ clusterEvalQ(cl, library(gtools))
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(adephylo))
 clusterEvalQ(cl, library(diversitree))
+clusterEvalQ(cl, library(phylobase))
 clusterExport(cl, varlist=ls())
 
 
