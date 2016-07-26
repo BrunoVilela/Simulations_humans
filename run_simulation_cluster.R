@@ -1,5 +1,7 @@
 setwd("~/Desktop")
 
+#####################################################################
+
 # Run the full model in a cluster. This version writes files to a cluster output folder.
 rm(list = ls())
 load.files <- list.files(path = "Functions", pattern = ".R",
@@ -7,6 +9,8 @@ load.files <- list.files(path = "Functions", pattern = ".R",
 for (i in 1:length(load.files)) {
   source(load.files[i])
 }
+
+#####################################################################
 
 library(gtools)
 library(ape)
@@ -21,6 +25,7 @@ library(geiger)
 library(caper)
 library(msm)
 library(spdep)
+library(parallel)
 
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
@@ -31,15 +36,13 @@ sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
-
-
 dim(myWorld)
+#####################################################################
+#number_of_time_steps <- 100 ## these are for testing the function, not for the main code
+#replicate_cycle <- 3
+#combo_number <- 31
 
-number_of_time_steps <- 100
-replicate_cycle <- 3
-combo_number <- 31
-
-sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs) {
+sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips) {
   
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
@@ -97,24 +100,55 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
                            paste(P.diffusion, collapse="_"), "_P.TakeOver_",
                            paste(P.TakeOver, collapse="_"),"_P.Arisal_",
                            paste(P.Arisal, collapse="_"),
-                           "_timesteps_", number_of_time_steps, ".Rdata"))
+                           "_timesteps_", number_of_time_steps, "_ntips_", number_of_tips,"_.Rdata"))
   
 }
+
+
+
+
+#####################################################################
+coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
+conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
+conds <- ifelse(conds <= 21, 1, 2)
+conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
+
+
+##### Specify simulation parameters #################################
+
+number_of_tips <- length(coords[,1])
+number_of_time_steps_a <- 300
+replicate_cycle <- c(1:16)  #number of replicates
+
+#####################################################################
+
+
+
+sub <- sample(1:nrow(coords), number_of_tips) # subsample (remove when running for all)
+
+system.time(
+  myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
+)
+nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
+              sym = TRUE) # 7 symmetric neighbors
+
+dim(myWorld)
+
+
+
 
 #sim_run_cluster(1, 31, myWorld, 300, nbs)
 
 
+#map()
+#plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
+#points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
+#points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
+#plot(myOut$mytree)
 
-
-map()
-plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
-points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
-points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
-plot(myOut$mytree)
-
-
+#####################################################################
 a <- Sys.time()
-library(parallel)
+
 
 
 # Set up cluster
@@ -138,44 +172,30 @@ clusterEvalQ(cl, library(gtools))
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(adephylo))
 clusterEvalQ(cl, library(diversitree))
-clusterEvalQ(cl, source("Functions/Arisal_module.R"))
-clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
-clusterEvalQ(cl, source("Functions/Build_world_function.R"))
-clusterEvalQ(cl, source("Functions/Complete_Model.R"))
-clusterEvalQ(cl, source("Functions/Diffusion_module.R"))
-clusterEvalQ(cl, source("Functions/Extinction_module.R"))
-clusterEvalQ(cl, source("Functions/Possible_combinations_of_movement_function.R"))
-clusterEvalQ(cl, source("Functions/spatial_join.R"))
-clusterEvalQ(cl, source("Functions/Speciate_function.R"))
-clusterEvalQ(cl, source("Functions/Speciation_function.R"))
-clusterEvalQ(cl, source("Functions/SpeciationTakeover_Module.R"))
-clusterEvalQ(cl, source("Functions/Takeover_function.R"))
-clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
 clusterExport(cl, varlist=ls())
 
+
+#####################################################################
 # lset are the landscapes that we will run
 b <- Sys.time()
-replicate_cycle <- c(1:1)
-number_of_time_steps_a <- 50
-#number_of_time_steps_b <- 300
-replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs
+
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 25, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 28, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 29, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 31, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 c <- Sys.time()
 
