@@ -28,9 +28,7 @@ conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
 sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
 
-system.time(
-  myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
-)
+myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
 
