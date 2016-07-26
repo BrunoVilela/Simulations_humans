@@ -386,19 +386,19 @@ all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
   	 	#line_color <- 1
   	 	#k <- 1
   	 	#plot(0,0, type="n", xlim=c(0,300), ylim=c(1,8))
-  	 	for(k in 1:length(gamma_list)){
+  	 	for(k in 1:rep_length){
   	 		#lines(gamma_list[[k]]$times, log(gamma_list[[k]]$ltt), col=rainbow(4)[line_color])	
   	 		gamma[k] <- gamma_list[[k]]$gamma
   			gamma_p_value[k] <-  	gamma_list[[k]]$p
   	 	}
   	 	
   	 	
-  	 	for(k in 1:length(gamma_list)){
-  	 	lineages_through_time[1:length(gamma_list[[k]]$ltt),k] <- 	gamma_list[[k]]$ltt
+  	 	for(k in 1:rep_length){
+  	 	lineages_through_time[1:length(gamma_list[[k]]$ltt),k] <- 	log(gamma_list[[k]]$ltt)
   			time_steps[1:length(gamma_list[[k]]$ltt),k] <- gamma_list[[k]]$times
   	 	}
   	 	
-  	 	
+  	 	log(gamma_list[[k]]$ltt)
   	
   	# str(gamma_list)
 	#class(all_trees)
@@ -492,76 +492,72 @@ c <-cluster_results_analysis(28, 10, 300, 3)
 d <-cluster_results_analysis(25, 10, 300, 4)
 
 
-plot(0,0, type="n", xlim=c(0,300), ylim=c(0,8))
+
+setwd("~/Desktop")
+pdf(file="time through lineage plot.pdf", width=11, height=8.5)
+color_choice <- c("firebrick", "cornflowerblue", "limegreen", "grey")
+
+plot(0,0, type="n", xlim=c(0,8), ylim=c(0,300), xlab="log(number of tips)", ylab="time between tips")
 
 for(h in 1:length(d[[3]][1,])){
-lines(a[[3]][,h], log(a[[2]][,h]), col=rainbow(4)[1])
+lines(log(a[[2]][,h]), a[[3]][,h], col=adjustcolor(color_choice[1], alpha=.8))
 
-}
-
-for(h in 1:length(d[[3]][1,])){
-lines(b[[3]][,h], log(b[[2]][,h]), col=rainbow(4)[2])
-}
-
-for(h in 1:length(d[[3]][1,])){
-lines(c[[3]][,h], log(c[[2]][,h]), col=rainbow(4)[3])
 }
 
 for(h in 1:length(d[[3]][1,])){
-lines(d[[3]][,h], log(d[[2]][,h]), col=rainbow(4)[4])
+lines(log(b[[2]][,h]), b[[3]][,h], col=adjustcolor(color_choice[2], alpha=.8))
+
+}
+
+for(h in 1:length(d[[3]][1,])){
+lines(log(c[[2]][,h]), c[[3]][,h], col=adjustcolor(color_choice[3], alpha=.8))
+
+}
+
+for(h in 1:length(d[[3]][1,])){
+lines(log(d[[2]][,h]), d[[3]][,h], col=adjustcolor(color_choice[4], alpha=.8))
+
+}
+dev.off()
+
+h <- 500
+
+
+ltt_mean_a <- rep(NA, length(a[[3]][,1]))
+ltt_SD_a <- rep(NA, length(a[[3]][,1]))
+for(h in 1:length(a[[3]][,1])){
+ltt_mean_a[h] <- mean(a[[3]][h,], na.rm =TRUE)
+ltt_SD_a[h] <- sd(a[[3]][h,], na.rm=TRUE)
+}
+
+ltt_mean_b <- rep(NA, length(b[[3]][,1]))
+ltt_SD_b <- rep(NA, length(b[[3]][,1]))
+for(h in 1:length(b[[3]][,1])){
+ltt_mean_b[h] <- mean(b[[3]][h,], na.rm =TRUE)
+ltt_SD_b[h] <- sd(b[[3]][h,], na.rm=TRUE)
+}
+
+ltt_mean_c <- rep(NA, length(c[[3]][,1]))
+ltt_SD_c <- rep(NA, length(c[[3]][,1]))
+for(h in 1:length(c[[3]][,1])){
+ltt_mean_c[h] <- mean(c[[3]][h,], na.rm =TRUE)
+ltt_SD_c[h] <- sd(c[[3]][h,], na.rm=TRUE)
+}
+
+ltt_mean_d <- rep(NA, length(d[[3]][,1]))
+ltt_SD_d <- rep(NA, length(d[[3]][,1]))
+for(h in 1:length(d[[3]][,1])){
+ltt_mean_d[h] <- mean(d[[3]][h,], na.rm =TRUE)
+ ltt_SD_d[h] <- sd(d[[3]][h,], na.rm=TRUE)
 }
 
 
-ltt_mean_a <- rep(NA, length(a[[2]][,1]))
-ltt_SD_a <- rep(NA, length(a[[2]][,1]))
-for(h in 1:length(a[[2]][,1])){
-ltt_mean_a[h] <- mean(a[[2]][h,], rm.na=TRUE)
-ltt_SD_a[h] <- sd(a[[2]][h,])
-}
-
-ltt_mean_b <- rep(NA, length(b[[2]][,1]))
-for(h in 1:length(b[[2]][,1])){
-ltt_mean_b[h] <- mean(b[[2]][h,], rm.na=TRUE)
-}
-
-ltt_mean_c <- rep(NA, length(c[[2]][,1]))
-for(h in 1:length(c[[2]][,1])){
-ltt_mean_c[h] <- mean(c[[2]][h,], rm.na=TRUE)
-}
-
-ltt_mean_d <- rep(NA, length(d[[2]][,1]))
-for(h in 1:length(d[[2]][,1])){
-ltt_mean_d[h] <- mean(d[[2]][h,], rm.na=TRUE)
-}
-
-plot(0,0, type="n", xlim=c(0,300), ylim=c(0,8))
-
-without_NA_ltt_a <- ltt_mean_a[which(!is.na(ltt_mean_a))]
-without_NA_time_a <- a[[3]][which(!is.na(a[[3]][,1])),1]
-without_NA_time_a <- without_NA_time_a[1:length(without_NA_ltt_a)]
-
-lines(without_NA_time_a, log(without_NA_ltt_a) , col=rainbow(4)[1])
-
-without_NA_ltt_b <- ltt_mean_b[which(!is.na(ltt_mean_b))]
-without_NA_time_b <- b[[3]][which(!is.na(b[[3]][,1])),1]
-without_NA_time_b <- without_NA_time_b[1:length(without_NA_ltt_b)]
-
-lines(without_NA_time_b, log(without_NA_ltt_b) , col=rainbow(4)[2])
-
-without_NA_ltt_c <- ltt_mean_c[which(!is.na(ltt_mean_c))]
-without_NA_time_c <- c[[3]][which(!is.na(c[[3]][,1])),1]
-without_NA_time_c <- without_NA_time_c[1:length(without_NA_ltt_c)]
-
-lines(without_NA_time_c, log(without_NA_ltt_c) , col=rainbow(4)[3])
 
 
-without_NA_ltt_d <- ltt_mean_d[which(!is.na(ltt_mean_d))]
-without_NA_time_d <- d[[3]][which(!is.na(d[[3]][,1])),1]
-without_NA_time_d <- without_NA_time_d[1:length(without_NA_ltt_d)]
-
-lines(without_NA_time_d, log(without_NA_ltt_d) , col=rainbow(4)[4])
 
 
+
+dev.off()
 
 
 a <- Sys.time()
