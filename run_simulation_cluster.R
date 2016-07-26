@@ -26,6 +26,7 @@ library(caper)
 library(msm)
 library(spdep)
 library(parallel)
+library(phylobase)
 
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
@@ -38,7 +39,7 @@ nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
 dim(myWorld)
 #####################################################################
-#number_of_time_steps <- 100 ## these are for testing the function, not for the main code
+#number_of_time_steps <- 300 ## these are for testing the function, not for the main code
 #replicate_cycle <- 3
 #combo_number <- 31
 
@@ -64,10 +65,13 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   
   if (any(chosen_combo[[2]] == "Random_new_origin")) {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
-    P.Arisal <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom") 
+    P.Arisal <- matrix(prob_choose, ncol = 2, nrow = nrow(myWorld)) # probability per cell
+    P.Arisal[myWorld[, 7] == 1, 2] <- 0 # probability of agriculture is zero in non-suitable places
   } else {
-    P.Arisal <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
+    P.Arisal <- matrix(0, ncol = 2, nrow = nrow(myWorld))
   }
+  colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
+  
   
   if (any(chosen_combo[[2]] == "Diffusion")) {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of diffusion
@@ -172,6 +176,7 @@ clusterEvalQ(cl, library(gtools))
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(adephylo))
 clusterEvalQ(cl, library(diversitree))
+clusterEvalQ(cl, library(phylobase))
 clusterExport(cl, varlist=ls())
 
 

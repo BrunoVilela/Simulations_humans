@@ -1,6 +1,6 @@
 # Speciation function used inside the speciation takeover
 Speciation <- function(NodeData, myWorld, i, P.speciation,
-                       myT, PosTargets, mytree) {
+                       myT, PosTargets, mytree, BL) {
   Row.In.Node.Data <- which(NodeData[, 2] == i)
   env.match <- myWorld[i, 7] == myWorld[i, 6]
   domesticator <- myWorld[i, 6] == 2
@@ -13,7 +13,8 @@ Speciation <- function(NodeData, myWorld, i, P.speciation,
   if (runif(1) < prob.sp) {
     # speciate (i.e., send diaspora to an adjacent empty cell)
     Temp <- speciate(myT = myT, Parent = i, PosTargets = PosTargets, 
-                     myWorld = myWorld, mytree = mytree, NodeData = NodeData)
+                     myWorld = myWorld, mytree = mytree, NodeData = NodeData,
+                     BL)
     
     myWorld <- Temp$myWorld
     mytree <- Temp$mytree

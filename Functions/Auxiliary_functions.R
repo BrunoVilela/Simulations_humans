@@ -50,15 +50,12 @@ uniformBranchs <- function(mytree, myT) {
   # mytree the phylogenetic tree
   # myT the current time step
   if (!is.null(mytree)) {
-    for (i in 1:length(mytree$tip.label)) {
-      dist.root <- distRoot(mytree, tips = i, method = "patristic")
-      if (dist.root < myT) {
-        ThisBranch <- which(mytree$edge[, 2] == i)
-        sub <- (myT - dist.root)
-        mytree$edge.length[ThisBranch] <- mytree$edge.length[ThisBranch] + sub
+      dist.root <- distRoot2(mytree)
+      sub <- (myT - dist.root)
+      n <- Ntip(mytree)
+      tips <- sapply(1:n, function(x,y) which(y==x),y=mytree$edge[,2])
+      mytree$edge.length[tips] <- mytree$edge.length[tips] + sub
       }
-    }
-  }
   return(mytree)
 }
 
@@ -76,4 +73,44 @@ extinct <- function(mytree, remove, myWorld) {
   NodeData[, 2] <- as.numeric(gsub("t", "", mytree$tip.label))
   return(list("mytree" = mytree, "myWorld" = myWorld,
               "NodeData" = NodeData))  
+}
+
+
+#==================================================================
+# Function to add a species to a tip
+# phylogenetic tree
+bind.tip <- function(tree, tip.label, edge.length, where,
+                     parent, target) {
+  tip <- list(edge = matrix(c(3, 3, 1, 2),
+                            ncol = 2, nrow = 2),
+            tip.label = tip.label,
+            edge.length = rep(as.numeric(edge.length), 2),
+            Nnode = 1)
+  class(tip) <- "phylo"
+  obj <- bind.tree(tree, tip, where = where)
+  return(obj)
+}
+
+
+#==================================================================
+# Get the patristic distance to the root
+# x = phylogenetic tree
+distRoot2 <- function(x) {
+  N <- Ntip(x)
+  x <- as(x, "phylo4")
+  tips <- 1:N
+  tips <- getNode(x, tips)
+  tips.names <- names(tips)
+  root <- getNode(x, N + 1)
+  allPath <- lapply(tips, function(tip) .tipToRoot(x, tip, 
+                                                   root, include.root = TRUE))
+  allPath.names <- names(allPath)
+  allPath <- lapply(1:length(allPath), function(i) c(allPath[[i]], 
+                                                     tips[i]))
+  names(allPath) <- allPath.names
+  edge.idx <- lapply(allPath, function(e) getEdge(x, e))
+  allEdgeLength <- edgeLength(x)
+  res <- sapply(edge.idx, function(idx) sum(allEdgeLength[idx], 
+                                            na.rm = TRUE))
+  return(res)
 }

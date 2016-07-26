@@ -22,9 +22,9 @@ SpeciationTakeOver <- function(input) {
   }
   
   # Probabililty of speciation
-  
+  BL <- (1 / trait.length)
   for (i in index.tips) { 
-    myT <- (1 / trait.length) + myT # Change time
+    myT <-  BL + myT # Change time
     
     if (!i %in% extinct.list) {
       myHex <- myWorld[i, 1]
@@ -34,7 +34,7 @@ SpeciationTakeOver <- function(input) {
       # If not null than Speciate going to an empty cell
       if (!emptyORtakeover) {
         temp <- Speciation(NodeData, myWorld, i, P.speciation,
-                           myT, PosTargets, mytree)
+                           myT, PosTargets, mytree, BL)
         mytree <- temp$mytree
         myWorld <- temp$myWorld
         NodeData <- temp$NodeData
@@ -44,7 +44,7 @@ SpeciationTakeOver <- function(input) {
       if (emptyORtakeover & sum(P.TakeOver) != 0) {
         temp <- TakeOver(myWorld, mytree, P.TakeOver, 
                          NodeData, myT, multiplier = multiplier,
-                         i)
+                         i, BL)
         mytree <- temp$mytree
         myWorld <- temp$myWorld
         NodeData <- temp$NodeData

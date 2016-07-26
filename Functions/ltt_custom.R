@@ -16,7 +16,14 @@ ltt.custom <- function(x) {
   return(cbind(time, lineages))
 }
 
+<<<<<<< HEAD
 
 #par(mfrow = c(1, 2))
 #plot(ltt.custom(tree), type = "l") # Tree must be your own tree from myOut
 #ltt(tree, log.lineages = F, gamma = TRUE)
+=======
+# 
+# par(mfrow = c(1, 2))
+# plot(ltt.custom(tree), type = "l") # Tree must be your own tree from myOut
+# ltt(tree, log.lineages = F, gamma = TRUE)
+>>>>>>> 906d70a4c3a5e217ddf486f9ba0b4cc4a98525e1
