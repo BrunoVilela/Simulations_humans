@@ -99,6 +99,10 @@ plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
 points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
 points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
 myOut$myWorld[, 8] <- paste0("t", myOut$myWorld[, 8])
-match
+trait <- cbind(myOut$myWorld[, 6:7])
+rownames(trait) <- myOut$myWorld[, 8]
+trait <- trait[!is.na(trait[, 1]), ]
+trait.plot(myOut$mytree, trait, cex.lab = 0.001,
+           cols = list("Trait" = c("blue", "red"), "Environment" = c("gray", "darkgreen")))
 plot(myOut$mytree, edge.color = c("blue", "red")[myOut$myWorld[, 6]],
      show.tip.label = FALSE)
