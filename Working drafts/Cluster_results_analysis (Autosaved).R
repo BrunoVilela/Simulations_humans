@@ -67,7 +67,7 @@ for (i in 1:length(load.files)) {
 load_functions <- Sys.time()
 
 ###################################################
-combo_pass <- 31    #These are for testing the function. Do not use in actual model runs.
+combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
 analyze_this_many <- 4000  
 Timesteps_pass <- 300
 #i <- 99
@@ -368,9 +368,9 @@ all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
     Ic <- as.vector(na.omit(Ic))
 		
 	#Iw - Fusco and Cronk 1995 suggested by Simon Greenhill
+	library(caper)	
 	
-	
-	
+	plot(fusco.test(all_trees[[20]]), type="l")
 	
 	#Gamma index
 	
