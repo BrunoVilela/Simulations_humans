@@ -122,7 +122,7 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 
 number_of_tips <- length(coords[,1])
 number_of_time_steps_a <- 300
-replicate_cycle <- c(1:16)  #number of replicates
+replicate_cycle <- c(1:12)  #number of replicates
 
 #####################################################################
 
