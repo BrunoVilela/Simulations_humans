@@ -52,7 +52,7 @@ library(ape)
 library(phytools)
 library(picante)
 library(apTreeshape)
-		
+library(caper)
 		
 ######Read in R functions##############################
 start_time <- Sys.time()
@@ -67,7 +67,7 @@ for (i in 1:length(load.files)) {
 load_functions <- Sys.time()
 
 ###################################################
-combo_pass <- 31    #These are for testing the function. Do not use in actual model runs.
+combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
 analyze_this_many <- 4000  
 Timesteps_pass <- 300
 #i <- 99
@@ -120,6 +120,7 @@ data.result <- cluster_input_files[1:analyze_this_many, ]
   dim(data.result)
   l.myfiles <- length(myfiles)
   
+  # some of these are different lengths. Need to make a list or fix otherwise.
   data.result[,25:41] <- rep(NA, l.myfiles)
   colnames(data.result)[25:41] <- c(
   	"Branch_Lengths", 
@@ -283,7 +284,7 @@ all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
 
 		# avPD -- Average phylogenetic diversity
 		
-		Branch_Lengths <- as.vector(unlist(lapply(Branch_Lengths, mean)))
+		average_phylogenetic diversity <- as.vector(unlist(lapply(Branch_Lengths, mean)))
 		
 		# avPDab #IGNORED BECAUSE IT USES ABUNDANCE
 		
@@ -367,13 +368,18 @@ all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
     Ic <- as.vector(na.omit(Ic))
 		
 	#Iw - Fusco and Cronk 1995 suggested by Simon Greenhill
-	
-	
-	
-	
+		
+	plot((fusco.test(all_trees[[4]], tipsAsSpecies=TRUE)))
+	fusco_out <- (fusco.test(all_trees[[4]], tipsAsSpecies=TRUE))
+	summary(fusco_out)
+	hist(fusco_out[1,])
 	#Gamma index
+	hist(fusco_out$observed$I)
+	hist(fusco_out$observed$I.prime)
+	hist(fusco_out$observed$I.w)
 	
 	
+	# Gamma
 	 all_trees_gamma <- all_trees[!sapply(all_trees, is.null)]
      gamma_list <- ltt(all_trees_gamma, gamma=TRUE, plot=FALSE)
   	 tip_length <- 1254
@@ -453,7 +459,7 @@ all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
 	
 											calc_regularity_metrics <- Sys.time()
 
-##### (5) Tree metric -- Macroevolutionary  ###############
+##### (5) Tree metric -- Macroevolutionary - Rate and rate changes ###############
 ##################################################
 
 
