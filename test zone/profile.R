@@ -98,4 +98,7 @@ map()
 plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
 points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
 points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
-plotTree(myOut$mytree, )
+myOut$myWorld[, 8] <- paste0("t", myOut$myWorld[, 8])
+match
+plot(myOut$mytree, edge.color = c("blue", "red")[myOut$myWorld[, 6]],
+     show.tip.label = FALSE)
