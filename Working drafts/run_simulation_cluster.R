@@ -189,20 +189,25 @@ clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster,
                combo_number = 25, number_of_time_steps = number_of_time_steps_a,
                myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
+c <- Sys.time()
+
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 28, number_of_time_steps = number_of_time_steps_a,
                myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
+
+d <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 29, number_of_time_steps = number_of_time_steps_a,
                myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
+e <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
                combo_number = 31, number_of_time_steps = number_of_time_steps_a,
                myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
-c <- Sys.time()
+f <- Sys.time()
 
 
 
@@ -212,7 +217,9 @@ difftime(b, a)
 difftime(c, b)
 # Time to run 
 
-
+difftime(d, c)
+difftime(e, d)
+difftime(f, e)
 
 stopCluster(cl)
 
