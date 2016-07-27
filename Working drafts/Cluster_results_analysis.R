@@ -498,8 +498,8 @@ d <-cluster_results_analysis(25, 10, 300, 4)
 
 
 
-setwd("~/Desktop")
-pdf(file="time through lineage plot.pdf", width=11, height=8.5)
+#setwd("~/Desktop")
+pdf(file="Figures/time through lineage plot.pdf", width=11, height=8.5)
 color_choice <- c("firebrick", "cornflowerblue", "limegreen", "grey")
 
 plot(0,0, type="n", xlim=c(0,8), ylim=c(0,300), xlab="log(number of tips)", ylab="time between tips")
@@ -565,7 +565,7 @@ ltt_mean_d[h] <- mean(d[[3]][h,], na.rm =TRUE)
 }
 
 
-pdf(file="polytest.pdf")
+pdf(file="Figures/polytest.pdf")
 plot(0,0, type="n", xlim=c(0,8), ylim=c(0,300), xlab="log(number of tips)", ylab="time between tips")
 
 alpha_level <- .1
