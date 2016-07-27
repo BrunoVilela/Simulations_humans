@@ -32,7 +32,7 @@ coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 100) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 300) # subsample (remove when running for all)
 
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
@@ -64,8 +64,8 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   
   
   if (any(chosen_combo[[2]] == "Random_new_origin")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
-    P.Arisal <- matrix(prob_choose, ncol = 2, nrow = nrow(myWorld)) # probability per cell
+    prob_choose_a <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
+    P.Arisal <- matrix(prob_choose_a, ncol = 2, nrow = nrow(myWorld)) # probability per cell
     P.Arisal[myWorld[, 7] == 1, 2] <- 0 # probability of agriculture is zero in non-suitable places
   } else {
     P.Arisal <- matrix(0, ncol = 2, nrow = nrow(myWorld))
@@ -103,8 +103,8 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
                            paste(P.extinction, collapse="_"), "_P.diffusion_",
                            paste(P.diffusion, collapse="_"), "_P.TakeOver_",
                            paste(P.TakeOver, collapse="_"),"_P.Arisal_",
-                           paste(P.Arisal, collapse="_"),
-                           "_timesteps_", number_of_time_steps, "_ntips_", number_of_tips,"_.Rdata"))
+                           prob_choose_a,
+                           "_timesteps_", number_of_time_steps, "_.Rdata"))
   
 }
 
@@ -141,7 +141,7 @@ dim(myWorld)
 
 
 
-#sim_run_cluster(1, 31, myWorld, 300, nbs)
+#system.time(sim_run_cluster(1, 31, myWorld, 300, nbs))
 
 
 #map()

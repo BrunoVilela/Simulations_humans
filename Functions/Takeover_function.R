@@ -1,6 +1,6 @@
 # Takeover function
 TakeOver <- function(myWorld, mytree, P.TakeOver, 
-                     NodeData, myT, multiplier = 1.3,
+                     myT, multiplier = 1.3,
                      i, BL) {
   
   extinct.list <- NULL
@@ -43,30 +43,27 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   if (prob.to > runif(1)) {
     extinct.list <- PosTargets
     temp <- sub.TakeOver(mytree, index.tips = PosTargets, 
-                         myWorld, myT, i, NodeData, BL)
+                         myWorld, myT, i, BL)
     mytree <- temp$mytree
     myWorld <- temp$myWorld
-    NodeData <- temp$NodeData
   }
   
-  return(list("mytree" = mytree, "myWorld" = myWorld,
-              "NodeData" = NodeData, "extinct.list" = extinct.list))  
+  return(list("mytree" = mytree, "myWorld" = myWorld, "extinct.list" = extinct.list))  
 }
 
 
 
 #==================================================================
 sub.TakeOver <- function(mytree, index.tips, myWorld, myT,
-                         i, NodeData, BL) { #index.tips = PosTargets
+                         i, BL) { #index.tips = PosTargets
   # eliminate any record of the society that used to occupy the chosen spot
   temp <- extinct(mytree, index.tips, myWorld)
   mytree <- temp$mytree
   myWorld <- temp$myWorld
-  NodeData <- temp$NodeData
-  
+
   # and now occupy this spot with a descendant of the domest society
   Temp <- speciate(myT = myT, Parent = i, index.tips, 
                    myWorld = myWorld, mytree = mytree,
-                   NodeData = NodeData, BL)
+                   BL)
   return(Temp)
 }

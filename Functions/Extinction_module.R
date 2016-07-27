@@ -14,10 +14,9 @@ Extinction <- function(input) {
   P.TakeOver <- input[[5]]
   myWorld <- input[[6]]
   mytree <- input[[7]]
-  NodeData <- input[[8]]
-  myT <- input[[9]]
-  multiplier <- input[[10]]
-  nbs <- input[[11]]
+  myT <- input[[8]]
+  multiplier <- input[[9]]
+  nbs <- input[[10]]
   
   if (sum(P.extinction) != 0) {
     trait.nonNA <- !is.na(myWorld[, 6])
@@ -41,12 +40,11 @@ Extinction <- function(input) {
         temp <- extinct(mytree, index.tips[extinction], myWorld)
         mytree <- temp$mytree
         myWorld <- temp$myWorld
-        NodeData <- temp$NodeData
       }
     }
   }
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
-                 myWorld, mytree, NodeData, myT, multiplier, nbs)
+                 myWorld, mytree, myT, multiplier, nbs)
   return(output)
 }  
 

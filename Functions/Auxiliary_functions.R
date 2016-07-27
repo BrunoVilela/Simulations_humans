@@ -20,13 +20,7 @@ getTargets <- function(cellID, myWorld, empty, nbs, traits = FALSE) {
   #       if false will keep only targets with traits
   # nbs a neihbor class object
   AllTargets <-  nbs[[cellID]]
-  PosTargets <- NULL
-  
   # Figure out which of the neighboring cells are good options for this context
-  nAll <- length(AllTargets)
-  PosTargets <- numeric(nAll)
-
-  
   if (empty) {
     PosTargets <- AllTargets[is.na(myWorld[AllTargets, 6])]
   } 
@@ -45,7 +39,7 @@ getTargets <- function(cellID, myWorld, empty, nbs, traits = FALSE) {
 
 #==================================================================
 # Extend the tips of branches that did not reproduce to maintain
-# an ultrametric tree
+# an ultrametric tree (unused for now)
 uniformBranchs <- function(mytree, myT) {
   # mytree the phylogenetic tree
   # myT the current time step
@@ -65,22 +59,14 @@ uniformBranchs <- function(mytree, myT) {
 extinct <- function(mytree, remove, myWorld) {
   mytree <- drop.tip(mytree, tip = paste0("t", myWorld[remove, 8]))
   myWorld[remove, 4:6] <- NA
-  # update NodeData
-  tip.length <- Ntip(mytree)
-  NodeData <- matrix(NA, tip.length, 2)
-  colnames(NodeData) <- c('Node', 'Tip')
-  NodeData[, 1] <- 1:tip.length
-  NodeData[, 2] <- as.numeric(gsub("t", "", mytree$tip.label))
-  return(list("mytree" = mytree, "myWorld" = myWorld,
-              "NodeData" = NodeData))  
+  return(list("mytree" = mytree, "myWorld" = myWorld))  
 }
 
 
 #==================================================================
 # Function to add a species to a tip
 # phylogenetic tree
-bind.tip <- function(tree, tip.label, edge.length, where,
-                     parent, target) {
+bind.tip <- function(tree, tip.label, edge.length, where) {
   tip <- list(edge = matrix(c(3, 3, 1, 2),
                             ncol = 2, nrow = 2),
             tip.label = tip.label,
@@ -94,7 +80,7 @@ bind.tip <- function(tree, tip.label, edge.length, where,
 
 #==================================================================
 # Get the patristic distance to the root
-# x = phylogenetic tree
+# x = phylogenetic tree (unused for now)
 distRoot2 <- function(x) {
   N <- Ntip(x)
   x <- as(x, "phylo4")

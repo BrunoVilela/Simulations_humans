@@ -38,17 +38,13 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   }
   
   myWorld[start, 4:6] <- c(0, 0, 1) # Setting root(0), time(0), ancestral(1, forager)
-  
-  # Keep track of the tip numbers for each position in myWorld (when colonized)
-  NodeData <- matrix(c(rootnode, start), 1, 2)
-  colnames(NodeData) <- c('Node', 'Tip') 
-  
+
   mytree <- NULL # Empty tree 
   myT <- 0 # Time starts at zero
-  
+
   # Common input and output for all the internal modules
   input <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
-                myWorld, mytree, NodeData, myT, multiplier, nbs) 
+                myWorld, mytree, myT, multiplier, nbs) 
   
   # Functions order to be randomized
   rand_order_func_run <- list("Extinction", "Diffusion", "SpeciationTakeOver", "Arisal")
@@ -76,6 +72,5 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   # Trunsform the input/output into the final result and return it
   myWorld <- input[[6]]
   mytree <- input[[7]]
-  NodeData <- input[[8]]
-  return(list('mytree' = mytree, 'NodeData' = NodeData, 'myWorld' = myWorld))
+  return(list('mytree' = mytree, 'myWorld' = myWorld))
 }
