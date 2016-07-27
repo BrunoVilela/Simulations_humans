@@ -453,7 +453,7 @@ all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
 	
 											calc_regularity_metrics <- Sys.time()
 
-##### (5) Tree metric -- Macroevolutionary  ###############
+##### (5) Tree metric -- Macroevolutionary - Rate and rate changes ###############
 ##################################################
 
 
