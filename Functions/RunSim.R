@@ -53,7 +53,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   
   for (steps in 1:N.steps) { # Starts the loop with 'n' steps
     
-    if (steps %% (N.steps / 10) == 0) { # Time count
+    if (steps %% round((N.steps / 10)) == 0) { # Time count
       cat('-') # Time count
     }# Time count
     if (steps == N.steps) { # Time count
