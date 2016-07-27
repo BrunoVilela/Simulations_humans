@@ -214,7 +214,7 @@ all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
 
 #str(all_trees_as_treeshape)
 #summary(all_trees_as_treeshape)
-
+1000/60
 
 ## NOTE: need to deal with NAs here so we don't have to deal with them later with each function
 
@@ -369,17 +369,19 @@ all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
 		
 	#Iw - Fusco and Cronk 1995 suggested by Simon Greenhill
 		
-	plot((fusco.test(all_trees[[4]], tipsAsSpecies=TRUE)))
-	fusco_out <- (fusco.test(all_trees[[4]], tipsAsSpecies=TRUE))
-	summary(fusco_out)
-	hist(fusco_out[1,])
+		plot((fusco.test(all_trees[[14]], tipsAsSpecies=TRUE)))
+		fusco_out <- (fusco.test(all_trees[[4]], tipsAsSpecies=TRUE))
+		summary(fusco_out)
+		hist(fusco_out[1,])
+	
+		hist(fusco_out$observed$I)
+		hist(fusco_out$observed$I.prime)
+		hist(fusco_out$observed$I.w)
+	
+
+	
 	#Gamma index
-	hist(fusco_out$observed$I)
-	hist(fusco_out$observed$I.prime)
-	hist(fusco_out$observed$I.w)
 	
-	
-	# Gamma
 	 all_trees_gamma <- all_trees[!sapply(all_trees, is.null)]
      gamma_list <- ltt(all_trees_gamma, gamma=TRUE, plot=FALSE)
   	 tip_length <- 1254
@@ -615,59 +617,48 @@ dev.off()
 
 aaaa <- Sys.time()
 
-library(gtools)
-library(ape)
-library(adephylo)
-library(diversitree)
-library(TotalCopheneticIndex)
-library(phytools)
-library(apTreeshape)
-library(plyr)
-library(fitdistrplus)
-library(geiger)
-library(caper)
 
-library(parallel)
+#library(parallel)
 
 # Set up cluster
 #cl <- makeCluster(detectCores() , type = "PSOCK")
 
 # Push resources out to cluster
-clusterEvalQ(cl, library(gtools))
-clusterEvalQ(cl, library(ape))
-clusterEvalQ(cl, library(adephylo))
-clusterEvalQ(cl, library(diversitree))
-clusterEvalQ(cl, library( TotalCopheneticIndex))
-clusterEvalQ(cl, library(phytools ))
-clusterEvalQ(cl, library(apTreeshape ))
-clusterEvalQ(cl, library( plyr))
-clusterEvalQ(cl, library( fitdistrplus))
-clusterEvalQ(cl, library(geiger))
-clusterEvalQ(cl, library(caper))
-clusterEvalQ(cl, library(spdep))
-clusterEvalQ(cl, library(survival))
-clusterEvalQ(cl, library(maps))
-clusterEvalQ(cl, library(spdep))
+#clusterEvalQ(cl, library(gtools))
+#clusterEvalQ(cl, library(ape))
+#clusterEvalQ(cl, library(adephylo))
+#clusterEvalQ(cl, library(diversitree))
+#clusterEvalQ(cl, library( TotalCopheneticIndex))
+#clusterEvalQ(cl, library(phytools ))
+#clusterEvalQ(cl, library(apTreeshape ))
+#clusterEvalQ(cl, library( plyr))
+#clusterEvalQ(cl, library( fitdistrplus))
+#clusterEvalQ(cl, library(geiger))
+#clusterEvalQ(cl, library(caper))
+#clusterEvalQ(cl, library(spdep))
+#clusterEvalQ(cl, library(survival))
+#clusterEvalQ(cl, library(maps))
+#clusterEvalQ(cl, library(spdep))
 
-setwd("~/Box Sync/colliding ranges/Simulations_humans")
-clusterEvalQ(cl, source("Functions/Arisal_module.R"))
-clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
-clusterEvalQ(cl, source("Functions/Build_world_function.R"))
-clusterEvalQ(cl, source("Functions/Complete_Model.R"))
-clusterEvalQ(cl, source("Functions/Diffusion_module.R"))
-clusterEvalQ(cl, source("Functions/Extinction_module.R"))
-clusterEvalQ(cl, source("Functions/Speciate_function.R"))
-clusterEvalQ(cl, source("Functions/Speciation_function.R"))
-clusterEvalQ(cl, source("Functions/Takeover_function.R"))
-clusterEvalQ(cl, source("Functions/SpeciationTakeover_Module.R"))
-clusterEvalQ(cl, source("Functions/Possible_combinations_of_movement_function.R"))
-clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
-clusterEvalQ(cl, source("Functions/Plot_output.R"))
-clusterEvalQ(cl, source("Functions/spatial_join.R"))
+#setwd("~/Box Sync/colliding ranges/Simulations_humans")
+#clusterEvalQ(cl, source("Functions/Arisal_module.R"))
+#clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
+#clusterEvalQ(cl, source("Functions/Build_world_function.R"))
+#clusterEvalQ(cl, source("Functions/Complete_Model.R"))
+#clusterEvalQ(cl, source("Functions/Diffusion_module.R"))
+#clusterEvalQ(cl, source("Functions/Extinction_module.R"))
+#clusterEvalQ(cl, source("Functions/Speciate_function.R"))
+#clusterEvalQ(cl, source("Functions/Speciation_function.R"))
+#clusterEvalQ(cl, source("Functions/Takeover_function.R"))
+#clusterEvalQ(cl, source("Functions/SpeciationTakeover_Module.R"))
+#clusterEvalQ(cl, source("Functions/Possible_combinations_of_movement_function.R"))
+#clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
+#clusterEvalQ(cl, source("Functions/Plot_output.R"))
+#clusterEvalQ(cl, source("Functions/spatial_join.R"))
 
 # lset are the landscapes that we will run
 
- setwd("~/Desktop")
+# setwd("~/Desktop")
 combo_type <- c(25,28,29,31)
 
 
