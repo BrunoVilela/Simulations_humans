@@ -121,7 +121,7 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 300
+number_of_time_steps_a <- 1200
 replicate_cycle <- c(1:12)  #number of replicates
 
 #####################################################################
