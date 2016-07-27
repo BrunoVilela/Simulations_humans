@@ -498,7 +498,8 @@ all_trees_as_treeshape <- na.omit(all_trees_as_treeshape)
 #rm(data.result)
 #load(paste0(combo_type, "_" , Timesteps_pass , "_analysis.R") )
 
-
+## This section is just for making plots for texting and understanding metrics
+##############################################################
 a <- cluster_results_analysis(31, 10, 300, 1)
 b <-cluster_results_analysis(29, 10, 300, 2)
 c <-cluster_results_analysis(28, 10, 300, 3)
@@ -612,7 +613,7 @@ legend(0,300,legend=rev(c("S+E+A","S+E+A + Diffusion", "S+E+A + Takeover", "Full
 dev.off()
 
 
-
+####End of plot test code -- to be moved to dashboard plot script
 
 
 aaaa <- Sys.time()
