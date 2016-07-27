@@ -71,6 +71,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   }
   # Trunsform the input/output into the final result and return it
   myWorld <- input[[6]]
+  myWorld[, 8] <- paste0("t", myWorld[, 8])
   mytree <- input[[7]]
   return(list('mytree' = mytree, 'myWorld' = myWorld))
 }
