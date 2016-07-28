@@ -31,13 +31,13 @@ coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 50) # subsample (remove when running for all)
 
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
 dim(myWorld)
-number_of_time_steps <- 300 ## these are for testing the function, not for the main code
+number_of_time_steps <- 500 ## these are for testing the function, not for the main code
 replicate_cycle <- 3
 combo_number <- 31
 
@@ -86,12 +86,29 @@ if (any(chosen_combo[[2]] == "Takeover")) {
 
 
 profvis({
+  myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation,
+                          P.diffusion, P.Arisal, P.TakeOver, nbs,
+                          N.steps = number_of_time_steps, silent = F,
+                          multiplier = 2)
+})
+
+
+
+library(compiler)
+RunSimUltimateCmp <- cmpfun(RunSimUltimate)
+system.time(
+  myOut <- RunSimUltimateCmp(myWorld, P.extinction, P.speciation, 
+                             P.diffusion, P.Arisal, P.TakeOver, nbs,
+                             N.steps = number_of_time_steps, silent = F, 
+                             multiplier = 2)
+)
+
+system.time(
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs,
                           N.steps = number_of_time_steps, silent = F, 
                           multiplier = 2)
-})
-
+)
 
 
 map()
