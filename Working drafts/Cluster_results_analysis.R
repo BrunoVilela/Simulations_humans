@@ -9,6 +9,7 @@ library(picante)
 library(apTreeshape)
 library(caper)
 library(geiger)
+library(diversitree)
 
 ######Read in R functions##############################
 start_time <- Sys.time()
@@ -380,17 +381,10 @@ for(w in 1:length(fusco_tester$observed$S)){
   ##################################################
   
   ## Speciation vs extinction rates and Net diversification
-  all.bds <- lapply(all_trees, bd)
-  births <- sapply(all.bds, "[", 1)
-  deaths <- sapply(all.bds, "[", 2)
-  b.div.d <- sapply(all.bds, "[", 3)
-  b.minus.d <- sapply(all.bds, "[", 4)
-  
+  bds <- sapply(all_trees, bd)
+
   ## Speciation vs extinction rates and Net diversification dependent on trait
   par.div.dep <- mapply(DivDep, mytree = all_trees, myWorld = all_worlds)
-   
-  
-  
   
   ## Instantaneous rate or speciation and extinction from BAMM 
   # ????
@@ -399,10 +393,10 @@ for(w in 1:length(fusco_tester$observed$S)){
   phy.sig.D <- mapply(D, mytree = all_trees, myWorld = all_worlds)
   
   ## Transistion rates (variable rates)
-  Transition.rates <- mapply(transitions, mytree = all_trees, myWorld = all_worlds)
-  q12 <- Transition.rates[1, ] # transition from foraging to farming
-  q21 <- Transition.rates[2, ] # transition from farming to foraging
-  rates.ratio <- q12/q21 # the ratio between both transition rates
+  # Transition.rates <- mapply(transitions, mytree = all_trees, myWorld = all_worlds)
+  # q12 <- Transition.rates[1, ] # transition from foraging to farming
+  # q21 <- Transition.rates[2, ] # transition from farming to foraging
+  # rates.ratio <- q12/q21 # the ratio between both transition rates
   
   calc_macroevolution_metrics <- Sys.time()
   
@@ -414,10 +408,11 @@ for(w in 1:length(fusco_tester$observed$S)){
   
   ### Calculate and return time stamps
   time_vect <- c(start_time, load_functions, start_functions, parse_file_names, load_files, extract_branch_length, calc_pairwise_dist, calc_evolutionary_distinctiveness, calc_spatial_metrics, calc_richness_metrics, calc_divergence_metrics, calc_regularity_metrics, calc_macroevolution_metrics, save_time)
-  calc_times <- as.data.frame(difftime(time_vect[-1], time_vect[-(length(time_vect))], ))
+  calc_times <- as.data.frame(difftime(time_vect[-1], time_vect[-(length(time_vect))]))
   rownames(calc_times) <-  c("load R functions", "start results calculation function", "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics", "save output file")
   # calc_times
-  return(list(calc_times,  lineages_through_time , time_steps , gamma , gamma_p_value))
+  return(list(calc_times,  lineages_through_time , time_steps , gamma , gamma_p_value, 
+              bds, phy.sig.D, par.div.dep))
   
 }
 
