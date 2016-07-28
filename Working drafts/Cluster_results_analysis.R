@@ -293,14 +293,40 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   
   #Iw - Fusco and Cronk 1995 suggested by Simon Greenhill
   
-  plot((fusco.test(all_trees[[14]], tipsAsSpecies=TRUE)))
-  fusco_out <- (fusco.test(all_trees[[4]], tipsAsSpecies=TRUE))
-  summary(fusco_out)
-  hist(fusco_out[1,])
   
-  hist(fusco_out$observed$I)
-  hist(fusco_out$observed$I.prime)
-  hist(fusco_out$observed$I.w)
+  fuscoDist <- hist(fusco_tester $observed$I.prime, breaks = 10, plot = TRUE)
+  
+  S <- fusco_tester$observed$S 
+  I.prime <- fusco_tester$observed$I.prime
+  
+  allPossI <- function(S, I.prime) {
+            m <- ceiling(S/2)
+            RET <- (seq(from = m, to = S - 1) - m)/((S - 1) - 
+                m)
+            if (I.prime & (S%%2) == 1) 
+                RET <- RET * (S - 1)/S
+            return(RET)
+        }
+
+for(w in 1:length(fusco_tester$observed$S)){
+  hist(allPossI(fusco_tester$observed$S[w], fusco_tester$observed$I.prime[w]))
+  }
+  
+  str(fusco.test(all_trees[[14]]))
+  fusco_tester <- fusco.test(all_trees[[14]])
+  str(fusco_tester)
+  class(fusco_tester[9])
+  hist(unlist(fusco_tester[9]), breaks=10)
+  hist(unlist(fusco_tester[10]), breaks=10)
+  fusco_tester[1]$I.prime
+  
+  plot(fusco.test(all_trees[[14]], tipsAsSpecies=TRUE))
+  #plot.fusco
+   plot.fusco(fusco_tester $observed$I.prime)
+   
+  hist(fusco_tester$observed$I)
+  hist(fusco_tester $observed$I.prime)
+  hist(fusco_tester $observed$I.w)
   
   
   
