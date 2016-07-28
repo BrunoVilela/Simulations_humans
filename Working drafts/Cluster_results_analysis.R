@@ -23,7 +23,7 @@ load_functions <- Sys.time()
 ###################################################
 combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
 analyze_this_many <- 4000  
-Timesteps_pass <- 1253
+Timesteps_pass <- 5000
 #i <- 99
 
 cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass, line_color) {
