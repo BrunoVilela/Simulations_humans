@@ -1,3 +1,5 @@
+setwd("~/Box Sync/colliding ranges/Simulations_humans")
+
 ######Read in R libraries##############################
 #source("Plot_output.R")
 library(ape)
@@ -29,22 +31,21 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   start_functions <- Sys.time()
   
   ##### Load the results ########################
-  myfiles_full <- list.files("big world cluster outputs",
+  myfiles_full <- list.files("big world cluster outputs/5000 timesteps",
                              full.names = TRUE)
   
   ##### parse file names to retrieve simulation parameter info ########################
   split.file.name <- strsplit(myfiles_full, split = "_")   #split file name everywhere there is and underscore
   
   
-  positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28:31, 35) # 
-  data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles_full)))
+  positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28, 30) # 
+  data.result <- data.frame(matrix(ncol = 21, nrow = length(myfiles_full)))
   colnames(data.result) <- c("File_path", "replicate", "combo",
                              "speciation_1", "speciation_2", "speciation_3", "speciation_4",
                              "extinction_1", "extinction_2", "extinction_3", "extinction_4",
                              "diffusion_1", "diffusion_2", "diffusion_3", "diffusion_4",
                              "takeover_1", "takeover_2", "takeover_3", "takeover_4",
-                             "arisal_1", "arisal_2", "arisal_3", "arisal_4",
-                             "Timesteps")
+                             "arisal_1",  "Timesteps")
   data.result[, 1] <- myfiles_full
   #head(data.result)
   
