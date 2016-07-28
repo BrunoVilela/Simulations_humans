@@ -2,7 +2,9 @@
 #
 # This is the master script for calling all the individual functions to create full simulations. This script also controls parallel
 #   calls made to a local cluster (MPI) within R using library(parallel). A seperate function is needed to control parallel runs on 
-#   a high performance computing cluster that runs on linux. The ouput from this function is one file per simulation replicate and that file contains the object myOut, which is a list containing a 'phylo' tree object and myWorld, a matrix object containing the data produced by the simulation. 
+#   a high performance computing cluster that runs on linux. The ouput from this function is one file per simulation 
+#   replicate and that file contains the object myOut, which is a list containing a 'phylo' tree object and myWorld, a matrix 
+#   object containing the data produced by the simulation. 
 #
 # 28 July 2016 
 # Ty Tuff, Bruno Vilela & Carlos A. Botero
@@ -171,8 +173,6 @@ replicate_cycle <- c(1:96)  #number of replicates
 
 
 
-sub <- sample(1:nrow(coords), number_of_tips) # subsample (remove when running for all)
-
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
@@ -184,7 +184,7 @@ dim(myWorld)
 
 
 
-#       
+      
 
 
 #map()
