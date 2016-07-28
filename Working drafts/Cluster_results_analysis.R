@@ -1,3 +1,6 @@
+####
+setwd("~/Box Sync/colliding ranges/Simulations_humans")
+
 ######Read in R libraries##############################
 #source("Plot_output.R")
 library(ape)
@@ -5,6 +8,7 @@ library(phytools)
 library(picante)
 library(apTreeshape)
 library(caper)
+library(geiger)
 
 ######Read in R functions##############################
 start_time <- Sys.time()
@@ -19,32 +23,32 @@ for (i in 1:length(load.files)) {
 load_functions <- Sys.time()
 
 ###################################################
-combo_pass <- 31    #These are for testing the function. Do not use in actual model runs.
+combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
 analyze_this_many <- 4000  
-Timesteps_pass <- 300
+Timesteps_pass <- 5000
 #i <- 99
+
 
 cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass, line_color) {
   
   start_functions <- Sys.time()
   
   ##### Load the results ########################
-  myfiles_full <- list.files("big world cluster outputs",
+  myfiles_full <- list.files("big world cluster outputs/5000 timesteps",
                              full.names = TRUE)
   
   ##### parse file names to retrieve simulation parameter info ########################
   split.file.name <- strsplit(myfiles_full, split = "_")   #split file name everywhere there is and underscore
   
   
-  positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28:31, 35) # 
-  data.result <- data.frame(matrix(ncol = 24, nrow = length(myfiles_full)))
+  positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28, 30) # 
+  data.result <- data.frame(matrix(ncol = 21, nrow = length(myfiles_full)))
   colnames(data.result) <- c("File_path", "replicate", "combo",
                              "speciation_1", "speciation_2", "speciation_3", "speciation_4",
                              "extinction_1", "extinction_2", "extinction_3", "extinction_4",
                              "diffusion_1", "diffusion_2", "diffusion_3", "diffusion_4",
                              "takeover_1", "takeover_2", "takeover_3", "takeover_4",
-                             "arisal_1", "arisal_2", "arisal_3", "arisal_4",
-                             "Timesteps")
+                             "arisal_1", "Timesteps")
   data.result[, 1] <- myfiles_full
   #head(data.result)
   
@@ -70,7 +74,7 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   
   parse_file_names <- Sys.time()  
   
-
+  
   ##### Load the file specified by each row for independent analysis ###################
   #for (i in 1:l.myfiles) {
   
@@ -85,7 +89,7 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
     }
     if (any(!is.na(myOut))) {
       all_trees[[i]] <- myOut$mytree
-      all_worlds[[i]] <- myOut$myWorlds
+      all_worlds[[i]] <- myOut$myWorld
     }
   }
   
@@ -350,25 +354,29 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   ##################################################
   
   ## Speciation vs extinction rates and Net diversification
-  bd <- function(tree) {
-    x <- birthdeath(tree)  
-    b <- x$para[2] / (1 - x$para[1])
-    d <- b - x$para[2]
-    setNames(c(b, d), c("b", "d"))
-  }
   all.bds <- lapply(all_trees, bd)
+  births <- sapply(all.bds, "[", 1)
+  deaths <- sapply(all.bds, "[", 2)
+  b.div.d <- sapply(all.bds, "[", 3)
+  b.minus.d <- sapply(all.bds, "[", 4)
+  
+  ## Speciation vs extinction rates and Net diversification dependent on trait
+  par.div.dep <- mapply(DivDep, mytree = all_trees, myWorld = all_worlds)
+   
   
   
   
   ## Instantaneous rate or speciation and extinction from BAMM 
+  # ????
   
   ## Phylogenetic signal (D)
+  phy.sig.D <- mapply(D, mytree = all_trees, myWorld = all_worlds)
+  
   ## Transistion rates (variable rates)
-  
-  
-  
-  
-  
+  Transition.rates <- mapply(transitions, mytree = all_trees, myWorld = all_worlds)
+  q12 <- Transition.rates[1, ] # transition from foraging to farming
+  q21 <- Transition.rates[2, ] # transition from farming to foraging
+  rates.ratio <- q12/q21 # the ratio between both transition rates
   
   calc_macroevolution_metrics <- Sys.time()
   
