@@ -1,4 +1,4 @@
-# run_simulation cluster.R
+# Script for running the full simulation on an MPI cluster
 #
 # This is the master script for calling all the individual functions to create full simulations. This script also controls parallel
 #   calls made to a local cluster (MPI) within R using library(parallel). A seperate function is needed to control parallel runs on 
@@ -40,12 +40,14 @@ library(spdep)
 library(parallel)
 library(phylobase)
 
+## Load spatial coordinate and suitability data
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
+#sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 
+## Build the myWorld matrix object to pass on to the main function
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
