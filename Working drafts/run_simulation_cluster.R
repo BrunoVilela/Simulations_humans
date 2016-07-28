@@ -1,9 +1,21 @@
-setwd("~/Desktop")
+# Script for running the full simulation on an MPI cluster
+#
+# This is the master script for calling all the individual functions to create full simulations. This script also controls parallel
+#   calls made to a local cluster (MPI) within R using library(parallel). A seperate function is needed to control parallel runs on 
+#   a high performance computing cluster that runs on linux. The ouput from this function is one file per simulation replicate and that file contains the object myOut, which is a list containing a 'phylo' tree object and myWorld, a matrix object containing the data produced by the simulation. 
+#
+# 28 July 2016 
+# Ty Tuff, Bruno Vilela & Carlos A. Botero
+# Washington University in Saint Louis
+#==================================================================
 
+setwd("~/Desktop")
+setwd("~/Box Sync/colliding ranges/Simulations_humans")
 #####################################################################
 
-# Run the full model in a cluster. This version writes files to a cluster output folder.
-rm(list = ls())
+rm(list = ls())  # remove existing objects from workspace.
+
+# Load all the functions used in this script from a folder where they are each stored and documented seperately. 
 load.files <- list.files(path = "Functions", pattern = ".R",
                          full.names = TRUE)
 for (i in 1:length(load.files)) {
@@ -11,7 +23,7 @@ for (i in 1:length(load.files)) {
 }
 
 #####################################################################
-
+## need to document which functions we use from each of these libraries. 
 library(gtools)
 library(ape)
 library(adephylo)
@@ -28,12 +40,14 @@ library(spdep)
 library(parallel)
 library(phylobase)
 
+## Load spatial coordinate and suitability data
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
+#sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 
+## Build the myWorld matrix object to pass on to the main function
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
@@ -43,7 +57,36 @@ dim(myWorld)
 #replicate_cycle <- 3
 #combo_number <- 31
 
-sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips) {
+sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips = 1254) {
+  # Calls the full simulation script 
+  #	 
+  # Purpose: Need to wrap the entire simulation script into a function so it can be called in parallel from a cluster call 	
+  #
+  # Args:
+  #    replicate_cycle: An integer indicating the replicate number of a simulation. This variable is used in this function to label        
+  #			the saved output file and control the number of replicates run by the cluster.
+  #
+  #    combo_number: An interger between 1 and 31 indicating the combinations of S, E, A, D, and T modules to be included 
+  #			in the simulation. The full list of these combinations can be printed using the function combo_of_choice(28, TRUE).
+  # 		We are currently using combinations 25,28,29,and 31 as our four competing models for the spread of agriculture.  
+  #
+  #    myWorld: Matrix that defines the scope of the available world and acts as a data hub for organizing and reporting 	  
+  #			results from the different elements of the simulation. 
+  #
+  #    number_of_time_steps: An integer indicating how many iterations the simulation will calculated before writing the data 
+  #			file. 
+  #
+  #    nbs: A list of the available neighbors for each spatial point. This is passed to the function for calculating the interaction 
+  #			of neighbors through time. 
+  #
+  #    number_of_tips: An interger indicating the number of tree tips the simulation should be truncated to. The default is to 
+  #			include all the available tips (e.g. 1254 for human languages). 
+  #
+  # Returns: 
+  #    myOut: A list object containing a 'phylo' tree object called mytree in the first position and the myWorld matrix of 
+  #      	spatial and tree data in the second position 
+  #		
+  
   
   chosen_combo <- combo_of_choice(combo_number, FALSE)
   
@@ -122,7 +165,7 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 
 number_of_tips <- length(coords[,1])
 number_of_time_steps_a <- 5000
-replicate_cycle <- c(1:12)  #number of replicates
+replicate_cycle <- c(1:96)  #number of replicates
 
 #####################################################################
 
@@ -191,21 +234,21 @@ clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster,
 
 c <- Sys.time()
 
-#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-#               combo_number = 28, number_of_time_steps = number_of_time_steps_a,
-#               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 28, number_of_time_steps = number_of_time_steps_a,
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 d <- Sys.time()
 
-#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-#               combo_number = 29, number_of_time_steps = number_of_time_steps_a,
-#               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 29, number_of_time_steps = number_of_time_steps_a,
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 e <- Sys.time()
 
-#clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-#               combo_number = 31, number_of_time_steps = number_of_time_steps_a,
-#               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
+clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
+               combo_number = 31, number_of_time_steps = number_of_time_steps_a,
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 f <- Sys.time()
 
