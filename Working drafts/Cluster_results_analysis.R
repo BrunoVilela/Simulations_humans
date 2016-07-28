@@ -70,46 +70,29 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   
   parse_file_names <- Sys.time()  
   
-  
-  # some of these are different lengths. Need to make a list or fix otherwise.
-  pos <- 25:41
-  data.result[, pos] <- rep(NA, analyze_this_many)
-  colnames(data.result)[pos] <- c("Branch_Lengths", 
-                                  "Pairwise_dist", 
-                                  "Evolutionary_distinctiveness", 
-                                  "Pylo_diversity",
-                                  "F_quadratic_entropy",
-                                  "Phylogenetic_isolation",
-                                  "Average_Pylo_diversity",
-                                  "Mean_pairwise_distance",
-                                  "mean_Phylogenetic_isolation",
-                                  "variance_Pylo_diversity",
-                                  "Ic",
-                                  "lineages_through_time",
-                                  "time_steps",
-                                  "gamma",
-                                  "gamma_p_value",
-                                  "variance_pairwise_distance",
-                                  "variance_Phylogenetic_isolation")
-  
+
   ##### Load the file specified by each row for independent analysis ###################
   #for (i in 1:l.myfiles) {
   
   all_trees <- vector("list", 2)
   class(all_trees) <- "multiPhylo"
+  
+  all_worlds <- list()
+  
   for(i in 1:analyze_this_many) {
     if (file.exists(myfiles[i])) {
       load(myfiles[i])
     }
     if (any(!is.na(myOut))) {
       all_trees[[i]] <- myOut$mytree
+      all_worlds[[i]] <- myOut$myWorlds
     }
   }
   
-  # Subset the trees
+  # Subset the trees and world
   keep <- !sapply(all_trees, is.null)
   all_trees <- all_trees[keep]
-  
+  all_worlds <- all_worlds[keep] 
   # Number of world extinctions
   extinctions <- sum(!keep)
   
@@ -366,17 +349,24 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   ##### (5) Tree metric -- Macroevolutionary - Rate and rate changes ###############
   ##################################################
   
+  ## Speciation vs extinction rates and Net diversification
+  bd <- function(tree) {
+    x <- birthdeath(tree)  
+    b <- x$para[2] / (1 - x$para[1])
+    d <- b - x$para[2]
+    setNames(c(b, d), c("b", "d"))
+  }
+  all.bds <- lapply(all_trees, bd)
   
-  ## Phylogenetic signal
-  
-  
-  ## Speciation vs extinction rates
-  
-  
-  ## Transistion rates (variable rates)
   
   
   ## Instantaneous rate or speciation and extinction from BAMM 
+  
+  ## Phylogenetic signal (D)
+  ## Transistion rates (variable rates)
+  
+  
+  
   
   
   
