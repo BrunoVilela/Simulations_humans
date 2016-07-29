@@ -101,7 +101,6 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   # Number of world extinctions
   extinctions <- sum(!keep)
   
-  
   load_files <- Sys.time()
   ##### Calculate each metric from the parameters provided by the file name and add them to the matrix  ###########
   ############################################################################################
@@ -413,10 +412,35 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
    calc_times
  
 ### Returns from function in list form
-returns <- list(calc_times,  lineages_through_time , time_steps , gamma , gamma_p_value, bds)
-names(returns) <- c("calc_times",  "lineages_through_time" , "time_steps" , "gamma" , "gamma_p_value", "bds")
+returns <- list(
+	calc_times, 
+	all_trees,
+	all_worlds, 
+	keep, 
+	extinctions, 
+	lineages_through_time , 
+	time_steps, 
+	gamma, 
+	gamma_p_value, 
+	bds
+	)
+
+names(returns) <- c(
+	"calc_times", 
+	"trees from all replicates"
+	"landscapes from all replicates"
+	"extant landscapes", 
+	"global extinctions",  
+	"lineages through time", 
+	"waiting time corresponding to lineages through time", 
+	"gamma parameter", 
+	"gamma parameter P-value", 
+	"speciation and extinction rates ('births', 'deaths', 'births/deaths', and 'births-deaths)"
+	)
+	
   return(returns)
-  
+ 
+ 
 }
 
 #rm(data.result)
