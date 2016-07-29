@@ -520,13 +520,12 @@ names(returns) <- c(
 
 ## This section is just for making plots for texting and understanding metrics -- to be moved to dashboard plot
 ##############################################################
-a <- cluster_results_analysis(31, 4, 5000)
-b <- cluster_results_analysis(29, 1, 5000)
-c <- cluster_results_analysis(28, 1, 5000)
-d <- cluster_results_analysis(25, 1, 5000)
+#a <- cluster_results_analysis(31, 200, 5000)
+#b <- cluster_results_analysis(29, 200, 5000)
+#c <- cluster_results_analysis(28, 200, 5000)
+#d <- cluster_results_analysis(25, 200, 5000)
 		
-str(returns)
-a$calc_times
+
 
 #setwd("~/Desktop")
 pdf(file="Figures/time through lineage plot.pdf", width=11, height=8.5)
@@ -637,46 +636,30 @@ dev.off()
 ####End of plot test code -- to be moved to dashboard plot script
 
 
-aaaa <- Sys.time()
+starter_time <- Sys.time()
 
 
-#library(parallel)
+library(parallel)
 
 # Set up cluster
-#cl <- makeCluster(detectCores() , type = "PSOCK")
+cl <- makeCluster(detectCores() , type = "PSOCK")
+
 
 # Push resources out to cluster
-#clusterEvalQ(cl, library(gtools))
-#clusterEvalQ(cl, library(ape))
-#clusterEvalQ(cl, library(adephylo))
-#clusterEvalQ(cl, library(diversitree))
-#clusterEvalQ(cl, library( TotalCopheneticIndex))
-#clusterEvalQ(cl, library(phytools ))
-#clusterEvalQ(cl, library(apTreeshape ))
-#clusterEvalQ(cl, library( plyr))
-#clusterEvalQ(cl, library( fitdistrplus))
-#clusterEvalQ(cl, library(geiger))
-#clusterEvalQ(cl, library(caper))
-#clusterEvalQ(cl, library(spdep))
-#clusterEvalQ(cl, library(survival))
-#clusterEvalQ(cl, library(maps))
-#clusterEvalQ(cl, library(spdep))
 
-#setwd("~/Box Sync/colliding ranges/Simulations_humans")
-#clusterEvalQ(cl, source("Functions/Arisal_module.R"))
-#clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
-#clusterEvalQ(cl, source("Functions/Build_world_function.R"))
-#clusterEvalQ(cl, source("Functions/Complete_Model.R"))
-#clusterEvalQ(cl, source("Functions/Diffusion_module.R"))
-#clusterEvalQ(cl, source("Functions/Extinction_module.R"))
-#clusterEvalQ(cl, source("Functions/Speciate_function.R"))
-#clusterEvalQ(cl, source("Functions/Speciation_function.R"))
-#clusterEvalQ(cl, source("Functions/Takeover_function.R"))
-#clusterEvalQ(cl, source("Functions/SpeciationTakeover_Module.R"))
-#clusterEvalQ(cl, source("Functions/Possible_combinations_of_movement_function.R"))
-#clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
-#clusterEvalQ(cl, source("Functions/Plot_output.R"))
-#clusterEvalQ(cl, source("Functions/spatial_join.R"))
+clusterEvalQ(cl, library(ape))
+clusterEvalQ(cl, library(phytools))
+clusterEvalQ(cl, library(picante))
+clusterEvalQ(cl, library(apTreeshape))
+clusterEvalQ(cl, library(caper))
+clusterEvalQ(cl, library(geiger))
+clusterEvalQ(cl, library(diversitree))
+clusterEvalQ(cl, library(spdep))
+
+
+
+setwd("~/Box Sync/colliding ranges/Simulations_humans")
+clusterExport(cl, varlist=ls())
 
 # lset are the landscapes that we will run
 
@@ -684,40 +667,20 @@ aaaa <- Sys.time()
 combo_type <- c(25,28,29,31)
 
 
-analyze_this_many <- 10000
+analyze_this_many <- 200
 
 b <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 100, nbs) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 5000) 
 
 c <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300) 
-
-d <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 600, nbs) 
-
-e <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 25, nbs) 
-
-f <- Sys.time()
 
 
-difftime(b, aaaa)
+difftime(b, starter_time)
 # Time to load packages
 
 difftime(c, b)
 # Time to run combo 31
 
-difftime(d, c)
-# Time to run combo 29
 
-difftime(e, d)
-# Time to run combo 28
-
-difftime(f, e)
-# Time to run combo 25
-
-difftime(f, a)
-# Total time
-
-#stopCluster(cl)
+stopCluster(cl)
 
