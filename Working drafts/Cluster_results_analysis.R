@@ -520,7 +520,7 @@ names(returns) <- c(
 
 ## This section is just for making plots for texting and understanding metrics -- to be moved to dashboard plot
 ##############################################################
-a <- cluster_results_analysis(31, 1, 5000)
+a <- cluster_results_analysis(31, 4, 5000)
 b <- cluster_results_analysis(29, 1, 5000)
 c <- cluster_results_analysis(28, 1, 5000)
 d <- cluster_results_analysis(25, 1, 5000)
