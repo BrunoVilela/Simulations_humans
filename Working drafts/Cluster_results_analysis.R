@@ -398,6 +398,13 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   
   calc_macroevolution_metrics <- Sys.time()
   
+  # Spatial
+  nbs0 <- lapply(all_worlds, function(x) knearneigh(as.matrix(x[, 2:3]),
+                                                    k = 7, longlat = TRUE))
+  nbs <- lapply(nbs0, knn2nb, sym = TRUE) # 7 symmetric neighbors
+  nbs.listw <- lapply(nbs, nb2listw)
+  factors.nbs <- lapply(all_worlds, function(x) as.factor(ifelse(is.na(x[, 6]), 3, x[, 6])))
+  test <- mapply(joincount.test, fx = factors.nbs, listw = nbs.listw, SIMPLIFY = FALSE)
   
  
   
