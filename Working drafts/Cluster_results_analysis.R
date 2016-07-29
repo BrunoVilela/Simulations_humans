@@ -391,10 +391,10 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   phy.sig.D <- mapply(D, mytree = all_trees, myWorld = all_worlds)
   
   ## Transistion rates (variable rates)
-  # Transition.rates <- mapply(transitions, mytree = all_trees, myWorld = all_worlds)
-  # q12 <- Transition.rates[1, ] # transition from foraging to farming
-  # q21 <- Transition.rates[2, ] # transition from farming to foraging
-  # rates.ratio <- q12/q21 # the ratio between both transition rates
+   Transition.rates <- mapply(transitions, mytree = all_trees, myWorld = all_worlds)
+   q12 <- Transition.rates[1, ] # transition from foraging to farming
+   q21 <- Transition.rates[2, ] # transition from farming to foraging
+   rates.ratio <- q12/q21 # the ratio between both transition rates
   
   calc_macroevolution_metrics <- Sys.time()
   
@@ -409,7 +409,7 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   calc_times <- as.data.frame(difftime(time_vect[-1], time_vect[-(length(time_vect))]))
   colnames(calc_times) <- c("walltime")
   rownames(calc_times) <-  c( "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics", "save output file")
-   calc_times
+  
  
 ### Returns from function in list form
 returns <- list(
@@ -449,7 +449,7 @@ returns <- list(
 	Transition.rates,
 	q12,
 	q21,
-	rates.ratio,
+	rates.ratio
 	)
 
 names(returns) <- c(
@@ -481,21 +481,20 @@ names(returns) <- c(
 	
 	# tree topology
 	"Colless statistic",
+	"lineages through time (by number of tips)", 
+	"waiting time corresponding to lineages through time (by number of tips)", 
+	"gamma parameter", 
+	"gamma parameter P-value", 
 	
 	# Evolutionary rates
+	"speciation and extinction rates ('births', 'deaths', 'births/deaths', and 'births-deaths)",
 	"Speciation vs extinction rates and Net diversification dependent on trait",
 	"Phylogenetic signal",
 	"Evolutionary transition rates",
 	"transition from foraging to farming",
 	"transition from farming to foraging",
-	"ratio between both transition rates",
+	"ratio between both transition rates"
 	
-		
-	"lineages through time (by number of tips)", 
-	"waiting time corresponding to lineages through time (by number of tips)", 
-	"gamma parameter", 
-	"gamma parameter P-value", 
-	"speciation and extinction rates ('births', 'deaths', 'births/deaths', and 'births-deaths)"
 	)
 	
   return(returns)
