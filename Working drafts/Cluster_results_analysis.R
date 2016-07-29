@@ -407,6 +407,7 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   ### Calculate and return time stamps
   time_vect <- format(c(start_functions, parse_file_names, load_files, extract_branch_length, calc_pairwise_dist, calc_evolutionary_distinctiveness, calc_spatial_metrics, calc_richness_metrics, calc_divergence_metrics, calc_regularity_metrics, calc_macroevolution_metrics, save_time))
   calc_times <- as.data.frame(difftime(time_vect[-1], time_vect[-(length(time_vect))]))
+  calc_times <- cbind(difftime( save_time, start_functions) ,calc_times)
   colnames(calc_times) <- c("walltime")
   rownames(calc_times) <-  c( "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics", "save output file")
   
