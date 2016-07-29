@@ -379,16 +379,16 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   ##################################################
   
   ## Speciation vs extinction rates and Net diversification
- # bds <- sapply(all_trees, bd)
+ bds <- sapply(all_trees, bd)
 
   ## Speciation vs extinction rates and Net diversification dependent on trait
-  #par.div.dep <- mapply(DivDep, mytree = all_trees, myWorld = all_worlds)
+  par.div.dep <- mapply(DivDep, mytree = all_trees, myWorld = all_worlds)
   
   ## Instantaneous rate or speciation and extinction from BAMM 
   # ????
   
   ## Phylogenetic signal (D)
-  #phy.sig.D <- mapply(D, mytree = all_trees, myWorld = all_worlds)
+  phy.sig.D <- mapply(D, mytree = all_trees, myWorld = all_worlds)
   
   ## Transistion rates (variable rates)
   # Transition.rates <- mapply(transitions, mytree = all_trees, myWorld = all_worlds)
@@ -413,26 +413,86 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
  
 ### Returns from function in list form
 returns <- list(
-	calc_times, 
+	calc_times,
+	myfiles, 
 	all_trees,
+	all_trees_as_treeshape,
 	all_worlds, 
 	keep, 
 	extinctions, 
+	
+	Branch_Lengths,
+	Pylo_diversity,
+	average_phylogenetic_diversity,
+	variance_Pylo_diversity,
+	
+	Pairwise_dist,
+	F_quadratic_entropy,
+	Mean_pairwise_distance,
+	variance_pairwise_distance,
+
+	Evolutionary_distinctiveness,
+	Evolutionary_distinctiveness_sum,
+	mean_Phylogenetic_isolation,
+		
+	
+	
+	Ic,
 	lineages_through_time , 
 	time_steps, 
 	gamma, 
 	gamma_p_value, 
-	bds
+	
+	bds,
+	par.div.dep,
+	phy.sig.D,
+	Transition.rates,
+	q12,
+	q21,
+	rates.ratio,
 	)
 
 names(returns) <- c(
 	"calc_times", 
-	"trees from all replicates"
-	"landscapes from all replicates"
+	"files used in analysis",
+	"all trees as 'phylo' object",
+	"all trees as 'treeshape' object",
+	"landscapes from all replicates",
 	"extant landscapes", 
 	"global extinctions",  
-	"lineages through time", 
-	"waiting time corresponding to lineages through time", 
+	
+	#unit: branch lengths
+	"Branch lengths",
+	"Pylogenetic diversity, a.k.a. sum of branch lengths",
+	"mean phylogenetic diversity",
+	"variance in Pylogenetic diversity",
+	
+	#unit: pairwise distance 
+	"Pairwise distance between tips",
+	"F quadratic entropy, a.k.a. sum of pairwise distance between tips",
+	"Mean pairwise distance between tips",
+	"variance in pairwise_distance between tips",
+	
+	#unit: evolutionary distinctiveness
+	"Evolutionary distinctiveness",
+	"Evolutionary distinctiveness sum",
+	"mean Phylogenetic isolation, a.k.a. mean of evolutionary distinctiveness",
+	"variance_Phylogenetic_isolation, a.k.a. variance in evolutionary distinctiveness",
+	
+	# tree topology
+	"Colless statistic",
+	
+	# Evolutionary rates
+	"Speciation vs extinction rates and Net diversification dependent on trait",
+	"Phylogenetic signal",
+	"Evolutionary transition rates",
+	"transition from foraging to farming",
+	"transition from farming to foraging",
+	"ratio between both transition rates",
+	
+		
+	"lineages through time (by number of tips)", 
+	"waiting time corresponding to lineages through time (by number of tips)", 
 	"gamma parameter", 
 	"gamma parameter P-value", 
 	"speciation and extinction rates ('births', 'deaths', 'births/deaths', and 'births-deaths)"
@@ -448,10 +508,10 @@ names(returns) <- c(
 
 ## This section is just for making plots for texting and understanding metrics -- to be moved to dashboard plot
 ##############################################################
-a <- cluster_results_analysis(31, 10, 5000, 1)
-b <-cluster_results_analysis(29, 10, 5000, 2)
-c <-cluster_results_analysis(28, 10, 5000, 3)
-d <-cluster_results_analysis(25, 10, 5000, 4)
+a <- cluster_results_analysis(31, 1, 5000, 1)
+b <-cluster_results_analysis(29, 1, 5000, 2)
+c <-cluster_results_analysis(28, 1, 5000, 3)
+d <-cluster_results_analysis(25, 1, 5000, 4)
 
 
 
