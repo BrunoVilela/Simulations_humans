@@ -391,10 +391,10 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   phy.sig.D <- mapply(D, mytree = all_trees, myWorld = all_worlds)
   
   ## Transistion rates (variable rates)
-   Transition.rates <- mapply(transitions, mytree = all_trees, myWorld = all_worlds)
-   q12 <- Transition.rates[1, ] # transition from foraging to farming
-   q21 <- Transition.rates[2, ] # transition from farming to foraging
-   rates.ratio <- q12/q21 # the ratio between both transition rates
+   #Transition.rates <- mapply(transitions, mytree = all_trees, myWorld = all_worlds)
+   #q12 <- Transition.rates[1, ] # transition from foraging to farming
+   #q21 <- Transition.rates[2, ] # transition from farming to foraging
+   #rates.ratio <- q12/q21 # the ratio between both transition rates
   
   calc_macroevolution_metrics <- Sys.time()
   
@@ -447,10 +447,10 @@ returns <- list(
 	bds,
 	par.div.dep,
 	phy.sig.D,
-	Transition.rates,
-	q12,
-	q21,
-	rates.ratio
+	#Transition.rates,
+	#q12,
+	#q21,
+	#rates.ratio
 	)
 
 names(returns) <- c(
@@ -491,10 +491,10 @@ names(returns) <- c(
 	"speciation and extinction rates ('births', 'deaths', 'births/deaths', and 'births-deaths)",
 	"Speciation vs extinction rates and Net diversification dependent on trait",
 	"Phylogenetic signal",
-	"Evolutionary transition rates",
-	"transition from foraging to farming",
-	"transition from farming to foraging",
-	"ratio between both transition rates"
+	#"Evolutionary transition rates",
+	#"transition from foraging to farming",
+	#"transition from farming to foraging",
+	#"ratio between both transition rates"
 	
 	)
 	
@@ -514,7 +514,7 @@ c <-cluster_results_analysis(28, 4, 5000, 3)
 d <-cluster_results_analysis(25, 4, 5000, 4)
 
 str(a)
-a$calc_times
+d$calc_times
 
 #setwd("~/Desktop")
 pdf(file="Figures/time through lineage plot.pdf", width=11, height=8.5)
