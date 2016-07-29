@@ -480,12 +480,12 @@ names(returns) <- c(
 	# tree topology
 	"Colless statistic",
 	"lineages through time (by number of tips)", 
-	"waiting time corresponding to lineages through time (by number of tips)", 
+	"waiting time corresponding to lineages through time by number of tips", 
 	"gamma parameter", 
 	"gamma parameter P-value", 
 	
 	# Evolutionary rates
-	"speciation and extinction rates ('births', 'deaths', 'births/deaths', and 'births-deaths)",
+	"speciation and extinction rates ('births', 'deaths', 'births/deaths', and 'births-deaths')",
 	"Speciation vs extinction rates and Net diversification dependent on trait",
 	"Phylogenetic signal" #,
 	#"Evolutionary transition rates",
@@ -495,12 +495,12 @@ names(returns) <- c(
 	
 	)
 	
-  return(returns)
+ 
  print(calc_times)
  
- save(returns, file=paste0("results cluster output/", "Results_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_time_steps_", analyze_this_many ,"_replicates_", "analysis.R"))
+ save(returns, file=paste0("results cluster output/", "Results_ analysis_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_time_steps_", analyze_this_many ,"_replicates.R"))
   
-  
+   return(returns)
 
 }
 
@@ -510,11 +510,11 @@ names(returns) <- c(
 ## This section is just for making plots for texting and understanding metrics -- to be moved to dashboard plot
 ##############################################################
 a <- cluster_results_analysis(31, 1, 5000)
-b <-cluster_results_analysis(29, 4, 5000)
-c <-cluster_results_analysis(28, 4, 5000)
-d <-cluster_results_analysis(25, 4, 5000)
+b <- cluster_results_analysis(29, 4, 5000)
+c <- cluster_results_analysis(28, 4, 5000)
+d <- cluster_results_analysis(25, 1, 5000)
 
-str(a)
+str(returns)
 a$calc_times
 
 #setwd("~/Desktop")
