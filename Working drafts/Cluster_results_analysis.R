@@ -124,8 +124,7 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   ## 0c) Phylogenetic isolation
   
   # Using equal.splits method, faster computation
-  Evolutionary_distinctiveness <- lapply(all_trees, evol.distinct2, 
-                                         type = "equal.splits") 
+  Evolutionary_distinctiveness <- lapply(all_trees, evol.distinct2, type = "equal.splits") 
   
   calc_evolutionary_distinctiveness <- Sys.time()
   
@@ -279,39 +278,39 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   #Iw - Fusco and Cronk 1995 suggested by Simon Greenhill
   
   
-  fuscoDist <- hist(fusco_tester $observed$I.prime, breaks = 10, plot = TRUE)
   
-  S <- fusco_tester$observed$S 
-  I.prime <- fusco_tester$observed$I.prime
+#  S <- fusco_tester$observed$S 
+#  I.prime <- fusco_tester$observed$I.prime
+#  fuscoDist <- hist(fusco_tester $observed$I.prime, breaks = 10, plot = TRUE)
   
-  allPossI <- function(S, I.prime) {
-            m <- ceiling(S/2)
-            RET <- (seq(from = m, to = S - 1) - m)/((S - 1) - 
-                m)
-            if (I.prime & (S%%2) == 1) 
-                RET <- RET * (S - 1)/S
-            return(RET)
-        }
+#  allPossI <- function(S, I.prime) {
+#            m <- ceiling(S/2)
+#            RET <- (seq(from = m, to = S - 1) - m)/((S - 1) - 
+#                m)
+#            if (I.prime & (S%%2) == 1) 
+#                RET <- RET * (S - 1)/S
+#            return(RET)
+#        }
 
-for(w in 1:length(fusco_tester$observed$S)){
-  hist(allPossI(fusco_tester$observed$S[w], fusco_tester$observed$I.prime[w]))
-  }
+#for(w in 1:length(fusco_tester$observed$S)){
+#  hist(allPossI(fusco_tester$observed$S[w], fusco_tester$observed$I.prime[w]))
+#  }
   
-  str(fusco.test(all_trees[[14]]))
-  fusco_tester <- fusco.test(all_trees[[14]])
-  str(fusco_tester)
-  class(fusco_tester[9])
-  hist(unlist(fusco_tester[9]), breaks=10)
-  hist(unlist(fusco_tester[10]), breaks=10)
-  fusco_tester[1]$I.prime
+  #str(fusco.test(all_trees[[14]]))
+ # fusco_tester <- fusco.test(all_trees[[14]])
+ # str(fusco_tester)
+ # class(fusco_tester[9])
+ # hist(unlist(fusco_tester[9]), breaks=10)
+  #hist(unlist(fusco_tester[10]), breaks=10)
+#  fusco_tester[1]$I.prime
   
-  plot(fusco.test(all_trees[[14]], tipsAsSpecies=TRUE))
+ # plot(fusco.test(all_trees[[14]], tipsAsSpecies=TRUE))
   #plot.fusco
-   plot.fusco(fusco_tester $observed$I.prime)
+ #  plot.fusco(fusco_tester $observed$I.prime)
    
-  hist(fusco_tester$observed$I)
-  hist(fusco_tester $observed$I.prime)
-  hist(fusco_tester $observed$I.w)
+ # hist(fusco_tester$observed$I)
+ # hist(fusco_tester $observed$I.prime)
+ # hist(fusco_tester $observed$I.w)
   
   
   
@@ -381,16 +380,16 @@ for(w in 1:length(fusco_tester$observed$S)){
   ##################################################
   
   ## Speciation vs extinction rates and Net diversification
-  bds <- sapply(all_trees, bd)
+ # bds <- sapply(all_trees, bd)
 
   ## Speciation vs extinction rates and Net diversification dependent on trait
-  par.div.dep <- mapply(DivDep, mytree = all_trees, myWorld = all_worlds)
+  #par.div.dep <- mapply(DivDep, mytree = all_trees, myWorld = all_worlds)
   
   ## Instantaneous rate or speciation and extinction from BAMM 
   # ????
   
   ## Phylogenetic signal (D)
-  phy.sig.D <- mapply(D, mytree = all_trees, myWorld = all_worlds)
+  #phy.sig.D <- mapply(D, mytree = all_trees, myWorld = all_worlds)
   
   ## Transistion rates (variable rates)
   # Transition.rates <- mapply(transitions, mytree = all_trees, myWorld = all_worlds)
@@ -407,24 +406,28 @@ for(w in 1:length(fusco_tester$observed$S)){
   save_time <- Sys.time()
   
   ### Calculate and return time stamps
-  time_vect <- c(start_time, load_functions, start_functions, parse_file_names, load_files, extract_branch_length, calc_pairwise_dist, calc_evolutionary_distinctiveness, calc_spatial_metrics, calc_richness_metrics, calc_divergence_metrics, calc_regularity_metrics, calc_macroevolution_metrics, save_time)
+  time_vect <- format(c(start_functions, parse_file_names, load_files, extract_branch_length, calc_pairwise_dist, calc_evolutionary_distinctiveness, calc_spatial_metrics, calc_richness_metrics, calc_divergence_metrics, calc_regularity_metrics, calc_macroevolution_metrics, save_time))
   calc_times <- as.data.frame(difftime(time_vect[-1], time_vect[-(length(time_vect))]))
-  rownames(calc_times) <-  c("load R functions", "start results calculation function", "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics", "save output file")
-  # calc_times
-  return(list(calc_times,  lineages_through_time , time_steps , gamma , gamma_p_value, 
-              bds, phy.sig.D, par.div.dep))
+  colnames(calc_times) <- c("walltime")
+  rownames(calc_times) <-  c( "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics", "save output file")
+   calc_times
+ 
+### Returns from function in list form
+returns <- list(calc_times,  lineages_through_time , time_steps , gamma , gamma_p_value, bds)
+names(returns) <- c("calc_times",  "lineages_through_time" , "time_steps" , "gamma" , "gamma_p_value", "bds")
+  return(returns)
   
 }
 
 #rm(data.result)
 #load(paste0(combo_type, "_" , Timesteps_pass , "_analysis.R") )
 
-## This section is just for making plots for texting and understanding metrics
+## This section is just for making plots for texting and understanding metrics -- to be moved to dashboard plot
 ##############################################################
-a <- cluster_results_analysis(31, 10, 300, 1)
-b <-cluster_results_analysis(29, 10, 300, 2)
-c <-cluster_results_analysis(28, 10, 300, 3)
-d <-cluster_results_analysis(25, 10, 300, 4)
+a <- cluster_results_analysis(31, 10, 5000, 1)
+b <-cluster_results_analysis(29, 10, 5000, 2)
+c <-cluster_results_analysis(28, 10, 5000, 3)
+d <-cluster_results_analysis(25, 10, 5000, 4)
 
 
 
