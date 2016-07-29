@@ -25,12 +25,12 @@ load_functions <- Sys.time()
 
 ###################################################
 combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
-analyze_this_many <- 4  
+analyze_this_many <- 1  
 Timesteps_pass <- 5000
 #i <- 99
 
 
-cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass, line_color) {
+cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_pass) {
   
   start_functions <- Sys.time()
   
@@ -404,9 +404,9 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   ### Calculate and return time stamps
   time_vect <- format(c(start_functions, parse_file_names, load_files, extract_branch_length, calc_pairwise_dist, calc_evolutionary_distinctiveness, calc_spatial_metrics, calc_richness_metrics, calc_divergence_metrics, calc_regularity_metrics, calc_macroevolution_metrics))
   calc_times <- as.data.frame(difftime(time_vect[-1], time_vect[-(length(time_vect))]))
-  calc_times <- cbind(difftime( calc_macroevolution_metrics, start_functions) ,calc_times)
+  calc_times <- rbind(difftime( calc_macroevolution_metrics, start_functions) ,calc_times)
   colnames(calc_times) <- c("walltime")
-  rownames(calc_times) <-  c( "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics")
+  rownames(calc_times) <-  c( "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics", "total time")
   
  
 ### Returns from function in list form
@@ -498,7 +498,7 @@ names(returns) <- c(
   return(returns)
  print(calc_times)
  
- save(data.result, file=paste0("results cluster output/", "Results_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_time_steps_", analyze_this_many ,"_replicates_", "analysis.R"))
+ save(returns, file=paste0("results cluster output/", "Results_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_time_steps_", analyze_this_many ,"_replicates_", "analysis.R"))
   
   
 
@@ -509,10 +509,10 @@ names(returns) <- c(
 
 ## This section is just for making plots for texting and understanding metrics -- to be moved to dashboard plot
 ##############################################################
-a <- cluster_results_analysis(31, 1, 5000, 1)
-b <-cluster_results_analysis(29, 4, 5000, 2)
-c <-cluster_results_analysis(28, 4, 5000, 3)
-d <-cluster_results_analysis(25, 4, 5000, 4)
+a <- cluster_results_analysis(31, 1, 5000)
+b <-cluster_results_analysis(29, 4, 5000)
+c <-cluster_results_analysis(28, 4, 5000)
+d <-cluster_results_analysis(25, 4, 5000)
 
 str(a)
 a$calc_times
