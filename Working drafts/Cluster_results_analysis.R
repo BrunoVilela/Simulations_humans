@@ -25,7 +25,7 @@ load_functions <- Sys.time()
 
 ###################################################
 combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
-analyze_this_many <- 4000  
+analyze_this_many <- 4  
 Timesteps_pass <- 5000
 #i <- 99
 
@@ -434,7 +434,7 @@ returns <- list(
 	Evolutionary_distinctiveness,
 	Evolutionary_distinctiveness_sum,
 	mean_Phylogenetic_isolation,
-		
+	variance_Phylogenetic_isolation,
 	
 	
 	Ic,
@@ -499,7 +499,7 @@ names(returns) <- c(
 	)
 	
   return(returns)
- 
+ print(calc_times)
  
 }
 
