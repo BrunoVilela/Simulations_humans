@@ -10,6 +10,7 @@ library(apTreeshape)
 library(caper)
 library(geiger)
 library(diversitree)
+library(spdep)
 
 ######Read in R functions##############################
 start_time <- Sys.time()
@@ -461,43 +462,43 @@ returns <- list(
 
 names(returns) <- c(
 	"calc_times", 
-	"files used in analysis",
-	"all trees as 'phylo' object",
-	"all trees as 'treeshape' object",
-	"landscapes from all replicates",
-	"extant landscapes", 
-	"global extinctions",  
-	"spatial tests",
+	"files_used_in_analysis",
+	"all_trees_as_phylo_object",
+	"all_trees_as_treeshape_object",
+	"landscapes_from_all_replicates",
+	"extant_landscapes", 
+	"global_extinctions",  
+	"spatial_tests",
 	
 	#unit: branch lengths
-	"Branch lengths",
-	"Pylogenetic diversity, a.k.a. sum of branch lengths",
-	"mean phylogenetic diversity",
-	"variance in Pylogenetic diversity",
+	"branch_lengths",
+	"pylogenetic_diversity_is_sum_branch_lengths",
+	"mean_phylogenetic_diversity",
+	"variance_in_pylogenetic_diversity",
 	
 	#unit: pairwise distance 
-	"Pairwise distance between tips",
-	"F quadratic entropy, a.k.a. sum of pairwise distance between tips",
-	"Mean pairwise distance between tips",
-	"variance in pairwise_distance between tips",
+	"pairwise distance between tips",
+	"F_quadratic_entropy_is_sum_of_pairwise_distance_between_tips",
+	"mean_pairwise_distance_between_tips",
+	"variance_in_pairwise_distance_between_tips",
 	
 	#unit: evolutionary distinctiveness
-	"Evolutionary distinctiveness",
-	"Evolutionary distinctiveness sum",
-	"mean Phylogenetic isolation, a.k.a. mean of evolutionary distinctiveness",
-	"variance_Phylogenetic_isolation, a.k.a. variance in evolutionary distinctiveness",
+	"evolutionary_distinctiveness",
+	"evolutionary_distinctiveness_sum",
+	"mean_phylogenetic_isolation_is_mean_evolutionary_distinctiveness",
+	"variance_phylogenetic_isolation_is_variance_in_evolutionary_distinctiveness",
 	
 	# tree topology
-	"Colless statistic",
-	"lineages through time by number of tips", 
-	"waiting time corresponding to lineages through time by number of tips", 
-	"gamma parameter", 
-	"gamma parameter P-value", 
+	"Colless_statistic",
+	"lineages_through_time_by_number_of_tips", 
+	"waiting_time_corresponding_to_lineages_through_time_by_number_of_tips", 
+	"gamma_parameter", 
+	"gamma_parameter_P_value", 
 	
 	# Evolutionary rates
-	"speciation and extinction rates -- births, deaths, births/deaths, and births-deaths",
-	"Speciation vs extinction rates and Net diversification dependent on trait",
-	"Phylogenetic signal" #,
+	"speciation_and_extinction_rates_as_birth_death",
+	"speciation_vs_extinction_rates_and_net_diversification_dependent_on_trait",
+	"phylogenetic_signal" #,
 	#"Evolutionary transition rates",
 	#"transition from foraging to farming",
 	#"transition from farming to foraging",
@@ -508,7 +509,7 @@ names(returns) <- c(
  
  print(calc_times)
  
- save(returns, file=paste0("results cluster output/", "Results_ analysis_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_time_steps_", analyze_this_many ,"_replicates.R"))
+ save(returns, file=paste0("results cluster output/", "Results_ analysis_for_model_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_timesteps_", analyze_this_many ,"_replicates_used.R"))
   
    return(returns)
 
@@ -523,7 +524,7 @@ a <- cluster_results_analysis(31, 1, 5000)
 b <- cluster_results_analysis(29, 1, 5000)
 c <- cluster_results_analysis(28, 1, 5000)
 d <- cluster_results_analysis(25, 1, 5000)
-
+		
 str(returns)
 a$calc_times
 
