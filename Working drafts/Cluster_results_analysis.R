@@ -507,12 +507,13 @@ names(returns) <- c(
 
 ## This section is just for making plots for texting and understanding metrics -- to be moved to dashboard plot
 ##############################################################
-a <- cluster_results_analysis(31, 1, 5000, 1)
-b <-cluster_results_analysis(29, 1, 5000, 2)
-c <-cluster_results_analysis(28, 1, 5000, 3)
-d <-cluster_results_analysis(25, 1, 5000, 4)
+a <- cluster_results_analysis(31, 4, 5000, 1)
+b <-cluster_results_analysis(29, 4, 5000, 2)
+c <-cluster_results_analysis(28, 4, 5000, 3)
+d <-cluster_results_analysis(25, 4, 5000, 4)
 
-
+str(a)
+a$calc_times
 
 #setwd("~/Desktop")
 pdf(file="Figures/time through lineage plot.pdf", width=11, height=8.5)
