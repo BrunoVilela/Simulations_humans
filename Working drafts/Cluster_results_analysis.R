@@ -134,7 +134,15 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   
   ##### (1) Spatial metrics ###################
   #######################################
+   # Spatial
+  nbs0 <- lapply(all_worlds, function(x) knearneigh(as.matrix(x[, 2:3]),
+                                                    k = 7, longlat = TRUE))
+  nbs <- lapply(nbs0, knn2nb, sym = TRUE) # 7 symmetric neighbors
+  nbs.listw <- lapply(nbs, nb2listw)
+  factors.nbs <- lapply(all_worlds, function(x) as.factor(ifelse(is.na(x[, 6]), 3, x[, 6])))
+  spatial_tests <- mapply(joincount.test, fx = factors.nbs, listw = nbs.listw, SIMPLIFY = FALSE)
   
+
   
   calc_spatial_metrics <- Sys.time()
   
@@ -398,20 +406,12 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   
   calc_macroevolution_metrics <- Sys.time()
   
-  # Spatial
-  nbs0 <- lapply(all_worlds, function(x) knearneigh(as.matrix(x[, 2:3]),
-                                                    k = 7, longlat = TRUE))
-  nbs <- lapply(nbs0, knn2nb, sym = TRUE) # 7 symmetric neighbors
-  nbs.listw <- lapply(nbs, nb2listw)
-  factors.nbs <- lapply(all_worlds, function(x) as.factor(ifelse(is.na(x[, 6]), 3, x[, 6])))
-  test <- mapply(joincount.test, fx = factors.nbs, listw = nbs.listw, SIMPLIFY = FALSE)
   
- 
   
   ### Calculate and return time stamps
   time_vect <- format(c(start_functions, parse_file_names, load_files, extract_branch_length, calc_pairwise_dist, calc_evolutionary_distinctiveness, calc_spatial_metrics, calc_richness_metrics, calc_divergence_metrics, calc_regularity_metrics, calc_macroevolution_metrics))
   calc_times <- as.data.frame(difftime(time_vect[-1], time_vect[-(length(time_vect))]))
-  calc_times <- rbind(calc_times, difftime( time_vect[length(time_vect)] , time_vect[1]), units="mins")
+  calc_times <- rbind(calc_times, difftime( time_vect[length(time_vect)] , time_vect[1]))
   colnames(calc_times) <- c("walltime")
   rownames(calc_times) <-  c( "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics", "total time")
   
@@ -425,6 +425,8 @@ returns <- list(
 	all_worlds, 
 	keep, 
 	extinctions, 
+	
+	spatial_tests,
 	
 	Branch_Lengths,
 	Pylo_diversity,
@@ -465,6 +467,7 @@ names(returns) <- c(
 	"landscapes from all replicates",
 	"extant landscapes", 
 	"global extinctions",  
+	"spatial tests",
 	
 	#unit: branch lengths
 	"Branch lengths",
