@@ -443,7 +443,7 @@ returns <- list(
 	
 	bds,
 	par.div.dep,
-	phy.sig.D,
+	phy.sig.D #,
 	#Transition.rates,
 	#q12,
 	#q21,
@@ -487,7 +487,7 @@ names(returns) <- c(
 	# Evolutionary rates
 	"speciation and extinction rates ('births', 'deaths', 'births/deaths', and 'births-deaths)",
 	"Speciation vs extinction rates and Net diversification dependent on trait",
-	"Phylogenetic signal",
+	"Phylogenetic signal" #,
 	#"Evolutionary transition rates",
 	#"transition from foraging to farming",
 	#"transition from farming to foraging",
@@ -498,7 +498,7 @@ names(returns) <- c(
   return(returns)
  print(calc_times)
  
- save(data.result, file=paste0("results cluster output/", "Results_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_time_steps_", analyze_this_many ,"_replicates_", "analysis.Rdata"))
+ save(data.result, file=paste0("results cluster output/", "Results_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_time_steps_", analyze_this_many ,"_replicates_", "analysis.R"))
   
   
 
