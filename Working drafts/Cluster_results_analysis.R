@@ -667,10 +667,17 @@ clusterExport(cl, varlist=ls())
 combo_type <- c(25,28,29,31)
 
 
+<<<<<<< HEAD
 analyze_this_many <- 2000
 
 b <- Sys.time()
 clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 10000) 
+=======
+analyze_this_many <- 200
+
+b <- Sys.time()
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 5000) 
+>>>>>>> f18ea19d047b5c309aaa88906563044b106f68f9
 
 c <- Sys.time()
 
