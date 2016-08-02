@@ -12,7 +12,7 @@
 #==================================================================
 
 setwd("~/Desktop")
-setwd("~/Box Sync/colliding ranges/Simulations_humans")
+#setwd("~/Box Sync/colliding ranges/Simulations_humans")
 #####################################################################
 
 rm(list = ls())  # remove existing objects from workspace.
@@ -47,7 +47,7 @@ coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-#sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 
 ## Build the myWorld matrix object to pass on to the main function
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
@@ -166,8 +166,8 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 5000
-replicate_cycle <- c(1:96)  #number of replicates
+number_of_time_steps_a <- 10000
+replicate_cycle <- c(1:80)  #number of replicates
 
 #####################################################################
 

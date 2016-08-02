@@ -10,6 +10,7 @@ library(apTreeshape)
 library(caper)
 library(geiger)
 library(diversitree)
+library(spdep)
 
 ######Read in R functions##############################
 start_time <- Sys.time()
@@ -26,7 +27,7 @@ load_functions <- Sys.time()
 ###################################################
 combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
 analyze_this_many <- 1  
-Timesteps_pass <- 5000
+Timesteps_pass <- 10000
 #i <- 99
 
 
@@ -35,7 +36,7 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   start_functions <- Sys.time()
   
   ##### Load the results ########################
-  myfiles_full <- list.files("big world cluster outputs/5000 timesteps",
+  myfiles_full <- list.files("big world cluster outputs/10000 timesteps",
                              full.names = TRUE)
   
   ##### parse file names to retrieve simulation parameter info ########################
@@ -134,7 +135,15 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   
   ##### (1) Spatial metrics ###################
   #######################################
+   # Spatial
+  nbs0 <- lapply(all_worlds, function(x) knearneigh(as.matrix(x[, 2:3]),
+                                                    k = 7, longlat = TRUE))
+  nbs <- lapply(nbs0, knn2nb, sym = TRUE) # 7 symmetric neighbors
+  nbs.listw <- lapply(nbs, nb2listw)
+  factors.nbs <- lapply(all_worlds, function(x) as.factor(ifelse(is.na(x[, 6]), 3, x[, 6])))
+  spatial_tests <- mapply(joincount.test, fx = factors.nbs, listw = nbs.listw, SIMPLIFY = FALSE)
   
+
   
   calc_spatial_metrics <- Sys.time()
   
@@ -398,20 +407,12 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many , Timesteps_p
   
   calc_macroevolution_metrics <- Sys.time()
   
-  # Spatial
-  nbs0 <- lapply(all_worlds, function(x) knearneigh(as.matrix(x[, 2:3]),
-                                                    k = 7, longlat = TRUE))
-  nbs <- lapply(nbs0, knn2nb, sym = TRUE) # 7 symmetric neighbors
-  nbs.listw <- lapply(nbs, nb2listw)
-  factors.nbs <- lapply(all_worlds, function(x) as.factor(ifelse(is.na(x[, 6]), 3, x[, 6])))
-  test <- mapply(joincount.test, fx = factors.nbs, listw = nbs.listw, SIMPLIFY = FALSE)
   
- 
   
   ### Calculate and return time stamps
   time_vect <- format(c(start_functions, parse_file_names, load_files, extract_branch_length, calc_pairwise_dist, calc_evolutionary_distinctiveness, calc_spatial_metrics, calc_richness_metrics, calc_divergence_metrics, calc_regularity_metrics, calc_macroevolution_metrics))
   calc_times <- as.data.frame(difftime(time_vect[-1], time_vect[-(length(time_vect))]))
-  calc_times <- rbind(calc_times, difftime( time_vect[length(time_vect)] , time_vect[1]), units="mins")
+  calc_times <- rbind(calc_times, difftime( time_vect[length(time_vect)] , time_vect[1]))
   colnames(calc_times) <- c("walltime")
   rownames(calc_times) <-  c( "parse file names", "load files from simulation", "extract branch lengths", "calculate pairwise distance", "calculate evolutionary distinctiveness", "calculate spatial metrics", "calculate richness metrics", "calculate divergence metrics", "calculate regularity metrics", "calculate macroevolution metrics", "total time")
   
@@ -425,6 +426,8 @@ returns <- list(
 	all_worlds, 
 	keep, 
 	extinctions, 
+	
+	spatial_tests,
 	
 	Branch_Lengths,
 	Pylo_diversity,
@@ -459,42 +462,43 @@ returns <- list(
 
 names(returns) <- c(
 	"calc_times", 
-	"files used in analysis",
-	"all trees as 'phylo' object",
-	"all trees as 'treeshape' object",
-	"landscapes from all replicates",
-	"extant landscapes", 
-	"global extinctions",  
+	"files_used_in_analysis",
+	"all_trees_as_phylo_object",
+	"all_trees_as_treeshape_object",
+	"landscapes_from_all_replicates",
+	"extant_landscapes", 
+	"global_extinctions",  
+	"spatial_tests",
 	
 	#unit: branch lengths
-	"Branch lengths",
-	"Pylogenetic diversity, a.k.a. sum of branch lengths",
-	"mean phylogenetic diversity",
-	"variance in Pylogenetic diversity",
+	"branch_lengths",
+	"pylogenetic_diversity_is_sum_branch_lengths",
+	"mean_phylogenetic_diversity",
+	"variance_in_pylogenetic_diversity",
 	
 	#unit: pairwise distance 
-	"Pairwise distance between tips",
-	"F quadratic entropy, a.k.a. sum of pairwise distance between tips",
-	"Mean pairwise distance between tips",
-	"variance in pairwise_distance between tips",
+	"pairwise distance between tips",
+	"F_quadratic_entropy_is_sum_of_pairwise_distance_between_tips",
+	"mean_pairwise_distance_between_tips",
+	"variance_in_pairwise_distance_between_tips",
 	
 	#unit: evolutionary distinctiveness
-	"Evolutionary distinctiveness",
-	"Evolutionary distinctiveness sum",
-	"mean Phylogenetic isolation, a.k.a. mean of evolutionary distinctiveness",
-	"variance_Phylogenetic_isolation, a.k.a. variance in evolutionary distinctiveness",
+	"evolutionary_distinctiveness",
+	"evolutionary_distinctiveness_sum",
+	"mean_phylogenetic_isolation_is_mean_evolutionary_distinctiveness",
+	"variance_phylogenetic_isolation_is_variance_in_evolutionary_distinctiveness",
 	
 	# tree topology
-	"Colless statistic",
-	"lineages through time by number of tips", 
-	"waiting time corresponding to lineages through time by number of tips", 
-	"gamma parameter", 
-	"gamma parameter P-value", 
+	"Colless_statistic",
+	"lineages_through_time_by_number_of_tips", 
+	"waiting_time_corresponding_to_lineages_through_time_by_number_of_tips", 
+	"gamma_parameter", 
+	"gamma_parameter_P_value", 
 	
 	# Evolutionary rates
-	"speciation and extinction rates -- births, deaths, births/deaths, and births-deaths",
-	"Speciation vs extinction rates and Net diversification dependent on trait",
-	"Phylogenetic signal" #,
+	"speciation_and_extinction_rates_as_birth_death",
+	"speciation_vs_extinction_rates_and_net_diversification_dependent_on_trait",
+	"phylogenetic_signal" #,
 	#"Evolutionary transition rates",
 	#"transition from foraging to farming",
 	#"transition from farming to foraging",
@@ -505,7 +509,7 @@ names(returns) <- c(
  
  print(calc_times)
  
- save(returns, file=paste0("results cluster output/", "Results_ analysis_for_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_time_steps_", analyze_this_many ,"_replicates.R"))
+ save(returns, file=paste0("results cluster output/", "Results_ analysis_for_model_",combo_pass, "_" , "simulated_for_ ",Timesteps_pass ,"_timesteps_", analyze_this_many ,"_replicates_used.R"))
   
    return(returns)
 
@@ -516,13 +520,12 @@ names(returns) <- c(
 
 ## This section is just for making plots for texting and understanding metrics -- to be moved to dashboard plot
 ##############################################################
-a <- cluster_results_analysis(31, 1, 5000)
-b <- cluster_results_analysis(29, 1, 5000)
-c <- cluster_results_analysis(28, 1, 5000)
-d <- cluster_results_analysis(25, 1, 5000)
+#a <- cluster_results_analysis(31, 200, 5000)
+#b <- cluster_results_analysis(29, 200, 5000)
+#c <- cluster_results_analysis(28, 200, 5000)
+#d <- cluster_results_analysis(25, 200, 5000)
+		
 
-str(returns)
-a$calc_times
 
 #setwd("~/Desktop")
 pdf(file="Figures/time through lineage plot.pdf", width=11, height=8.5)
@@ -633,46 +636,30 @@ dev.off()
 ####End of plot test code -- to be moved to dashboard plot script
 
 
-aaaa <- Sys.time()
+starter_time <- Sys.time()
 
 
-#library(parallel)
+library(parallel)
 
 # Set up cluster
-#cl <- makeCluster(detectCores() , type = "PSOCK")
+cl <- makeCluster(detectCores() , type = "PSOCK")
+
 
 # Push resources out to cluster
-#clusterEvalQ(cl, library(gtools))
-#clusterEvalQ(cl, library(ape))
-#clusterEvalQ(cl, library(adephylo))
-#clusterEvalQ(cl, library(diversitree))
-#clusterEvalQ(cl, library( TotalCopheneticIndex))
-#clusterEvalQ(cl, library(phytools ))
-#clusterEvalQ(cl, library(apTreeshape ))
-#clusterEvalQ(cl, library( plyr))
-#clusterEvalQ(cl, library( fitdistrplus))
-#clusterEvalQ(cl, library(geiger))
-#clusterEvalQ(cl, library(caper))
-#clusterEvalQ(cl, library(spdep))
-#clusterEvalQ(cl, library(survival))
-#clusterEvalQ(cl, library(maps))
-#clusterEvalQ(cl, library(spdep))
 
-#setwd("~/Box Sync/colliding ranges/Simulations_humans")
-#clusterEvalQ(cl, source("Functions/Arisal_module.R"))
-#clusterEvalQ(cl, source("Functions/Auxiliary_functions.R"))
-#clusterEvalQ(cl, source("Functions/Build_world_function.R"))
-#clusterEvalQ(cl, source("Functions/Complete_Model.R"))
-#clusterEvalQ(cl, source("Functions/Diffusion_module.R"))
-#clusterEvalQ(cl, source("Functions/Extinction_module.R"))
-#clusterEvalQ(cl, source("Functions/Speciate_function.R"))
-#clusterEvalQ(cl, source("Functions/Speciation_function.R"))
-#clusterEvalQ(cl, source("Functions/Takeover_function.R"))
-#clusterEvalQ(cl, source("Functions/SpeciationTakeover_Module.R"))
-#clusterEvalQ(cl, source("Functions/Possible_combinations_of_movement_function.R"))
-#clusterEvalQ(cl, source("Functions/Ultimate_run_simulations.R"))
-#clusterEvalQ(cl, source("Functions/Plot_output.R"))
-#clusterEvalQ(cl, source("Functions/spatial_join.R"))
+clusterEvalQ(cl, library(ape))
+clusterEvalQ(cl, library(phytools))
+clusterEvalQ(cl, library(picante))
+clusterEvalQ(cl, library(apTreeshape))
+clusterEvalQ(cl, library(caper))
+clusterEvalQ(cl, library(geiger))
+clusterEvalQ(cl, library(diversitree))
+clusterEvalQ(cl, library(spdep))
+
+
+
+setwd("~/Box Sync/colliding ranges/Simulations_humans")
+clusterExport(cl, varlist=ls())
 
 # lset are the landscapes that we will run
 
@@ -680,40 +667,20 @@ aaaa <- Sys.time()
 combo_type <- c(25,28,29,31)
 
 
-analyze_this_many <- 10000
+analyze_this_many <- 2000
 
 b <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 100, nbs) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 10000) 
 
 c <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 300) 
-
-d <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 600, nbs) 
-
-e <- Sys.time()
-#clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 25, nbs) 
-
-f <- Sys.time()
 
 
-difftime(b, aaaa)
+difftime(b, starter_time)
 # Time to load packages
 
 difftime(c, b)
 # Time to run combo 31
 
-difftime(d, c)
-# Time to run combo 29
 
-difftime(e, d)
-# Time to run combo 28
-
-difftime(f, e)
-# Time to run combo 25
-
-difftime(f, a)
-# Total time
-
-#stopCluster(cl)
+stopCluster(cl)
 
