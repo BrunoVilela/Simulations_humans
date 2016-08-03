@@ -26,7 +26,7 @@ load_functions <- Sys.time()
 
 ###################################################
 combo_pass <- 25    #These are for testing the function. Do not use in actual model runs.
-analyze_this_many <- 10  
+analyze_this_many <- 1  
 Timesteps_pass <- 10000
 #i <- 99
 
@@ -547,7 +547,11 @@ cluster_results_analysis <- function(combo_pass, analyze_this_many,
 #b <- cluster_results_analysis(29, 200, 5000)
 #c <- cluster_results_analysis(28, 200, 5000)
 #d <- cluster_results_analysis(25, 200, 5000)
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> 13cf3cbc1bc3ce35f6adedb7a11c83a68b71a117
 
 
 #setwd("~/Desktop")
@@ -690,12 +694,10 @@ clusterExport(cl, varlist=ls())
 # setwd("~/Desktop")
 combo_type <- c(25,28,29,31)
 
-
 analyze_this_many <- 200
 
 b <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis,
-               analyze_this_many = analyze_this_many,  Timesteps_pass = 5000) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 5000) 
 
 c <- Sys.time()
 
