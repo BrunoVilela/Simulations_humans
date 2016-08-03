@@ -74,14 +74,14 @@ data.result.T4 ,
 data.result.A)
 
 head(input_parameters)
-par(mar=c(2,0,0,0))
+par(mar=c(2,2,0,0))
 
 plot(0,0,xlim=c(0,1), ylim=c(0,100))
 	line_weight <- 3
 
-colors <- adjustcolor(c(rep("red", 4), rep("blue", 4), rep("green", 4), rep("purple", 4), "orange"), alpha=.5)
+colors <- adjustcolor(c(rep("red", 4), rep("blue", 4), rep("green", 4), rep("purple", 4), "orange"), alpha=.8)
 h <- 17
-j <- 1
+
 for(h in 1:length(input_parameters[1,])){
 abline(v=mean(na.omit(input_parameters[,h])), col = colors[h], lty=2, lwd=2)
 if(length(unique(input_parameters[,h])) > 1){ 
@@ -90,7 +90,6 @@ dens <- hist(na.omit(input_parameters[,h]), add=TRUE, col = colors[h], breaks=50
 } 
 
 
-j <- j+1
 
 }
 
@@ -98,19 +97,24 @@ j <- j+1
 
 
 
-legend(0.7, 59.5, c("Speciation rate", "Extinction rate","Diffusion rate", "Takeover rate", "Arisal rate", "mean per distribution"),col= adjustcolor(c("red", "blue", "green", "purple", "orange"), alpha=.9), lwd=c(3,3,3,3,3,1.5), lty=c(1,1,1,1,1,2), seg.len=4)
-mtext("Phylogenetic automata results dashboard", 3, 1.5, col="black")
+legend(0.7, 89.5, c("Speciation rate", "Extinction rate","Diffusion rate", "Takeover rate", "Arisal rate", "mean per distribution"),col= adjustcolor(c("red", "blue", "green", "purple", "orange", "black"), alpha=.9), lwd=c(3,3,3,3,3,1.5), lty=c(1,1,1,1,1,2), seg.len=4)
+mtext("Distribution of values used as input parameters", 3, 1.5, col="darkgrey")
 mtext("probability", 1, 2, col="black", cex=.7)
 mtext("frequency", 2, 2.5, col="black", cex=.7)
-mtext("input parameters", 2, 5, col="purple")
 
 axis(2)
 
 
 
-
-
-
-
-
 }
+
+
+
+
+#input_parameters_plot(sea, sea.T, sea.D, sea.DT)
+
+
+
+
+
+

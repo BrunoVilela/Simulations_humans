@@ -71,22 +71,22 @@ page_one_layout <-layout(page_one_layout_matrix, width=c( 0.1, 1, 0.1, 1, 0.1, 1
 #layout.show(page_one_layout) 
 par(mar=c(0,0,0,0)) #set the default margin size within plot boxes to 0. This transfers the control of margin size to the width specified in the layout call.
 
-
+### Row 1
 replicate( 2 , blankplot(c(0,0), c(0,0))) #fill the first to boxes with blank plots to skip over them.
 
 # plot input parameter distributions
 input_parameters_plot(sea, sea.T, sea.D, sea.DT)
 
-
+blankplot(c(0,0), c(0,0))
 
 # display date, replicated quantity, and timesteps in top right plot box
 display_important_numbers(sea_name, sea.T_name, sea.D_name, sea.DT_name)
 
 
+replicate( 3 , blankplot(c(0,0), c(0,0)))
 
 
-
-
+### Row 2
 
 
 
