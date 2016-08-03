@@ -32,3 +32,10 @@ DivDep <- function(mytree, myWorld) {
   fit.musse <- find.mle(musse, x.init = p[argnames(musse)])
   fit.musse$par
 }
+
+
+# Adjust branch lengths
+adjBranch <- function(x) { 
+  x$edge.length <- x$edge.length / max(x$edge.length)
+  return(x)
+}
