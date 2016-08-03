@@ -44,18 +44,18 @@ data.result.E1 <- as.numeric(data.result[ , 8])
 data.result.E2 <- as.numeric(data.result[ , 9])
 data.result.E3 <- as.numeric(data.result[ , 10])
 data.result.E4 <- as.numeric(data.result[ , 11])
-data.result.S1 <- as.numeric(data.result[ , 12])
-data.result.S2 <- as.numeric(data.result[ , 13])
-data.result.S3 <- as.numeric(data.result[ , 14])
-data.result.S4 <- as.numeric(data.result[ , 15])
-data.result.S1 <- as.numeric(data.result[ , 16])
-data.result.S2 <- as.numeric(data.result[ , 17])
-data.result.S3 <- as.numeric(data.result[ , 18])
-data.result.S4 <- as.numeric(data.result[ , 19])
+data.result.D1 <- as.numeric(data.result[ , 12])
+data.result.D2 <- as.numeric(data.result[ , 13])
+data.result.D3 <- as.numeric(data.result[ , 14])
+data.result.D4 <- as.numeric(data.result[ , 15])
+data.result.T1 <- as.numeric(data.result[ , 16])
+data.result.T2 <- as.numeric(data.result[ , 17])
+data.result.T3 <- as.numeric(data.result[ , 18])
+data.result.T4 <- as.numeric(data.result[ , 19])
 data.result.A <- as.numeric(data.result[ , 20])
 
 
-input_parameters <- list(data.result.S1 ,
+input_parameters <- cbind(data.result.S1 ,
 data.result.S2 ,
 data.result.S3 ,
 data.result.S4 ,
@@ -63,55 +63,42 @@ data.result.E1 ,
 data.result.E2 ,
 data.result.E3 ,
 data.result.E4 ,
-data.result.S1 ,
-data.result.S2 ,
-data.result.S3 ,
-data.result.S4 ,
-data.result.S1 ,
-data.result.S2 ,
-data.result.S3 ,
-data.result.S4 ,
+data.result.D1 ,
+data.result.D2 ,
+data.result.D3 ,
+data.result.D4 ,
+data.result.T1 ,
+data.result.T2 ,
+data.result.T3 ,
+data.result.T4 ,
 data.result.A)
 
-
+head(input_parameters)
 par(mar=c(2,0,0,0))
-blankplot(c(0,1), c(0,10))
 
-summary(data.result_sub)
-
-
+plot(0,0,xlim=c(0,1), ylim=c(0,100))
 	line_weight <- 3
 
-colors <- adjustcolor(c("red", "blue", "green", "orange", "purple"), alpha=.6)
-
+colors <- adjustcolor(c(rep("red", 4), rep("blue", 4), rep("green", 4), rep("purple", 4), "orange"), alpha=.5)
+h <- 17
 j <- 1
-for(h in 1:length(input_parameters)){
-abline(v=mean(na.omit(as.numeric(input_parameters[[h]]))), col = colors[j], lty=2, lwd=2)
+for(h in 1:length(input_parameters[1,])){
+abline(v=mean(na.omit(input_parameters[,h])), col = colors[h], lty=2, lwd=2)
+if(length(unique(input_parameters[,h])) > 1){ 
+dens <- hist(na.omit(input_parameters[,h]), add=TRUE, col = colors[h], breaks=50, border=NA)
+#polygon(dens, col = colors[h], border="darkgrey")
+} 
+
+
 j <- j+1
 
 }
 
 
 
-colors <- adjustcolor(c("red", "blue", "green", "orange", "purple"), alpha=.1)
-dens <- density(na.omit(as.numeric(data.result_sub[,1])))
-polygon(dens, col = colors[1], border="darkgrey")
-
-dens <- density(na.omit(as.numeric(data.result_sub[,2])))
-polygon(dens, col = colors[2], border="darkgrey")
-
-dens <- density(na.omit(as.numeric(data.result_sub[,3])))
-polygon(dens, col = colors[3], border="darkgrey")
-
-dens <- density(na.omit(as.numeric(data.result_sub[,4])))
-polygon(dens, col = colors[4], border="darkgrey")
-
-dens <- density(na.omit(as.numeric(data.result_sub[,5])))
-polygon(dens, col = colors[5], border="darkgrey")
 
 
-
-legend(0.7, 9.5, c("Speciation rate", "Extinction rate","Diffusion rate", "Takeover rate", "Arisal rate", "mean per distribution"),col= adjustcolor(c("red", "blue", "green", "orange", "purple", "black"), alpha=.9), lwd=c(3,3,3,3,3,1.5), lty=c(1,1,1,1,1,2), seg.len=4)
+legend(0.7, 59.5, c("Speciation rate", "Extinction rate","Diffusion rate", "Takeover rate", "Arisal rate", "mean per distribution"),col= adjustcolor(c("red", "blue", "green", "purple", "orange"), alpha=.9), lwd=c(3,3,3,3,3,1.5), lty=c(1,1,1,1,1,2), seg.len=4)
 mtext("Phylogenetic automata results dashboard", 3, 1.5, col="black")
 mtext("probability", 1, 2, col="black", cex=.7)
 mtext("frequency", 2, 2.5, col="black", cex=.7)
