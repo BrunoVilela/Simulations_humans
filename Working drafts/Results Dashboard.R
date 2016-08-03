@@ -1,6 +1,6 @@
 # Script for calling and assembling results figures into a large dashboard for comparison
 #
-# This script 
+# This script calls a large series of plots to summarize model outputs.
 #
 # 28 July 2016 
 # Ty Tuff, Bruno Vilela & Carlos A. Botero
