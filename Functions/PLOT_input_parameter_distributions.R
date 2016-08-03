@@ -5,7 +5,7 @@
 
 
 ##################################################################################
-input_parameters_plot <- function(returns){
+input_parameters_plot <- function(sea, sea.T, sea.D, sea.DT){
 
 
 
@@ -36,22 +36,62 @@ head(data.result)
 
 
 
-data.result <- rbind(sea, sea.D, sea.T, sea.DT)
+data.result.S1 <- as.numeric(data.result[ , 4])
+data.result.S2 <- as.numeric(data.result[ , 5])
+data.result.S3 <- as.numeric(data.result[ , 6])
+data.result.S4 <- as.numeric(data.result[ , 7])
+data.result.E1 <- as.numeric(data.result[ , 8])
+data.result.E2 <- as.numeric(data.result[ , 9])
+data.result.E3 <- as.numeric(data.result[ , 10])
+data.result.E4 <- as.numeric(data.result[ , 11])
+data.result.S1 <- as.numeric(data.result[ , 12])
+data.result.S2 <- as.numeric(data.result[ , 13])
+data.result.S3 <- as.numeric(data.result[ , 14])
+data.result.S4 <- as.numeric(data.result[ , 15])
+data.result.S1 <- as.numeric(data.result[ , 16])
+data.result.S2 <- as.numeric(data.result[ , 17])
+data.result.S3 <- as.numeric(data.result[ , 18])
+data.result.S4 <- as.numeric(data.result[ , 19])
+data.result.A <- as.numeric(data.result[ , 20])
+
+
+input_parameters <- list(data.result.S1 ,
+data.result.S2 ,
+data.result.S3 ,
+data.result.S4 ,
+data.result.E1 ,
+data.result.E2 ,
+data.result.E3 ,
+data.result.E4 ,
+data.result.S1 ,
+data.result.S2 ,
+data.result.S3 ,
+data.result.S4 ,
+data.result.S1 ,
+data.result.S2 ,
+data.result.S3 ,
+data.result.S4 ,
+data.result.A)
+
+
 par(mar=c(2,0,0,0))
 blankplot(c(0,1), c(0,10))
 
-
+summary(data.result_sub)
 
 
 	line_weight <- 3
 
 colors <- adjustcolor(c("red", "blue", "green", "orange", "purple"), alpha=.6)
 
-abline(v=mean(na.omit(as.numeric(data.result_sub[,3:6]))), col = colors[1], lty=2, lwd=2)
-abline(v=mean(na.omit(as.numeric(data.result_sub[,2]))), col = colors[2], lty=2, lwd=2)
-abline(v=mean(na.omit(as.numeric(data.result_sub[,3]))), col = colors[3], lty=2, lwd=2)
-abline(v=mean(na.omit(as.numeric(data.result_sub[,4]))), col = colors[4], lty=2, lwd=2)
-abline(v=mean(na.omit(as.numeric(data.result_sub[,5]))), col = colors[5], lty=2, lwd=2)
+j <- 1
+for(h in 1:length(input_parameters)){
+abline(v=mean(na.omit(as.numeric(input_parameters[[h]]))), col = colors[j], lty=2, lwd=2)
+j <- j+1
+
+}
+
+
 
 colors <- adjustcolor(c("red", "blue", "green", "orange", "purple"), alpha=.1)
 dens <- density(na.omit(as.numeric(data.result_sub[,1])))
