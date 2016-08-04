@@ -697,7 +697,7 @@ combo_type <- c(25,28,29,31)
 analyze_this_many <- 200
 
 b <- Sys.time()
-clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 5000) 
+clusterApplyLB(cl, x = combo_type, fun = cluster_results_analysis, analyze_this_many = analyze_this_many,  Timesteps_pass = 10000) 
 
 c <- Sys.time()
 
