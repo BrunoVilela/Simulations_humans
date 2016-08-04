@@ -47,17 +47,17 @@ coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
 
 ## Build the myWorld matrix object to pass on to the main function
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
 dim(myWorld)
-#####################################################################
-#number_of_time_steps <- nrow(coords) ## these are for testing the function, not for the main code
-#replicate_cycle <- 3
-#combo_number <- 31
+# ####################################################################
+# number_of_time_steps <- nrow(coords) ## these are for testing the function, not for the main code
+# replicate_cycle <- 3
+# combo_number <- 31
 
 sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips = 1254) {
   # Calls the full simulation script 
@@ -91,7 +91,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   
   
   chosen_combo <- combo_of_choice(combo_number, FALSE)
-  
+  independent <- 1 # Always do independent, unless you the combo includes takeover dependent
   if (any(chosen_combo[[2]] == "Speciate")) {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .5, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2))  #prob speciation
     P.speciation <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
@@ -128,15 +128,17 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   if (any(chosen_combo[[2]] == "Takeover")) {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
     P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
+    independent <- rtnorm(1, mean = .5, sd = .1, upper = .7, lower = .3)
   } else {
     P.TakeOver <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
+  multiplier <- rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
   
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
-                          P.diffusion, P.Arisal, P.TakeOver, nbs,
+                          P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                           N.steps = number_of_time_steps, silent = TRUE, 
-                          multiplier = 2)
+                          multiplier = multiplier)
   
   
   save(myOut, file= paste0("big world cluster outputs/myOut_replicate_", 

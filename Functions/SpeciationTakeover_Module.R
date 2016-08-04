@@ -10,7 +10,7 @@ SpeciationTakeOver <- function(input) {
   myT <- input[[8]]
   multiplier <- input[[9]]
   nbs <- input[[10]]
-  
+  independent <- input[[11]]
   
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
@@ -42,7 +42,7 @@ SpeciationTakeOver <- function(input) {
       if (emptyORtakeover & sum(P.TakeOver) != 0) {
         temp <- TakeOver(myWorld, mytree, P.TakeOver, 
                          myT, multiplier = multiplier,
-                         i, BL)
+                         i, BL, independent)
         mytree <- temp$mytree
         myWorld <- temp$myWorld
         extinct.list <- c(extinct.list, temp$extinct.list)
@@ -59,7 +59,7 @@ SpeciationTakeOver <- function(input) {
 #  plot(mytree)
   }
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
-                 myWorld, mytree, myT, multiplier, nbs)
+                 myWorld, mytree, myT, multiplier, nbs, independent)
   return(output)
 }
 

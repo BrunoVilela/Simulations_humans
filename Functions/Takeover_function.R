@@ -1,8 +1,9 @@
 # Takeover function
 TakeOver <- function(myWorld, mytree, P.TakeOver, 
                      myT, multiplier = 1.3,
-                     i, BL) {
+                     i, BL, independent) {
   
+  ind <- independent < runif(1)
   extinct.list <- NULL
   myHex <- myWorld[i, 1]
   PosTargets <- getTargets(myHex, myWorld, nbs, empty = FALSE)
@@ -10,9 +11,11 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   target.trait.dom <- myWorld[PosTargets, 6] == 2
   P.TakeOver2 <- P.TakeOver
   # If I am at the rigth place give me more chances!
-  if (myWorld[i, 6] == myWorld[i, 7] & source.trait.dom) {
+  if (myWorld[i, 6] == myWorld[i, 7] & source.trait.dom &
+      ind) {
     P.TakeOver2 <- P.TakeOver2 * multiplier
   }
+  
   # How easy is to takeover
   prob.to <- numeric(length(PosTargets))
   prob.to[source.trait.dom & target.trait.dom] <- P.TakeOver2[2, 2] 
@@ -20,17 +23,13 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   prob.to[!source.trait.dom & target.trait.dom] <- P.TakeOver2[1, 2] 
   prob.to[!source.trait.dom & !target.trait.dom] <- P.TakeOver2[1, 1] 
 
-  # Adjust based on the missmatch of the source
-  match.env.targ <- myWorld[PosTargets, 6] != myWorld[PosTargets, 7]
-  Dom.in.For <- match.env.targ & target.trait.dom
-  prob.to[Dom.in.For] <- prob.to[Dom.in.For] * multiplier
-  
   # How good is the env for me
   good <- myWorld[i, 6] == myWorld[PosTargets, 7] & source.trait.dom
   
   if (any(good)) {
     PosTargets <- PosTargets[good]
     prob.to <- prob.to[good]
+    target.trait.dom <- target.trait.dom[good]
   }
   
   l.pos <- length(PosTargets)
@@ -38,6 +37,13 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
     choice <- sample(1:l.pos, 1)
     PosTargets <- PosTargets[choice]
     prob.to <- prob.to[choice]
+    target.trait.dom <- target.trait.dom[choice]
+  }
+  
+  # If I am at the rigth place give me more chances!
+  if (myWorld[PosTargets, 6] == myWorld[PosTargets, 7] & target.trait.dom &
+      ind) {
+    prob.to <- prob.to / multiplier
   }
   
   if (prob.to > runif(1)) {

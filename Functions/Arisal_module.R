@@ -14,6 +14,7 @@ Arisal <- function(input) {
   myT <- input[[8]]
   multiplier <- input[[9]]
   nbs <- input[[10]]
+  independent <- input[[11]]
   
   trait.nonNA <- !is.na(myWorld[, 6])
   trait.length <- sum(trait.nonNA)
@@ -30,7 +31,7 @@ Arisal <- function(input) {
   }
   
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
-                 myWorld, mytree, myT, multiplier, nbs)
+                 myWorld, mytree, myT, multiplier, nbs, independent)
   
   return(output)
 }
