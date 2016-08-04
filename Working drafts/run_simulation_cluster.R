@@ -130,7 +130,8 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
     P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
     independent <- rtnorm(1, mean = .5, sd = .1, upper = .7, lower = .3)
   } else {
-    P.TakeOver <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
+    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
+    P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
   }
   
   multiplier <- rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
