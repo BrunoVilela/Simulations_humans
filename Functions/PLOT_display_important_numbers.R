@@ -21,7 +21,7 @@ files.available <- c(sea_name, sea.D_name, sea.T_name, sea.DT_name )
 head(data.result)
 
 	blankplot(c(0,0), c(0,0))
-	mtext("Results Dashboard", side=1, line=-15, adj=0)
+	mtext("Results Dashboard", side=1, line=-15.5, adj=0, cex=1.5)
 	mtext("Developed by Ty Tuff, Bruno Vilela, ", side=1, line=-13, adj=0, col="darkgrey")
 	mtext("and Carlos Botero at wustl.edu", side=1, line=-11.5, adj=0, col="darkgrey")
 	mtext(paste0(format(Sys.time(), format="%d %B %Y")), side=1, line=-9.5, adj=0)

@@ -98,7 +98,7 @@ dens <- hist(na.omit(input_parameters[,h]), add=TRUE, col = colors[h], breaks=50
 
 
 legend(0.7, 89.5, c("Speciation rate", "Extinction rate","Diffusion rate", "Takeover rate", "Arisal rate", "mean per distribution"),col= adjustcolor(c("red", "blue", "green", "purple", "orange", "black"), alpha=.9), lwd=c(3,3,3,3,3,1.5), lty=c(1,1,1,1,1,2), seg.len=4)
-mtext("Distribution of values used as input parameters", 3, 1.5, col="darkgrey")
+mtext("Distribution of values used as input parameters", 3, 0.5, col="darkgrey")
 mtext("probability", 1, 2, col="black", cex=.7)
 mtext("frequency", 2, 2.5, col="black", cex=.7)
 
