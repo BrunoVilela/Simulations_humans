@@ -9,16 +9,16 @@ require(letsR)
   nbs <- knn2nb(knearneigh(coords, k = 7, longlat = TRUE),
               sym = TRUE)
   
-  map(mar=c(0,0,0,0))
+  map(mar=c(0,0,0,0), interior=FALSE)
   #mtext(text = myT)
   #plot(nbs, coords, add = TRUE, col = "gray80", lty = 3)
   col1 <- adjustcolor("firebrick", alpha = 1)
   col2 <-  adjustcolor("cornflowerblue", alpha = 1)
-  points(coords, col = c(col2, col1)[myWorld[, 7]], pch = 1, cex=.08)
+  points(coords, col = c(col2, col1)[myWorld[, 7]], pch = 1, cex=.18)
   
   col1 <- adjustcolor("firebrick", alpha = 1)
   col2 <-  adjustcolor("cornflowerblue", alpha = 1)
-  points(coords, col = c(col2, col1)[myWorld[, 6]], pch = 18, cex=.25)
+  points(coords, col = c(col2, col1)[myWorld[, 6]], pch = 18, cex=.35)
  
 }
 

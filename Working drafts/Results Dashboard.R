@@ -177,6 +177,36 @@ par(mar=c(0,0,0,0))
 
 
 
+replicate( 11 , blankplot(c(0,0), c(0,0)))
+
+FarmRawBranchLength(sea, sea.D, sea.T, sea.DT)
+
+blankplot(c(0,0), c(0,0))
+
+FarmRawBranchLength(sea, sea.D, sea.T, sea.DT)
+
+
+blankplot(c(0,0), c(0,0))
+
+FarmRawBranchLength(sea, sea.D, sea.T, sea.DT)
+
+
+blankplot(c(0,0), c(0,0))
+
+FarmRawBranchLength(sea, sea.D, sea.T, sea.DT)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 dev.off()
