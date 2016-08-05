@@ -1,4 +1,4 @@
-
+which_model <-sea
 maps_with_points <- function(which_model){
 require(spdep)
 require(letsR)
@@ -14,11 +14,13 @@ require(letsR)
   #plot(nbs, coords, add = TRUE, col = "gray80", lty = 3)
   col1 <- adjustcolor("firebrick", alpha = 1)
   col2 <-  adjustcolor("cornflowerblue", alpha = 1)
-  points(coords, col = c(col2, col1)[myWorld[, 7]], pch = 1, cex=.18)
+  points(coords, col = c(col2, col1)[myWorld[, 7]], pch = "O", cex=.28)
   
   col1 <- adjustcolor("firebrick", alpha = 1)
   col2 <-  adjustcolor("cornflowerblue", alpha = 1)
-  points(coords, col = c(col2, col1)[myWorld[, 6]], pch = 18, cex=.35)
+  col3 <- adjustcolor("limegreen", alpha = 1)
+  myWorld[which(is.na(myWorld[,6]) == TRUE) ,6]<- 3
+  points(coords, col = c(col2, col1, col3)[myWorld[, 6]], pch = 18, cex=.40)
  
 }
 
