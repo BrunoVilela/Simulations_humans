@@ -2,7 +2,7 @@
 #
 # This script calls a large series of plots to summarize model outputs.
 # This script pulls several plotting functions from the Functions folder. You will need to edit those scripts for each individual figure.  
-# 28 July 2016 
+# 28 July 2016 , last updated by Ty Tuff on 5 August 2016
 # Ty Tuff, Bruno Vilela & Carlos A. Botero
 # Washington University in Saint Louis
 #==================================================================
@@ -47,7 +47,7 @@ sea.DT 	<- returns ## S + E + A + D + T
 # PAGE 1 
 # Landscape layout with the distribution of input parameters on the top row, maps of the final arrangement of points for each model in the middle, and an example tree using the mean parameter values for each model.
 getwd()
-pdf( file = "Figures/PLOT_Page_1_overview.pdf", width = 11, height = 8.5) # start page one, this command ends when the command dev.off() is called.
+pdf( file = "Figures/PLOT_Page_1_overview.pdf", width = 8.5, height = 11) # start page one, this command ends when the command dev.off() is called.
 
 # The layout function establishes the grid background for plots to be plotted to. 
 # This layout should contain a boarder around the periphery for formatting adjustment later. 
@@ -58,16 +58,21 @@ pdf( file = "Figures/PLOT_Page_1_overview.pdf", width = 11, height = 8.5) # star
 # 1, 1, 1, 1, 1, 1, 1, 1, 1,     						# top margin
 # 2, 3, 3, 3, 3, 3, 4, 5, 6, 							# top row
 # 7, 7, 7, 7, 7, 7, 7, 7, 7, 							# first internal margin
-# 8, 9, 10, 11 ,12, 13, 14, 15, 16,   			# second row
-# 17, 17, 17, 17, 17, 17, 17, 17, 17, 		# second internal margin
-# 18, 19, 20, 21, 22, 23, 24,	 25, 26, 		# third row
-# 27, 27, 27, 27, 27, 27, 27, 27, 27, 		# third internal margin
-# 28, 29, 30, 31, 32, 33, 34, 35, 36, 		# bottom row
-# 37, 37, 37, 37, 37, 37, 37, 37, 37, 		# bottom margin
-page_one_layout_matrix <- matrix(c( rep( 1, 9 ), 2, rep( 3, 5 ), 4:6, rep( 7,  9 ), 8:16, rep( 17, 9), 18:26, rep( 27, 9 ), 28:36, rep( 37, 9 ) ), 9, 9, byrow=TRUE)
+# 8, 9, 9, 9, 9, 9, 10, 11 ,12,   					# second row
+# 13, 13, 13, 13, 13, 13, 13, 13, 13, 		# second internal margin
+# 14, 15, 15, 15, 15, 15, 16, 17, 18,  		# third row
+# 19, 19, 19, 19, 19, 19, 19, 19, 19, 		# third internal margin
+# 20, 21, 21, 21, 21, 21, 22, 23, 24,  		# fourth row
+# 25, 25, 25, 25 25, 25, 25, 25, 25,  		# fourth margin
+# 26, 27, 27, 27, 27, 27, 28, 29, 30, 
+#  31, 31, 31, 31, 31, 31, 31, 31, 31, 				# bottom row	# bottom margin
+
+
+
+page_one_layout_matrix <- matrix(c( rep( 1, 9 ), 2, rep( 3, 5 ), 4:6, rep( 7,  9 ), 8, rep(9, 5), 10:12, rep( 13, 9), 14, rep( 15, 5 ), 16:18, rep( 19, 9 ), 20, rep( 21, 5 ), 22:24, rep( 25, 9 ), 26, rep(27, 5), 28:30, rep( 31, 9 ) ), 11, 9, byrow=TRUE)
 
 # Specify the layout. Alternate the width calls so that margins are different between plot boxes and margin boxes. 
-page_one_layout <-layout(page_one_layout_matrix, width=c( 0.1, 1, 0.1, 1, 0.1, 1, 0.1, 1, 0.1), height=c(0.3, 1, 0.1, 1, 0.1, 1, 0.1, 1, 0.1))    
+page_one_layout <-layout(page_one_layout_matrix, width=c( 0.1, 0.8, 0.1, 0.8, 0.01, 0.8, 0.1, 1.2, 0.1), height=c(0.3, 0.8, 0.1, 1, 0.1, 1, 0.1, 1, 0.1,1,0.1))    
 #layout.show(page_one_layout) 
 par(mar=c(0,0,0,0)) #set the default margin size within plot boxes to 0. This transfers the control of margin size to the width specified in the layout call.
 
@@ -94,27 +99,33 @@ maps_with_points(sea)
 
 blankplot(c(0,0), c(0,0))
 
+
+example_tree(sea)
+
+replicate( 3 , blankplot(c(0,0), c(0,0)))
+
+
 maps_with_points(sea.D)
 
 blankplot(c(0,0), c(0,0))
 
-maps_with_points(sea.T)
-
-blankplot(c(0,0), c(0,0))
-
-maps_with_points(sea.DT)
-
-replicate( 2 , blankplot(c(0,0), c(0,0)))
-
-example_tree(sea)
-
-blankplot(c(0,10), c(0,0))
 
 example_tree(sea.D)
 
+replicate( 3 , blankplot(c(0,0), c(0,0)))
+
+
+maps_with_points(sea.T)
+
 blankplot(c(0,10), c(0,0))
 
+
 example_tree(sea.T)
+
+replicate( 3 , blankplot(c(0,0), c(0,0)))
+
+
+maps_with_points(sea.DT)
 
 blankplot(c(0,10), c(0,0))
 
@@ -124,35 +135,11 @@ example_tree(sea.DT)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 dev.off()
+
+
+
+
 
 ##################################################################
 # PAGE 2 
