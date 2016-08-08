@@ -145,6 +145,8 @@ dev.off()
 # PAGE 2 
 # Tree metrics
 sea[[15]][1]
+names(sea)
+
 pdf( file = "Figures/PLOT_Page_2_tree_metrics.pdf", width = 8.5, height = 11)
 
 # This plot needs to house 24 plot boxes (4 x 6) and a double margin at the top for category labeling. Adding a margin box between each of those boxes and around the periphery defines a 9 x 14. 
