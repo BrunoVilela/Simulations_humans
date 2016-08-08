@@ -1,4 +1,3 @@
-which_model <-sea
 maps_with_points <- function(which_model){
 require(spdep)
 require(letsR)

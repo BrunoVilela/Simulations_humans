@@ -40,7 +40,7 @@ sea.DT_name <- "results cluster output/Results_ analysis_for_model_31_simulated_
 load(sea.DT_name )
 sea.DT 	<- returns ## S + E + A + D + T
 
-
+names(sea)
 #### These results are plotted across 4 different pages, each with their own pdf call
 
 ##################################################################
@@ -72,7 +72,7 @@ pdf( file = "Figures/PLOT_Page_1_overview.pdf", width = 8.5, height = 11) # star
 page_one_layout_matrix <- matrix(c( rep( 1, 9 ), 2, rep( 3, 5 ), 4:6, rep( 7,  9 ), 8, rep(9, 5), 10:12, rep( 13, 9), 14, rep( 15, 5 ), 16:18, rep( 19, 9 ), 20, rep( 21, 5 ), 22:24, rep( 25, 9 ), 26, rep(27, 5), 28:30, rep( 31, 9 ) ), 11, 9, byrow=TRUE)
 
 # Specify the layout. Alternate the width calls so that margins are different between plot boxes and margin boxes. 
-page_one_layout <-layout(page_one_layout_matrix, width=c( 0.1, 0.8, 0.1, 0.8, 0.01, 0.8, 0.1, 1.2, 0.1), height=c(0.3, 0.8, 0.1, 1, 0.1, 1, 0.1, 1, 0.1,1,0.1))    
+page_one_layout <-layout(page_one_layout_matrix, width=c( 0.1, 0.8, 0.1, 0.8, 0.01, 0.8, 0.1, 1.2, 0.1), height=c(0.5, 0.8, 0.2, 1, 0.1, 1, 0.1, 1, 0.1,1,0.1))    
 #layout.show(page_one_layout) 
 par(mar=c(0,0,0,0)) #set the default margin size within plot boxes to 0. This transfers the control of margin size to the width specified in the layout call.
 
@@ -183,25 +183,21 @@ FarmRawBranchLength(sea, sea.D, sea.T, sea.DT)
 
 blankplot(c(0,0), c(0,0))
 
-FarmRawBranchLength(sea, sea.D, sea.T, sea.DT)
-
-
-blankplot(c(0,0), c(0,0))
-
-FarmRawBranchLength(sea, sea.D, sea.T, sea.DT)
-
+FarmSumBranchLength(sea, sea.D, sea.T, sea.DT)
 
 blankplot(c(0,0), c(0,0))
 
-FarmRawBranchLength(sea, sea.D, sea.T, sea.DT)
+FarmMeanBranchLength(sea, sea.D, sea.T, sea.DT)
 
+blankplot(c(0,0), c(0,0))
 
+FarmVarianceBranchLength(sea, sea.D, sea.T, sea.DT)
 
+replicate( 3 , blankplot(c(0,0), c(0,0)))
 
+FarmRawPairwiseDistance(sea, sea.D, sea.T, sea.DT)
 
-
-
-
+blankplot(c(0,0), c(0,0))
 
 
 

@@ -2,17 +2,17 @@
 
 
 ##################################################################################
-FarmRawBranchLength <- function(which_model1, which_model2, which_model3, which_model4 ){
+FarmVarianceBranchLength <- function(which_model1, which_model2, which_model3, which_model4 ){
 		
 	colors <-  c("cornflowerblue", "firebrick", "darkgreen", "orange")
 	
-	data.result_sub_1 <- unlist(which_model1[[9]])
-	data.result_sub_2 <- unlist(which_model2[[9]])
-	data.result_sub_3 <- unlist(which_model3[[9]])
-	data.result_sub_4 <- unlist(which_model4[[9]])
+	data.result_sub_1 <- unlist(which_model1[[12]])
+	data.result_sub_2 <- unlist(which_model2[[12]])
+	data.result_sub_3 <- unlist(which_model3[[12]])
+	data.result_sub_4 <- unlist(which_model4[[12]])
 	
 	par(mar=c(2,2,0,0))
-	plot(0,0, xlim=c(0,5), ylim=c(0, 6000), type="n")
+	plot(0,0, xlim=c(0,5), ylim=c(0, 100000), type="n")
 
 	sd <- sd(data.result_sub_1, na.rm=TRUE)
 	polygon(x=c(0.75,0.75,1.25,1.25), y=c(mean(data.result_sub_1, na.rm=TRUE)-sd, mean(data.result_sub_1, na.rm=TRUE)+sd, mean(data.result_sub_1, na.rm=TRUE)+sd,mean(data.result_sub_1, na.rm=TRUE)-sd), col=adjustcolor("grey",alpha=.9), border=adjustcolor("grey",alpha=.9))
