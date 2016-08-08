@@ -108,8 +108,17 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   
   
   if (any(chosen_combo[[2]] == "Random_new_origin")) {
-    prob_choose_a <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
-    P.Arisal <- matrix(prob_choose_a, ncol = 2, nrow = nrow(myWorld)) # probability per cell
+    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
+    P.Arisal0  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "Evol_to_F", "Evol_to_D")
+    # P.Arisal0 is the one you should change the parameters
+    P.Arisal <- matrix(NA, ncol = 2, nrow = nrow(myWorld)) # probability per cell
+    colnames(P.Arisal) <- c("Evolve_to_F", "Evolve_to_D")
+    Env.Dom <- myWorld[, 7] == 2
+    P.Arisal[Env.Dom, 1] <- P.Arisal0[1, 2]
+    P.Arisal[!Env.Dom, 1] <- P.Arisal0[1, 1]
+    P.Arisal[Env.Dom, 2] <- P.Arisal0[2, 2]
+    P.Arisal[!Env.Dom, 2] <- P.Arisal0[2, 1]
+    
   } else {
     P.Arisal <- matrix(0, ncol = 2, nrow = nrow(myWorld))
   }
