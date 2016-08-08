@@ -144,7 +144,7 @@ dev.off()
 ##################################################################
 # PAGE 2 
 # Tree metrics
-
+sea[[15]][1]
 pdf( file = "Figures/PLOT_Page_2_tree_metrics.pdf", width = 8.5, height = 11)
 
 # This plot needs to house 24 plot boxes (4 x 6) and a double margin at the top for category labeling. Adding a margin box between each of those boxes and around the periphery defines a 9 x 14. 
@@ -195,11 +195,42 @@ FarmVarianceBranchLength(sea, sea.D, sea.T, sea.DT)
 
 replicate( 3 , blankplot(c(0,0), c(0,0)))
 
-FarmRawPairwiseDistance(sea, sea.D, sea.T, sea.DT)
+#FarmRawPairwiseDistance(sea, sea.D, sea.T, sea.DT)  
+blankplot(c(0,0), c(0,0))
+
+blankplot(c(0,0), c(0,0))
+
+FarmSumPairwiseDistance(sea, sea.D, sea.T, sea.DT)
 
 blankplot(c(0,0), c(0,0))
 
 
+FarmMeanPairwiseDistance(sea, sea.D, sea.T, sea.DT)
+
+blankplot(c(0,0), c(0,0))
+
+
+FarmVariancePairwiseDistance(sea, sea.D, sea.T, sea.DT)
+
+replicate( 3 , blankplot(c(0,0), c(0,0)))
+
+
+FarmRawEvolutionaryDistinctiveness(sea, sea.D, sea.T, sea.DT)
+
+blankplot(c(0,0), c(0,0))
+
+FarmSumEvolutionaryDistinctiveness(sea, sea.D, sea.T, sea.DT)
+
+blankplot(c(0,0), c(0,0))
+
+FarmMeanEvolutionaryDistinctiveness(sea, sea.D, sea.T, sea.DT)
+
+blankplot(c(0,0), c(0,0))
+
+
+FarmVarianceEvolutionaryDistinctiveness(sea, sea.D, sea.T, sea.DT)
+
+blankplot(c(0,0), c(0,0))
 
 
 

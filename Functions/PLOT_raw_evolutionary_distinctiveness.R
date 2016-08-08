@@ -2,18 +2,21 @@
 
 
 ##################################################################################
-FarmSumBranchLength <- function(which_model1, which_model2, which_model3, which_model4 ){
+FarmRawEvolutionaryDistinctiveness <- function(which_model1, which_model2, which_model3, which_model4 ){
 		
 	colors <-  c("cornflowerblue", "firebrick", "darkgreen", "orange")
 	
-	data.result_sub_1 <- unlist(which_model1[[10]])
-	data.result_sub_2 <- unlist(which_model2[[10]])
-	data.result_sub_3 <- unlist(which_model3[[10]])
-	data.result_sub_4 <- unlist(which_model4[[10]])
+	data.result_sub_1 <- unlist(which_model1[[17]])
+	data.result_sub_2 <- unlist(which_model2[[17]])
+	data.result_sub_3 <- unlist(which_model3[[17]])
+	data.result_sub_4 <- unlist(which_model4[[17]])
 	
 	par(mar=c(2,2,0,0))
-	plot(0,0, xlim=c(0,5), ylim=c(0, 500000), type="n", bty="n", xaxt="n", ylab="Branch lengths")
-	#axis(1, labels = c("S+E+A", "S+E+A+T", "S+E+A+D", "S+E+A+T+D"), at=c(1,2,3,4), las=3)
+	
+plot(0,0, xlim=c(0,5), ylim=c(0, 6000), type="n", bty="n", xaxt="n", ylab="Branch lengths")
+	axis(1, labels = c("S+E+A", "S+E+A+T", "S+E+A+D", "S+E+A+T+D"), at=c(1,2,3,4), las=3)
+
+
 
 	sd <- sd(data.result_sub_1, na.rm=TRUE)
 	polygon(x=c(0.75,0.75,1.25,1.25), y=c(mean(data.result_sub_1, na.rm=TRUE)-sd, mean(data.result_sub_1, na.rm=TRUE)+sd, mean(data.result_sub_1, na.rm=TRUE)+sd,mean(data.result_sub_1, na.rm=TRUE)-sd), col=adjustcolor("grey",alpha=.9), border=adjustcolor("grey",alpha=.9))
@@ -40,4 +43,4 @@ FarmSumBranchLength <- function(which_model1, which_model2, which_model3, which_
 	
 }
 
-#FarmRawBranchLength(sea, sea.D, sea.T, sea.DT)
+#FarmRawEvolutionaryDistinctiveness(sea, sea.D, sea.T, sea.DT)
