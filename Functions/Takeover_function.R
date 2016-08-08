@@ -10,7 +10,7 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   source.trait.dom <- myWorld[i, 6] == 2
   target.trait.dom <- myWorld[PosTargets, 6] == 2
   P.TakeOver2 <- P.TakeOver
-  # If I am at the rigth place give me more chances!
+  # If I am at the rigth place give me more chances to attack!
   if (myWorld[i, 6] == myWorld[i, 7] & source.trait.dom &
       ind) {
     P.TakeOver2 <- P.TakeOver2 * multiplier
@@ -18,10 +18,11 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
   
   # How easy is to takeover
   prob.to <- numeric(length(PosTargets))
-  prob.to[source.trait.dom & target.trait.dom] <- P.TakeOver2[2, 2] 
-  prob.to[source.trait.dom & !target.trait.dom] <- P.TakeOver2[2, 1] 
-  prob.to[!source.trait.dom & target.trait.dom] <- P.TakeOver2[1, 2] 
+  
   prob.to[!source.trait.dom & !target.trait.dom] <- P.TakeOver2[1, 1] 
+  prob.to[!source.trait.dom & target.trait.dom] <- P.TakeOver2[1, 2] 
+  prob.to[source.trait.dom & !target.trait.dom] <- P.TakeOver2[2, 1] 
+  prob.to[source.trait.dom & target.trait.dom] <- P.TakeOver2[2, 2] 
 
   # How good is the env for me
   good <- myWorld[i, 6] == myWorld[PosTargets, 7] & source.trait.dom
@@ -40,7 +41,7 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
     target.trait.dom <- target.trait.dom[choice]
   }
   
-  # If I am at the rigth place give me more chances!
+  # If I am at the rigth place give me more chances to defend!
   if (myWorld[PosTargets, 6] == myWorld[PosTargets, 7] & target.trait.dom &
       ind) {
     prob.to <- prob.to / multiplier

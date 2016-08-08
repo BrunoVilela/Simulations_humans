@@ -4,10 +4,10 @@ Speciation <- function(myWorld, i, P.speciation,
   env.match <- myWorld[i, 7] == myWorld[i, 6]
   domesticator <- myWorld[i, 6] == 2
   prob.sp <- numeric(1)
-  prob.sp[env.match & domesticator] <- P.speciation[2, 2] # Prob of 
   prob.sp[env.match & !domesticator] <- P.speciation[1, 1] # Prob of
-  prob.sp[!env.match & domesticator] <- P.speciation[2, 1] # Prob of
+  prob.sp[env.match & domesticator] <- P.speciation[2, 2] # Prob of 
   prob.sp[!env.match & !domesticator] <- P.speciation[1, 2] # Prob of
+  prob.sp[!env.match & domesticator] <- P.speciation[2, 1] # Prob of
   
   if (runif(1) < prob.sp) {
     # speciate (i.e., send diaspora to an adjacent empty cell)

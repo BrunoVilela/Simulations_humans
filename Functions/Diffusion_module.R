@@ -35,11 +35,11 @@ Diffusion  <- function(input) {
           if (l.targets > 1) {
             PosTargets <- sample(PosTargets, 1)
           }
-          source.trait <- myWorld[i, 6] == 2
+          source.dom <- myWorld[i, 6] == 2
           prob.dif <- numeric(1)
-          prob.dif[source.trait] <- P.diffusion[2, 1] # Prob of
-          prob.dif[!source.trait] <- P.diffusion[1, 2] # Prob of
-          # HERE MULTIPLE THE PROBABILITY BY THE ENV MATCH
+          prob.dif[!source.dom] <- P.diffusion[1, 2] # Prob of
+          prob.dif[source.dom] <- P.diffusion[2, 1] # Prob of
+          # HERE DIVIDE THE PROBABILITY BY THE ENV MATCH
           prob.dif <- ifelse(myWorld[PosTargets, 6] == myWorld[PosTargets, 7] &
                                myWorld[PosTargets, 6] == 2,
                              prob.dif / multiplier, prob.dif)

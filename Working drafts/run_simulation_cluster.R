@@ -94,15 +94,14 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   independent <- 1 # Always do independent, unless you the combo includes takeover dependent
   if (any(chosen_combo[[2]] == "Speciate")) {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .5, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2))  #prob speciation
-    P.speciation <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
+    P.speciation <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "For", "Dom")
   } else {
     P.speciation <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (any(chosen_combo[[2]] == "Extinct")) {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2)) #prob of extinction
-    P.extinction  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
-    P.extinction["For", "Dom"] <- 0.4
+    P.extinction  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "For", "Dom")     
   } else {
     P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
@@ -111,7 +110,6 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   if (any(chosen_combo[[2]] == "Random_new_origin")) {
     prob_choose_a <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
     P.Arisal <- matrix(prob_choose_a, ncol = 2, nrow = nrow(myWorld)) # probability per cell
-    P.Arisal[myWorld[, 7] == 1, 2] <- 0 # probability of agriculture is zero in non-suitable places
   } else {
     P.Arisal <- matrix(0, ncol = 2, nrow = nrow(myWorld))
   }
@@ -120,14 +118,15 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   
   if (any(chosen_combo[[2]] == "Diffusion")) {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of diffusion
-    P.diffusion <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom") 
+    P.diffusion <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
+    diag(P.diffusion)<- NA
   } else {
     P.diffusion <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
   }
   
   if (any(chosen_combo[[2]] == "Takeover")) {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
-    P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
+    P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
     independent <- rtnorm(1, mean = .5, sd = .1, upper = .7, lower = .3)
   } else {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
