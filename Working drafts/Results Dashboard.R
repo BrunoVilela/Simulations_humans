@@ -145,6 +145,8 @@ dev.off()
 # PAGE 2 
 # Tree metrics
 sea[[15]][1]
+names(sea)
+
 pdf( file = "Figures/PLOT_Page_2_tree_metrics.pdf", width = 8.5, height = 11)
 
 # This plot needs to house 24 plot boxes (4 x 6) and a double margin at the top for category labeling. Adding a margin box between each of those boxes and around the periphery defines a 9 x 14. 
@@ -170,7 +172,7 @@ pdf( file = "Figures/PLOT_Page_2_tree_metrics.pdf", width = 8.5, height = 11)
 page_two_layout_matrix <- matrix(c( rep( 1, 9 ), 2:19, rep( 20, 9 ), 21:29, rep( 30,  9 ), 31:39, rep( 40, 9), 41:49, rep( 50, 9 ), 51:59, rep( 60, 9 ), 61:69, rep( 70, 9 ) ), 14, 9, byrow=TRUE)
 
 # Specify the layout. Alternate the width calls so that margins are different between plot boxes and margin boxes. 
-page_two_layout <-layout(page_two_layout_matrix, width=c( 0.1, 1, 0.1, 1, 0.1, 1, 0.1, 1, 0.1), height=c( 0.5, 0.5, 1, 0.1, 1, 0.1, 1, 0.1, 1, 0.1, 1, 0.1,1, 0.1))    
+page_two_layout <-layout(page_two_layout_matrix, width=c( 0.1, 1, 0.1, 1, 0.1, 1, 0.1, 1, 0.1), height=c( 0.5, 0.5, 1, 0.1, 1, 0.1, 1, 0.1, 1, 0.5, 1, 0.1,1, 0.1))    
 #layout.show(page_two_layout) 
 par(mar=c(0,0,0,0))
 
@@ -230,9 +232,15 @@ blankplot(c(0,0), c(0,0))
 
 FarmVarianceEvolutionaryDistinctiveness(sea, sea.D, sea.T, sea.DT)
 
+replicate( 3 , blankplot(c(0,0), c(0,0)))
+
+FarmGammaPlotBox(sea, sea.D, sea.T, sea.DT)
+
 blankplot(c(0,0), c(0,0))
 
+FarmGammaPlotDist(sea, sea.D, sea.T, sea.DT)
 
+blankplot(c(0,0), c(0,0))
 
 
 

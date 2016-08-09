@@ -1,13 +1,7 @@
 
-which_model1 <- sea
-which_model2 <- sea.D
-which_model3 <- sea.T
-which_model4 <- sea.DT
 
-
-gamma_plot <- function(which_model1, which_model2, which_model3, which_model4){
-	
-	
+FarmGammaPlotBox <- function(which_model1, which_model2, which_model3, which_model4){
+		
 	colors <-  c("cornflowerblue", "firebrick", "darkgreen", "orange")
 	
 	data.result_sub_1 <- unlist(which_model1[[24]])
@@ -16,45 +10,9 @@ gamma_plot <- function(which_model1, which_model2, which_model3, which_model4){
 	data.result_sub_4 <- unlist(which_model4[[24]])
 
 
-hist(data.result_sub_4)
-
-	plot(0,0, xlim=c(-10,140), ylim=c(0, .5), type="n", bty="n", xaxt="n", ylab="Branch lengths")
-	#axis(1, labels = c("S+E+A", "S+E+A+T", "S+E+A+D", "S+E+A+T+D"), at=c(1,2,3,4), las=3)
-
-
-	
-	gamma_parameters_1 <- fitdistr(data.result_sub_1[-141], "gamma")
-	gamma_parameters_2 <- fitdistr(data.result_sub_2, "gamma")
-	gamma_parameters_3 <- fitdistr(data.result_sub_3, "gamma")
-	gamma_parameters_4 <- fitdistr(data.result_sub_4, "gamma")
-	
-	
-	colors <- adjustcolor(c("cornflowerblue", "firebrick", "darkgreen", "orange"), alpha=.6)
-
-x  <- seq(0,60,length.out=100)
-hx <- dgamma(x, shape= gamma_parameters_1[[1]][1], rate= gamma_parameters_1[[1]][2])
-lines(hx, col=colors[1])
-hx <- dgamma(x, shape=mean(gamma_parameters_2[[1]][1], na.rm=TRUE), rate=mean(gamma_parameters_2[[1]][2], na.rm=TRUE))
-lines(hx, col=colors[2])
-hx <- dgamma(x, shape=mean(gamma_parameters_3[[1]][1], na.rm=TRUE), rate=mean(gamma_parameters_3[[1]][2], na.rm=TRUE))
-lines(hx, col=colors[3])
-hx <- dgamma(x, shape=gamma_parameters_4[[1]][1], rate=gamma_parameters_4[[1]][2])
-lines(hx, col=colors[4])
-axis(1, labels=FALSE)
-axis(4)
-
-	
-	
-}
-
-gamma_plot(sea, sea.D, sea.T, sea.DT)
-
-library(MASS)
-
-
 
 par(mar=c(2,2,0,0))
-	plot(0,0, xlim=c(0,5), ylim=c(0, 1000), type="n", bty="n", xaxt="n", ylab="Branch lengths")
+	plot(0,0, xlim=c(0,5), ylim=c(0, 60), type="n", bty="n", xaxt="n", ylab="Branch lengths")
 	#axis(1, labels = c("S+E+A", "S+E+A+T", "S+E+A+D", "S+E+A+T+D"), at=c(1,2,3,4), las=3)
 
 	sd <- sd(data.result_sub_1, na.rm=TRUE)
@@ -80,6 +38,58 @@ par(mar=c(2,2,0,0))
 	points(jitter(rep(3, length(data.result_sub_3)),3), data.result_sub_3, col=adjustcolor(colors[3], alpha=.5), pch= 20)
 	points(jitter(rep(4, length(data.result_sub_4)),2), data.result_sub_4, col=adjustcolor(colors[4], alpha=.5), pch= 20)
 	
+	
+}
+
+
+
+
+FarmGammaPlotDist <- function(which_model1, which_model2, which_model3, which_model4){
+	require(MASS)
+	
+	colors <-  c("cornflowerblue", "firebrick", "darkgreen", "orange")
+	
+	data.result_sub_1 <- unlist(which_model1[[24]])
+	data.result_sub_2 <- unlist(which_model2[[24]])
+	data.result_sub_3 <- unlist(which_model3[[24]])
+	data.result_sub_4 <- unlist(which_model4[[24]])
+
+
+
+par(mar=c(2,0,0,2))
+
+
+	plot(0,0, xlim=c(0,60), ylim=c(0, .5), type="n", bty="n", xaxt="n", yaxt="n", ylab="Branch lengths")
+	#axis(1, labels = c("S+E+A", "S+E+A+T", "S+E+A+D", "S+E+A+T+D"), at=c(1,2,3,4), las=3)
+
+
+	
+	gamma_parameters_1 <- fitdistr(data.result_sub_1[-141], "gamma")
+	gamma_parameters_2 <- fitdistr(data.result_sub_2, "gamma")
+	gamma_parameters_3 <- fitdistr(data.result_sub_3, "gamma")
+	gamma_parameters_4 <- fitdistr(data.result_sub_4, "gamma")
+	
+	
+	colors <- adjustcolor(c("cornflowerblue", "firebrick", "darkgreen", "orange"), alpha=.6)
+
+x  <- seq(0,60,length.out=100)
+hx <- dgamma(x, shape= gamma_parameters_1[[1]][1], rate= gamma_parameters_1[[1]][2])
+lines(x, hx, col=colors[1])
+hx <- dgamma(x, shape=gamma_parameters_2[[1]][1]), rate=mean(gamma_parameters_2[[1]][2])
+lines(x, hx, col=colors[2])
+hx <- dgamma(x, shape=gamma_parameters_3[[1]][1], rate=gamma_parameters_3[[1]][2])
+lines(x, hx, col=colors[3])
+hx <- dgamma(x, shape=gamma_parameters_4[[1]][1], rate=gamma_parameters_4[[1]][2])
+lines(x, hx, col=colors[4])
+#axis(1, labels=FALSE)
+axis(4)
+
+	
+	
+}
+
+
+
 
 	
 	
