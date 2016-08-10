@@ -327,5 +327,5 @@ blankplot(c(0,0), c(0,0))
 dev.off()
 
 
-
+str(sea[[8]])
 
