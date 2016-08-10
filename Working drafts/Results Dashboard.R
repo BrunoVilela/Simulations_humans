@@ -313,6 +313,16 @@ page_four_layout <-layout(page_four_layout_matrix, width=c( 0.1, 1, 0.1, 1, 0.1,
 par(mar=c(0,0,0,0))
 
 
+replicate( 11 , blankplot(c(0,0), c(0,0)))
+
+
+
+blankplot(c(0,0), c(0,0))
+
+SpatialClumping(sea, sea.D, sea.T, sea.DT)
+
+blankplot(c(0,0), c(0,0))
+
 
 dev.off()
 
