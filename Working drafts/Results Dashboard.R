@@ -1,11 +1,13 @@
 # Script for calling and assembling results figures into a large dashboard for comparison
 #
 # This script calls a large series of plots to summarize model outputs.
-# This script pulls several plotting functions from the Functions folder. You will need to edit those scripts for each individual figure.  
-# 28 July 2016 , last updated by Ty Tuff on 5 August 2016
+# This script pulls several plotting functions from the Functions folder. 
+# You will need to edit those scripts for each individual figure.  
+
+# 28 July 2016 , last updated by Ty Tuff on 11 August 2016
 # Ty Tuff, Bruno Vilela & Carlos A. Botero
 # Washington University in Saint Louis
-#==================================================================
+#===============================================================
 
 #setwd("~/Desktop")
 setwd("~/Box Sync/colliding ranges/Simulations_humans")

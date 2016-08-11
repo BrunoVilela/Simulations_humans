@@ -1,5 +1,11 @@
 #Not finished! 
 
+which_model1 <- sea
+which_model2 <- sea.D
+which_model3 <- sea.T
+which_model4 <- sea.DT
+
+
 ##################################################################################
 LineageThroughTimeTV <- function(which_model1, which_model2, which_model3, which_model4 ){
 		
@@ -16,35 +22,37 @@ LineageThroughTimeTV <- function(which_model1, which_model2, which_model3, which
 	data.result_sub_4_y <- unlist(which_model4[[23]])
 	
 	par(mar=c(2,2,0,0))
-	plot(0,0, type="n", xlim=c(0,1300), ylim=c(0,300), xlab="log(number of tips)",
+	#plot(0,0, type="n", xlim=c(0,1300), ylim=c(0,300), xlab="log(number of tips)",
      ylab="time between tips")
 	#axis(1, labels = c("S+E+A", "S+E+A+T", "S+E+A+D", "S+E+A+T+D"), at=c(1,2,3,4), las=3)
 
 plot(data.result_sub_1_x, data.result_sub_1_y, type="l")
+order(as.matrix(data.result_sub_1_x)) %in% order(as.matrix(data.result_sub_1_y))
 
+mean(as.numeric(rownames(as.matrix(data.result_sub_1_x))), na.rm=TRUE)
 
-for(h in 1:length(a[[3]][1,])){
-  lines(a[[2]][,h], a[[3]][,h], col=adjustcolor(color_choice[1], alpha=.8))
-  
+mat <- as.matrix(data.result_sub_1_x)
+rownames(mat) <- seq(1:length(mat))
+
+matr <- as.matrix(data.result_sub_1_y)
+rownames(matr) <- seq(1:length(matr))
+
+length(mat) == length(matr)
+mat[which(matr == 0)] <- NA
+matr[which(matr == 0)] <- NA
+mat <- mat[order(matr)]
+matr <- matr[order(matr)]
+both <- cbind(mat, matr)
+
+ltt_mean_a <- rep(NA, length(unique(both[,1])))
+ltt_SD_a <- rep(NA, length(unique(both[,1])))
+for(h in 1: length(unique(both[,1]))){
+one_step <- which(unique(both[,1])[h] == both[,1])
+
+ltt_mean_a[h] <- mean(both[one_step, ], na.rm=TRUE)
+  ltt_SD_a[h] <- sd(both[one_step, ], na.rm=TRUE)
 }
-
-for(h in 1:length(b[[3]][1,])){
-  lines(b[[2]][,h], b[[3]][,h], col=adjustcolor(color_choice[2], alpha=.8))
-  
-}
-
-for(h in 1:length(c[[3]][1,])){
-  lines(c[[2]][,h], c[[3]][,h], col=adjustcolor(color_choice[3], alpha=.8))
-  
-}
-
-for(h in 1:length(d[[3]][1,])){
-  lines(d[[2]][,h], d[[3]][,h], col=adjustcolor(color_choice[4], alpha=.8))
-  
-}
-dev.off()
-
-h <- 5
+plot(ltt_mean_a)
 
 
 ltt_mean_a <- rep(NA, length(a[[3]][,1]))

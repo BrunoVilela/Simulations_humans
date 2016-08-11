@@ -37,7 +37,7 @@ FarmWeibullPlots <- function(which_model1, which_model2, which_model3, which_mod
 	points(jitter(rep(3, length(data.result_sub_3)),3), data.result_sub_3, col=adjustcolor(colors[3], alpha=.05), pch= 20)
 	points(jitter(rep(4, length(data.result_sub_4)),2), data.result_sub_4, col=adjustcolor(colors[4], alpha=.05), pch= 20)
 	
-}
+
 
 
 
@@ -154,7 +154,7 @@ weibull_plots(cbind(cbind(a$Trasition.rates, b$Trasition.rates, c$Trasition.rate
 axis(1, labels = c("S+E+A", "S+E+A+T", "S+E+A+D", "S+E+A+T+D"), at=c(1,2,3,4), las=3)
 axis(2)
 
-
+}
 
 #FarmWeibullPlots(sea, sea.D, sea.T, sea.DT)
 #max(data.result_sub)
