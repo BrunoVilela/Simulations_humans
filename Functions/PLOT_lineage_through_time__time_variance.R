@@ -1,11 +1,3 @@
-#Not finished! 
-
-which_model1 <- sea
-which_model2 <- sea.D
-which_model3 <- sea.T
-which_model4 <- sea.DT
-
-
 ##################################################################################
 LineageThroughTimeTV <- function(which_model1, which_model2, which_model3, which_model4 ){
 		
