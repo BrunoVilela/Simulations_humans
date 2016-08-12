@@ -92,7 +92,7 @@ replicate( 3 , blankplot(c(0,0), c(0,0)))
 
 
 
-FarmGammaPlotBox(sea, sea.D, sea.T, sea.DT)
+FarmGammaPlotBoxTwo(sea, sea.D, sea.T, sea.DT)
 blankplot(c(0,0), c(0,0))
 
 LineageThroughTimeTV(sea, sea.D, sea.T, sea.DT)
