@@ -3,15 +3,15 @@ require(spdep)
 require(letsR)
 require(raster)
 
-r <- raster("~/Box Sync/colliding ranges/Simulations_humans/Functions/richnobuf.asc")
-plot(r)
+#r <- raster("~/Box Sync/colliding ranges/Simulations_humans/Functions/richnobuf.asc")
+#plot(r)
 
  myWorld <-  as.data.frame(which_model[[5]][1])
   coords <- as.matrix(myWorld[, 2:3])
   nbs <- knn2nb(knearneigh(coords, k = 7, longlat = TRUE),
               sym = TRUE)
   
-#  map(mar=c(0,0,0,0), interior=FALSE)
+  map(mar=c(0,0,0,0), interior=FALSE)
   #mtext(text = myT)
   #plot(nbs, coords, add = TRUE, col = "gray80", lty = 3)
   col1 <- adjustcolor("firebrick", alpha = 1)
