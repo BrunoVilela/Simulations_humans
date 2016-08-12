@@ -65,10 +65,10 @@ pdf( file = "Figures/Half_page_graphical_summary_for_proposal.pdf", width = 11, 
 
 
 
-page_two_layout_matrix <- matrix(c( rep( 1, 9 ), 2:19, rep( 20, 9 ), 21:29, rep( 30,  9 ), 31:39, rep( 40, 9), 41:49, rep( 50, 9 ), 51:59, rep( 60, 9 ), 61:69, rep( 70, 9 ) ), 14, 9, byrow=TRUE)
+page_two_layout_matrix <- matrix(c( rep( 1, 9 ), 2:19, rep( 20, 5 ), 16,  20, 18, 20, 21:25, 16, 26, 18, 27, rep( 28,  9 )), 6, 9, byrow=TRUE)
 
 # Specify the layout. Alternate the width calls so that margins are different between plot boxes and margin boxes. 
-page_two_layout <-layout(page_two_layout_matrix, width=c( 0.1, 1, 0.1, 1, 0.1, 1, 0.1, 1, 0.1), height=c( 0.1, 0.5, 2, 0.1, 1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1))    
+page_two_layout <-layout(page_two_layout_matrix, width=c( 0.1, 1, 0.1, 1, 0.1, 1, 0.1, 1, 0.1), height=c( 0.1, 0.5, 1, 0.1, 1, 0.5)    )
 #layout.show(page_two_layout) 
 
 #dev.off()
@@ -81,13 +81,21 @@ replicate( 11 , blankplot(c(0,0), c(0,0)))
 maps_with_points(sea)
 
 blankplot(c(0,0), c(0,0))
-example_tree(sea)
+maps_with_points(sea.T)
+
+
 
 blankplot(c(0,0), c(0,0))
 FarmGammaPlotBox(sea, sea.D, sea.T, sea.DT)
 
 blankplot(c(0,0), c(0,0))
 LineageThroughTimeTV(sea, sea.D, sea.T, sea.DT)
+
+replicate( 3 , blankplot(c(0,0), c(0,0)))
+example_tree(sea)
+
+blankplot(c(0,0), c(0,0))
+example_tree(sea.T)
 
 
 dev.off()
