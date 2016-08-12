@@ -1,7 +1,10 @@
 maps_with_points <- function(which_model){
 require(spdep)
 require(letsR)
+require(raster)
 
+#r <- raster("~/Box Sync/colliding ranges/Simulations_humans/Functions/richnobuf.asc")
+#plot(r)
 
  myWorld <-  as.data.frame(which_model[[5]][1])
   coords <- as.matrix(myWorld[, 2:3])
