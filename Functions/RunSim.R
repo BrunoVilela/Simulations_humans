@@ -39,7 +39,7 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   
   myWorld[start, 4:6] <- c(0, 0, 1) # Setting root(0), time(0), ancestral(1, forager)
 
-  mytree <- NULL # Empty tree 
+  mytree <- TheOriginOfSpecies(world.size, start) # Empty tree 
   myT <- 0 # Time starts at zero
 
   # Common input and output for all the internal modules
@@ -72,6 +72,6 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   # Trunsform the input/output into the final result and return it
   myWorld <- as.data.frame(input[[6]])
   myWorld[, 8] <- paste0("t", myWorld[, 8])
-  mytree <- input[[7]]
+  mytree <- makePhy(input[[7]])
   return(list('mytree' = mytree, 'myWorld' = myWorld))
 }

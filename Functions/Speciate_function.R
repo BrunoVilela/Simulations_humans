@@ -7,17 +7,8 @@ speciate <- function(myT, Parent, PosTargets, myWorld,
   }
   
   # Add a bifurcation to the node that used to be the parent
-  if (!is.null(mytree)) {
-    par.tip <- paste0("t", Parent)
-    OldParentalNode <- which(mytree$tip.label == par.tip)
-    mytree <- bind.tip(tree = mytree, tip.label = c(par.tip, paste0("t", PosTargets)), 
-                       edge.length = BL, where = OldParentalNode)
-  } else { 
-    mytree <- read.tree(text = paste0("(t", Parent, ":",
-                                      myT, ",t", PosTargets,
-                                      ":", myT, ");")) 
-  } 
-  
+  mytree <- NewTip(mytree, Parent, PosTargets, BL)  
+
   # keep track of this for confirmation
   myWorld[PosTargets, 4] <- Parent
   myWorld[PosTargets, 5] <- myT

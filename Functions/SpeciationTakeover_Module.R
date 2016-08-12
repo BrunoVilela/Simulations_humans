@@ -49,15 +49,11 @@ SpeciationTakeOver <- function(input) {
       }
     }
   }
-  #mytree <- uniformBranchs(mytree, myT)
-  if (!is.null(mytree)) {
- # mytree2 = mytree  
-  n <- length(mytree$tip.label)
-  tips <- sapply(1:n, function(x, y) which(y == x), y = mytree$edge[,2])
-  sub <- 1 - abs(round(floor(signif(mytree$edge.length[tips])) - (mytree$edge.length[tips]), digits = 5))
-  mytree$edge.length[tips] <- round(mytree$edge.length[tips] + sub, digits = 5)
-#  plot(mytree)
-  }
+  tips <- !mytree[, 2] %in% mytree[, 1]
+  sub <- 1 - abs(round(floor(signif(mytree[tips, 4])) - (mytree[tips, 4]),
+                       digits = 5))
+  mytree[tips, 4] <- round(mytree[tips, 4] + sub, digits = 5)
+
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
                  myWorld, mytree, myT, multiplier, nbs, independent)
   return(output)
