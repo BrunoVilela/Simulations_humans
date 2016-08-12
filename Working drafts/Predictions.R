@@ -86,7 +86,7 @@ scatter3D(x = log(myPCA$scores[, 1] + plus),
           z = log(myPCA$scores[, 3] + plus), ylab = "PCA2",
           xlab = "PCA1", zlab = "PCA3", cex = 2 * ((as.numeric(dif.take[, 1]) + 1)/(as.numeric(dif.take[, 2]) + 1)), 
           phi = 20, theta = -40, colvar = data.analysis.comp[, 1],
-          pch = 20, alpha = .4, colkey = T)
+          pch = 20, alpha = .4, colkey = F)
 par(mar = c(1, 2, 1, 1))
 x <- barplot(loadings[, 1], xaxt = "n", main = "PC1")
 x <- barplot(loadings[, 2], xaxt = "n", main = "PC2")
