@@ -14,7 +14,7 @@ LineageThroughTimeTV <- function(which_model1, which_model2, which_model3, which
 	data.result_sub_3_y <- unlist(which_model3[[23]])
 	data.result_sub_4_y <- unlist(which_model4[[23]])
 	
-	par(mar=c(2,2,0,0))
+	par(mar=c(0,0,0,0))
 	#plot(0,0, type="n", xlim=c(0,1300), ylim=c(0,300), xlab="log(number of tips)",
     # ylab="time between tips")
 	#axis(1, labels = c("S+E+A", "S+E+A+T", "S+E+A+D", "S+E+A+T+D"), at=c(1,2,3,4), las=3)
