@@ -18,7 +18,7 @@ Diffusion  <- function(input) {
   nbs <- input[[10]]
   independent <- input[[11]]
   
-  if (sum(P.diffusion) != 0) {
+  if (sum(P.diffusion, na.rm = TRUE) != 0) {
     trait.nonNA <- !is.na(myWorld[, 6])
     trait.length <- sum(trait.nonNA)
     index.tips <- which(trait.nonNA)

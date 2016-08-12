@@ -55,7 +55,7 @@ nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
 dim(myWorld)
 # ####################################################################
-# number_of_time_steps <- nrow(coords) ## these are for testing the function, not for the main code
+# number_of_time_steps <- nrow(myWorld) ## these are for testing the function, not for the main code
 # replicate_cycle <- 3
 # combo_number <- 31
 
@@ -143,13 +143,11 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   multiplier <- rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
-  
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                           N.steps = number_of_time_steps, silent = TRUE, 
                           multiplier = multiplier)
-  
-  
+
   save(myOut, file= paste0("big world cluster outputs/myOut_replicate_", 
                            formatC(replicate_cycle, width = 2,flag = 0),
                            "_combination_",
@@ -197,12 +195,12 @@ dim(myWorld)
 
       
 
-
-#map()
-#plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
-#points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
-#points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
-#plot(myOut$mytree)
+# 
+# map()
+# plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
+# points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
+# points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
+# plot(myOut$mytree)
 
 #####################################################################
 a <- Sys.time()

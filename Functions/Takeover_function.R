@@ -46,8 +46,8 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
       ind) {
     prob.to <- prob.to / multiplier
   }
-  
-  if (prob.to > runif(1)) {
+  test <- prob.to > runif(1)
+  if (test) {
     extinct.list <- PosTargets
     temp <- sub.TakeOver(mytree, index.tips = PosTargets, 
                          myWorld, myT, i, BL)
@@ -55,7 +55,8 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
     myWorld <- temp$myWorld
   }
   
-  return(list("mytree" = mytree, "myWorld" = myWorld, "extinct.list" = extinct.list))  
+  return(list("mytree" = mytree, "myWorld" = myWorld, "extinct.list" = extinct.list,
+              "spec" = test))  
 }
 
 

@@ -57,7 +57,9 @@ uniformBranchs <- function(mytree, myT) {
 # Function to remove the species from the world and the 
 # phylogenetic tree
 extinct <- function(mytree, remove, myWorld) {
-  mytree <- DropTip(mytree, remove)
+  for (i in 1:length(remove)) {
+  mytree <- DropTip(mytree, remove[i])
+  }
   myWorld[remove, 4:6] <- NA
   return(list("mytree" = mytree, "myWorld" = myWorld))  
 }

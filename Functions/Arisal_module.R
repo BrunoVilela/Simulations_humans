@@ -20,14 +20,11 @@ Arisal <- function(input) {
   trait.length <- sum(trait.nonNA)
   prob.ar <- numeric(trait.length)
   index.tips <- which(trait.nonNA)  
-  env.D <- myWorld[trait.nonNA, 7] == 2
   D <- myWorld[trait.nonNA, 6] == 2
   P.Arisal2 <- P.Arisal[trait.nonNA, , drop = FALSE]
-  prob.ar[env.D & D] <- P.Arisal2[env.D, 1] # Prob of
-  prob.ar[!env.D & D] <- P.Arisal2[!env.D, 1] # Prob of
-  prob.ar[env.D & !D] <- P.Arisal2[env.D, 2] # Prob of
-  prob.ar[!env.D & !D] <- P.Arisal2[!env.D, 2] # Prob of
-  
+  prob.ar[D] <- P.Arisal2[D, 1] # Prob of
+  prob.ar[!D] <- P.Arisal2[!D, 2] # Prob of
+
   arisal <- runif(trait.length) < prob.ar
   
   if (any(arisal)) {

@@ -19,7 +19,7 @@ SpeciationTakeOver <- function(input) {
   if (trait.length > 1) { # Only shuffles if there is more than 1 societies
     index.tips <- sample(index.tips)
   }
-  
+  spec <- FALSE
   # Probabililty of speciation
   BL <- (1 / trait.length)
   for (i in index.tips) { 
@@ -36,6 +36,7 @@ SpeciationTakeOver <- function(input) {
                            myT, PosTargets, mytree, BL)
         mytree <- temp$mytree
         myWorld <- temp$myWorld
+        spec <- sum(spec, temp$spec)
       }
       
       # If yes go to take over
@@ -46,14 +47,13 @@ SpeciationTakeOver <- function(input) {
         mytree <- temp$mytree
         myWorld <- temp$myWorld
         extinct.list <- c(extinct.list, temp$extinct.list)
+        spec <- sum(spec, temp$spec)
       }
     }
   }
+  
   tips <- !mytree[, 2] %in% mytree[, 1]
-  sub <- 1 - abs(round(floor(signif(mytree[tips, 4])) - (mytree[tips, 4]),
-                       digits = 5))
-  mytree[tips, 4] <- round(mytree[tips, 4] + sub, digits = 5)
-
+  mytree[tips, 4] <- mytree[tips, 4] + (1 - (BL * spec))
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
                  myWorld, mytree, myT, multiplier, nbs, independent)
   return(output)
