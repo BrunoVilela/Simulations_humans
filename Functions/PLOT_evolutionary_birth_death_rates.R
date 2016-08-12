@@ -1,5 +1,5 @@
 
-which_model1 <- sea
+#which_model1 <- sea
 ##################################################################################
 EvolutionaryBirthDeathRates <- function(which_model1, which_model2, which_model3, which_model4 ){
 		
@@ -43,5 +43,4 @@ EvolutionaryBirthDeathRates <- function(which_model1, which_model2, which_model3
 	
 }
 
-EvolutionaryBirthDeathRates(sea, sea.D, sea.T, sea.DT)
-names(sea)
+#EvolutionaryBirthDeathRates(sea, sea.D, sea.T, sea.DT)
