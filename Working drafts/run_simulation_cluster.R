@@ -53,6 +53,12 @@ sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
+nbs2 <- nbs
+# Adjust the nbs file from a list to a matrix
+n.obs <- sapply(nbs, length)
+seq.max <- seq_len(max(n.obs))
+nbs <- t(sapply(nbs, "[", i = seq.max))
+
 dim(myWorld)
 # ####################################################################
 # number_of_time_steps <- nrow(myWorld) ## these are for testing the function, not for the main code

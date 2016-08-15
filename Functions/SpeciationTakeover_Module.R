@@ -52,7 +52,7 @@ SpeciationTakeOver <- function(input) {
     }
   }
   
-  tips <- !mytree[, 2] %in% mytree[, 1]
+  tips <- !is.na(mytree[, 3])
   mytree[tips, 4] <- mytree[tips, 4] + (1 - (BL * spec))
   output <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
                  myWorld, mytree, myT, multiplier, nbs, independent)

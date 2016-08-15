@@ -37,7 +37,7 @@ tree <- makePhy(test5)
 
 
 # Extinction
-extinct <- 10
+extinct <- c(10, 12)
 test6 <- DropTip(test5, extinct)
 plot(makePhy(test6))
 

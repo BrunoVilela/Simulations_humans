@@ -26,22 +26,29 @@ library(spdep)
 library(parallel)
 library(phylobase)
 library(profvis)
+
 ## Load spatial coordinate and suitability data
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 
 ## Build the myWorld matrix object to pass on to the main function
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
+nbs2 <- nbs
+# Adjust the nbs file from a list to a matrix
+n.obs <- sapply(nbs, length)
+seq.max <- seq_len(max(n.obs))
+nbs <- t(sapply(nbs, "[", i = seq.max))
+
 dim(myWorld)
 # ####################################################################
-number_of_time_steps <- nrow(myWorld) ## these are for testing the function, not for the main code
+number_of_time_steps <- 1000 ## these are for testing the function, not for the main code
 replicate_cycle <- 3
-combo_number <- 31
+combo_number <- 29
 
   # Calls the full simulation script 
   #	 
@@ -130,17 +137,19 @@ combo_number <- 31
 
 
 
-profvis({
+#profvis({
+  microbenchmark(
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                           N.steps = number_of_time_steps, silent = F, 
-                          multiplier = multiplier)
-})
+                          multiplier = multiplier), times= 1)
+#})
 
 
-
+par(mfrow = c(1, 2))
 map()
-plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
-points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
-points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
-plot(myOut$mytree)
+plot(nbs2, coords[sub, ], add = TRUE, col = "gray80", lty = 3, cex = .3)
+points(coords[sub, ], col = c("blue", "red")[conds[sub, ]], cex = .3)
+points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]],
+       pch = 20, cex = .3)
+plot.phylo(myOut$mytree, type = "fan", show.tip.label = FALSE)

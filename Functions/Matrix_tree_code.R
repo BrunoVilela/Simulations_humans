@@ -1,7 +1,6 @@
 # The begging
 TheOriginOfSpecies <- function(size, start) {
   edge <- matrix(ncol = 4, nrow = (2 * size) - 1)
-  colnames(edge) <- c("Node", "Tip", "Tip.Label", "Length")
   edge[1, ] <- c(1, 2, start, 1)
   return(edge)
 }
@@ -18,7 +17,7 @@ NewTip <- function(edge, parent, child, branch) {
   edge[pos2, 3] <- c(parent, child)
   edge[father, 3] <- NA
   edge[pos2, 4] <- branch
-  tips <- !edge[, 2] %in% edge[, 1]
+  tips <- !is.na(edge[, 3])
   tips[pos2] <- FALSE
   edge[tips, 4] <- edge[tips, 4] + branch
   return(edge)
@@ -26,7 +25,8 @@ NewTip <- function(edge, parent, child, branch) {
 
 # Extinction
 DropTip <- function(edge, extinct) {
-  target <- which(edge[, 3] == extinct)
+  for (i in 1:length(extinct)) {
+  target <- which(edge[, 3] == extinct[i])
   trans <- edge[target, 1]
   edge[target, ] <- NA
   target2 <- which(trans == edge[, 1])
@@ -35,6 +35,7 @@ DropTip <- function(edge, extinct) {
   edge[target3, 4] <- edge[target2, 4] + edge[target3, 4]
   edge[target3, 3] <- edge[target2, 3]
   edge[target2, ] <- NA
+  }
   pos <- !is.na(edge[, 1])
   s <- sum(pos)
   edge[1:s, ] <- edge[pos, ]

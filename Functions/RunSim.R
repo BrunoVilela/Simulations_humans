@@ -26,8 +26,6 @@ RunSim <- function(myWorld, P.extinction, P.speciation,
   # start = the point ID in 'myWorld' that will give risen to humans. 
   # (humans origin will be in one of the existing positions)
   
-  
-  
   world.size <- nrow(myWorld)
   # Initialize parameters we will use later to build the phylogeny
   rootnode <-  world.size + 1 # standard convention for root node number

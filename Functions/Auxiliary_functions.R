@@ -19,7 +19,8 @@ getTargets <- function(cellID, myWorld, empty, nbs, traits = FALSE) {
   # empty if TRUE will keep targets with no trait, 
   #       if false will keep only targets with traits
   # nbs a neihbor class object
-  AllTargets <-  nbs[[cellID]]
+  AllTargets <-  nbs[cellID, ]
+  AllTargets <-  AllTargets[!is.na(AllTargets)]
   # Figure out which of the neighboring cells are good options for this context
   if (empty) {
     PosTargets <- AllTargets[is.na(myWorld[AllTargets, 6])]
@@ -36,48 +37,15 @@ getTargets <- function(cellID, myWorld, empty, nbs, traits = FALSE) {
   return(PosTargets)
 }
 
-
-#==================================================================
-# Extend the tips of branches that did not reproduce to maintain
-# an ultrametric tree (unused for now)
-uniformBranchs <- function(mytree, myT) {
-  # mytree the phylogenetic tree
-  # myT the current time step
-  if (!is.null(mytree)) {
-      dist.root <- distRoot2(mytree)
-      sub <- (myT - dist.root)
-      n <- Ntip(mytree)
-      tips <- sapply(1:n, function(x,y) which(y==x),y=mytree$edge[,2])
-      mytree$edge.length[tips] <- mytree$edge.length[tips] + sub
-      }
-  return(mytree)
-}
-
 #==================================================================
 # Function to remove the species from the world and the 
 # phylogenetic tree
 extinct <- function(mytree, remove, myWorld) {
-  for (i in 1:length(remove)) {
-  mytree <- DropTip(mytree, remove[i])
-  }
+  mytree <- DropTip(mytree, remove)
   myWorld[remove, 4:6] <- NA
   return(list("mytree" = mytree, "myWorld" = myWorld))  
 }
 
-
-#==================================================================
-# Function to add a species to a tip
-# phylogenetic tree
-bind.tip <- function(tree, tip.label, edge.length, where) {
-  tip <- list(edge = matrix(c(3, 3, 1, 2),
-                            ncol = 2, nrow = 2),
-            tip.label = tip.label,
-            edge.length = rep(as.numeric(edge.length), 2),
-            Nnode = 1)
-  class(tip) <- "phylo"
-  obj <- bind.tree(tree, tip, where = where)
-  return(obj)
-}
 
 
 #==================================================================
