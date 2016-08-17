@@ -1,5 +1,5 @@
 par(mfrow = c(3, 3))
-
+library(phytools)
 # Origin of the Tree
 size <- 5
 start <- 3

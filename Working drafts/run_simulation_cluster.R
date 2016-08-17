@@ -41,13 +41,21 @@ library(msm)
 library(spdep)
 library(parallel)
 library(phylobase)
+library(Rcpp)
+
+# Load C++ functions
+load.c <- list.files(path = "Functions/C++", pattern = ".cpp",
+                         full.names = TRUE)
+for (i in 1:length(load.c)) {
+  sourceCpp(file = load.c[i])
+}
 
 ## Load spatial coordinate and suitability data
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 600) # subsample (remove when running for all)
 
 ## Build the myWorld matrix object to pass on to the main function
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
@@ -145,7 +153,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
     independent <- rtnorm(1, mean = .5, sd = .1, upper = .7, lower = .3)
   } else {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
-    P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "For", "Dom", "For", "Dom")
+    P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
   }
   
   multiplier <- rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)

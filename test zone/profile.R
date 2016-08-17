@@ -10,6 +10,8 @@ for (i in 1:length(load.files)) {
 
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
+library(microbenchmark)
+library(Rcpp)
 library(gtools)
 library(ape)
 library(adephylo)
@@ -26,6 +28,9 @@ library(spdep)
 library(parallel)
 library(phylobase)
 library(profvis)
+
+
+
 
 ## Load spatial coordinate and suitability data
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
@@ -138,18 +143,31 @@ combo_number <- 29
 
 
 #profvis({
-  microbenchmark(
+  system.time(
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                           N.steps = number_of_time_steps, silent = F, 
-                          multiplier = multiplier), times= 1)
+                          multiplier = multiplier)
+  )
 #})
 
-
-par(mfrow = c(1, 2))
-map()
-plot(nbs2, coords[sub, ], add = TRUE, col = "gray80", lty = 3, cex = .3)
-points(coords[sub, ], col = c("blue", "red")[conds[sub, ]], cex = .3)
-points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]],
-       pch = 20, cex = .3)
-plot.phylo(myOut$mytree, type = "fan", show.tip.label = FALSE)
+  # Load C++ functions
+  load.c <- list.files(path = "Functions/C++", pattern = ".cpp",
+                       full.names = TRUE)
+  for (i in 1:length(load.c)) {
+    sourceCpp(file = load.c[i])
+  }
+  system.time(
+    myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
+                            P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
+                            N.steps = number_of_time_steps, silent = F, 
+                            multiplier = multiplier)
+  )
+# 
+# par(mfrow = c(1, 2))
+# map()
+# plot(nbs2, coords[sub, ], add = TRUE, col = "gray80", lty = 3, cex = .3)
+# points(coords[sub, ], col = c("blue", "red")[conds[sub, ]], cex = .3)
+# points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]],
+#        pch = 20, cex = .3)
+# plot.phylo(myOut$mytree, type = "fan", show.tip.label = FALSE)
