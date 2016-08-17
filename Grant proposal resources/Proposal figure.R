@@ -43,7 +43,7 @@ names(returns)
 ##################################################################
 # PAGE  
 # getwd()
-pdf( file = "Figures/Half_page_graphical_summary_for_proposal.pdf", width = 8.5, height = 4) # start page one, this command ends when the command dev.off() is called.
+pdf( file = "Figures/Half_page_graphical_summary_for_proposal.pdf", width = 7, height = 4) # start page one, this command ends when the command dev.off() is called.
 
 # This plot needs to house 24 plot boxes (4 x 6) and a double margin at the top for category labeling. Adding a margin box between each of those boxes and around the periphery defines a 9 x 14. 
 
@@ -68,7 +68,7 @@ pdf( file = "Figures/Half_page_graphical_summary_for_proposal.pdf", width = 8.5,
 page_two_layout_matrix <- matrix(c( rep(1,5), 2:6, rep(7,5), 8:12, rep(13,5), 14:18, rep(19,5)), 7, 5, byrow=TRUE)
 
 # Specify the layout. Alternate the width calls so that margins are different between plot boxes and margin boxes. 
-page_two_layout <-layout(page_two_layout_matrix, width=c( 0.1, 1, 0.1, 1, 0.1), height=c( 0.1, 1, 0.1, 1, 0.1, 1, 0.1)    )
+page_two_layout <-layout(page_two_layout_matrix, width=c( 0.1, 1, 0.1, 1, 0.1), height=c( 0.1, 2, 0.1, 1, 0.1, 1.5, 1)    )
 #layout.show(page_two_layout) 
 
 #dev.off()
@@ -84,10 +84,10 @@ blankplot(c(0,0), c(0,0))
 maps_with_points(sea.T)
 replicate( 3 , blankplot(c(0,0), c(0,0)))
 
-example_tree(sea)
+example_tree(sea, "limegreen")
 blankplot(c(0,0), c(0,0))
 
-example_tree(sea.T)
+example_tree(sea.T, "orange")
 replicate( 3 , blankplot(c(0,0), c(0,0)))
 
 
@@ -95,7 +95,7 @@ replicate( 3 , blankplot(c(0,0), c(0,0)))
 FarmGammaPlotBoxTwo(sea, sea.D, sea.T, sea.DT)
 blankplot(c(0,0), c(0,0))
 
-LineageThroughTimeTV(sea, sea.D, sea.T, sea.DT)
+LineageThroughTimeTvTwo(sea, sea.D, sea.T, sea.DT)
 replicate( 2 , blankplot(c(0,0), c(0,0)))
 
 

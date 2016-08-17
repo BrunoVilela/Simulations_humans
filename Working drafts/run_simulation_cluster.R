@@ -47,7 +47,7 @@ coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 
 ## Build the myWorld matrix object to pass on to the main function
 myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
@@ -109,6 +109,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   
   if (any(chosen_combo[[2]] == "Random_new_origin")) {
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
+    prob_choose_a <- prob_choose
     P.Arisal0  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "Evol_to_F", "Evol_to_D")
     # P.Arisal0 is the one you should change the parameters
     P.Arisal <- matrix(NA, ncol = 2, nrow = nrow(myWorld)) # probability per cell
@@ -121,6 +122,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
     
   } else {
     P.Arisal <- matrix(0, ncol = 2, nrow = nrow(myWorld))
+    prob_choose_a <- 0
   }
   colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
   
@@ -175,8 +177,8 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 10000
-replicate_cycle <- c(1:80)  #number of replicates
+number_of_time_steps_a <- 5000
+replicate_cycle <- c(1:14)  #number of replicates
 
 #####################################################################
 

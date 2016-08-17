@@ -2,7 +2,7 @@
 
 FarmGammaPlotBoxTwo <- function(which_model1, which_model2, which_model3, which_model4){
 		
-	colors <-  c("cornflowerblue", "firebrick", "darkgreen", "orange")
+	colors <-  c("limegreen", "orange")
 	
 	data.result_sub_1 <- unlist(which_model1[[24]])
 	data.result_sub_2 <- unlist(which_model2[[24]])
@@ -11,8 +11,8 @@ FarmGammaPlotBoxTwo <- function(which_model1, which_model2, which_model3, which_
 
 
 
-par(mar=c(0,0,0,0))
-	plot(0,0, xlim=c(0,5), ylim=c(0, 60), type="n", bty="n", xaxt="n", ylab="Branch lengths")
+par(mar=c(0,6,0,0))
+	plot(0,0, xlim=c(0.5,2.5), ylim=c(0, 60), type="n", bty="n", xaxt="n", ylab="Gamma statistic")
 	#axis(1, labels = c("S+E+A", "S+E+A+T", "S+E+A+D", "S+E+A+T+D"), at=c(1,2,3,4), las=3)
 
 	sd <- sd(data.result_sub_1, na.rm=TRUE)
@@ -30,15 +30,15 @@ par(mar=c(0,0,0,0))
 	
 	lines(x=c(0.50,1.50), y=rep(mean(data.result_sub_1, na.rm=TRUE),2), col=colors[1], lwd=2)
 	#lines(x=c(1.50,2.50), y= rep(mean(data.result_sub_2, na.rm=TRUE),2), col=colors[2], lwd=2)
-	lines(x=c(1.50,2.50), y= rep(mean(data.result_sub_3, na.rm=TRUE),2), col=colors[3], lwd=2)
+	lines(x=c(1.50,2.50), y= rep(mean(data.result_sub_3, na.rm=TRUE),2), col=colors[2], lwd=2)
 	#lines(x=c(3.50,4.50), y= rep(mean(data.result_sub_4, na.rm=TRUE),2), col=colors[4], lwd=2)
 	
-	#points(jitter(rep(1, length(data.result_sub_1)),7), data.result_sub_1, col=adjustcolor(colors[1], alpha=.5), pch=20)
-	points(jitter(rep(2, length(data.result_sub_2)),4), data.result_sub_2, col=adjustcolor(colors[2], alpha=.5), pch= 20)
-	#points(jitter(rep(3, length(data.result_sub_3)),3), data.result_sub_3, col=adjustcolor(colors[3], alpha=.5), pch= 20)
-	points(jitter(rep(4, length(data.result_sub_4)),2), data.result_sub_4, col=adjustcolor(colors[4], alpha=.5), pch= 20)
+	points(jitter(rep(1, length(data.result_sub_1)),7), data.result_sub_1, col=adjustcolor(colors[1], alpha=.5), pch=20)
+	#points(jitter(rep(2, length(data.result_sub_2)),4), data.result_sub_2, col=adjustcolor(colors[2], alpha=.5), pch= 20)
+	points(jitter(rep(2, length(data.result_sub_3)),3), data.result_sub_3, col=adjustcolor(colors[2], alpha=.5), pch= 20)
+	#points(jitter(rep(4, length(data.result_sub_4)),2), data.result_sub_4, col=adjustcolor(colors[4], alpha=.5), pch= 20)
 	
-	
+	axis(1, labels=c("base model", "base model + takeover"), at=c(1,2), lwd=0.01)
 }
 
 
@@ -56,7 +56,7 @@ FarmGammaPlotDist <- function(which_model1, which_model2, which_model3, which_mo
 
 
 
-par(mar=c(2,0,0,2))
+par(mar=c(0,4,0,0))
 
 
 	plot(0,0, xlim=c(0,60), ylim=c(0, .5), type="n", bty="n", xaxt="n", yaxt="n", ylab="Branch lengths")
