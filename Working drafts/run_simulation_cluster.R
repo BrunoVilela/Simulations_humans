@@ -11,7 +11,7 @@
 # Washington University in Saint Louis
 #==================================================================
 
-setwd("~/Desktop")
+#setwd("~/Desktop")
 #setwd("~/Box Sync/colliding ranges/Simulations_humans")
 #####################################################################
 
@@ -26,29 +26,19 @@ for (i in 1:length(load.files)) {
 
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
-library(gtools)
 library(ape)
-library(adephylo)
-library(diversitree)
-library(TotalCopheneticIndex)
-library(phytools)
-library(apTreeshape)
-library(plyr)
-library(fitdistrplus)
-library(geiger)
-library(caper)
-library(msm)
 library(spdep)
 library(parallel)
-library(phylobase)
 library(Rcpp)
+library(msm)
+library(FARM)
 
 # Load C++ functions
-load.c <- list.files(path = "Functions/C++", pattern = ".cpp",
-                         full.names = TRUE)
-for (i in 1:length(load.c)) {
-  sourceCpp(file = load.c[i])
-}
+# load.c <- list.files(path = "Functions/C++", pattern = ".cpp",
+#                          full.names = TRUE)
+# for (i in 1:length(load.c)) {
+#   sourceCpp(file = load.c[i])
+# }
 
 ## Load spatial coordinate and suitability data
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
@@ -192,7 +182,6 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 
 number_of_tips <- length(coords[,1])
 number_of_time_steps_a <- 200
-replicate_cycle <- c(1:14)  #number of replicates
 
 #####################################################################
 
@@ -211,8 +200,9 @@ dim(myWorld)
 
 
 
-sim_run_cluster(replicate_cycle, combo_number, myWorld, number_of_time_steps, 
-                nbs, number_of_tips = 1254)
+# sim_run_cluster(replicate_cycle = 1, combo_number = 25, myWorld,
+#                 number_of_time_steps = number_of_time_steps_a,
+#                 nbs, number_of_tips = 1254)
       
 
 # 
@@ -228,27 +218,16 @@ a <- Sys.time()
 
 
 # Set up cluster
-cl <- makeCluster(detectCores() , type = "PSOCK")
+ncores <- detectCores()
+cl <- makeCluster(ncores, type = "PSOCK")
+replicate_cycle <- c(1:ncores)  #number of replicates
+
 
 # Push resources out to cluster'
-clusterEvalQ(cl, library(TotalCopheneticIndex))
-clusterEvalQ(cl, library(phytools))
-clusterEvalQ(cl, library(geiger))
-clusterEvalQ(cl, library(caper))
-clusterEvalQ(cl, library(spdep))
-clusterEvalQ(cl, library(msm))
-clusterEvalQ(cl, library(plyr))
-clusterEvalQ(cl, library(apTreeshape))
-clusterEvalQ(cl, library(gtools))
 clusterEvalQ(cl, library(ape))
-clusterEvalQ(cl, library(adephylo))
-clusterEvalQ(cl, library(diversitree))
 clusterEvalQ(cl, library(msm))
-clusterEvalQ(cl, library(gtools))
-clusterEvalQ(cl, library(ape))
-clusterEvalQ(cl, library(adephylo))
-clusterEvalQ(cl, library(diversitree))
-clusterEvalQ(cl, library(phylobase))
+clusterEvalQ(cl, library(Rcpp))
+clusterEvalQ(cl, library(FARM))
 clusterExport(cl, varlist=ls())
 
 
