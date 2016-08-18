@@ -11,7 +11,7 @@
 # Washington University in Saint Louis
 #==================================================================
 
-#setwd("~/Desktop")
+setwd("~/Desktop")
 #setwd("~/Box Sync/colliding ranges/Simulations_humans")
 #####################################################################
 
@@ -181,8 +181,8 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 200
-
+number_of_time_steps_a <- 5000
+replicate_cycle <- c(1:ncores)  #number of replicates
 #####################################################################
 
 
@@ -200,10 +200,7 @@ dim(myWorld)
 
 
 
-# sim_run_cluster(replicate_cycle = 1, combo_number = 25, myWorld,
-#                 number_of_time_steps = number_of_time_steps_a,
-#                 nbs, number_of_tips = 1254)
-      
+
 
 # 
 # map()
@@ -220,12 +217,13 @@ a <- Sys.time()
 # Set up cluster
 ncores <- detectCores()
 cl <- makeCluster(ncores, type = "PSOCK")
-replicate_cycle <- c(1:ncores)  #number of replicates
+
 
 
 # Push resources out to cluster'
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(msm))
+
 clusterEvalQ(cl, library(Rcpp))
 clusterEvalQ(cl, library(FARM))
 clusterExport(cl, varlist=ls())
