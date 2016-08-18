@@ -161,7 +161,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   multiplier <- rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
-                          N.steps = number_of_time_steps, silent = TRUE, 
+                          N.steps = number_of_time_steps, silent = F, 
                           multiplier = multiplier)
 
   save(myOut, file= paste0("big world cluster outputs/myOut_replicate_", 
@@ -191,24 +191,28 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 5000
+number_of_time_steps_a <- 200
 replicate_cycle <- c(1:14)  #number of replicates
 
 #####################################################################
 
 
-
+sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
+n.obs <- sapply(nbs, length)
+seq.max <- seq_len(max(n.obs))
+nbs <- t(sapply(nbs, "[", i = seq.max))
 
 dim(myWorld)
 
 
 
-
+sim_run_cluster(replicate_cycle, combo_number, myWorld, number_of_time_steps, 
+                nbs, number_of_tips = 1254)
       
 
 # 

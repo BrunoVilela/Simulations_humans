@@ -10,6 +10,7 @@ for (i in 1:length(load.files)) {
 
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
+library(profvis)
 library(microbenchmark)
 library(Rcpp)
 library(gtools)
@@ -51,9 +52,9 @@ nbs <- t(sapply(nbs, "[", i = seq.max))
 
 dim(myWorld)
 # ####################################################################
-number_of_time_steps <- 1000 ## these are for testing the function, not for the main code
+number_of_time_steps <- 5000 ## these are for testing the function, not for the main code
 replicate_cycle <- 3
-combo_number <- 29
+combo_number <- 31
 
   # Calls the full simulation script 
   #	 
@@ -142,14 +143,14 @@ combo_number <- 29
 
 
 
-#profvis({
-  system.time(
-  myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
-                          P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
-                          N.steps = number_of_time_steps, silent = F, 
-                          multiplier = multiplier)
-  )
-#})
+# #profvis({
+#   system.time(
+#   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
+#                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
+#                           N.steps = number_of_time_steps, silent = F, 
+#                           multiplier = multiplier)
+#   )
+# #})
 
   # Load C++ functions
   load.c <- list.files(path = "Functions/C++", pattern = ".cpp",
@@ -163,11 +164,11 @@ combo_number <- 29
                             N.steps = number_of_time_steps, silent = F, 
                             multiplier = multiplier)
   )
-# 
-# par(mfrow = c(1, 2))
-# map()
-# plot(nbs2, coords[sub, ], add = TRUE, col = "gray80", lty = 3, cex = .3)
-# points(coords[sub, ], col = c("blue", "red")[conds[sub, ]], cex = .3)
-# points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]],
-#        pch = 20, cex = .3)
-# plot.phylo(myOut$mytree, type = "fan", show.tip.label = FALSE)
+
+par(mfrow = c(1, 2))
+plot.phylo(myOut$mytree, type = "fan", show.tip.label = FALSE)
+map()
+plot(nbs2, coords[sub, ], add = TRUE, col = "gray80", lty = 3, cex = .3)
+points(coords[sub, ], col = c("blue", "red")[conds[sub, ]], cex = .3)
+points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]],
+       pch = 20, cex = .3)
