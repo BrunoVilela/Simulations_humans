@@ -11,6 +11,8 @@
 # Washington University in Saint Louis
 #==================================================================
 
+library(devtools)
+install_github("BrunoVilela/FARM")
 setwd("~/Desktop")
 #setwd("~/Box Sync/colliding ranges/Simulations_humans")
 #####################################################################
@@ -182,7 +184,7 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 
 number_of_tips <- length(coords[,1])
 number_of_time_steps_a <- 5000
-replicate_cycle <- c(1:ncores)  #number of replicates
+replicate_cycle <- c(1:144)  #number of replicates
 #####################################################################
 
 
