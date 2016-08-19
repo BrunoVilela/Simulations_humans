@@ -175,10 +175,10 @@ dim(myWorld)
 
 
 
-sim_run_cluster(replicate_cycle = 1, 
-                combo_number = 31,
-                myWorld, number_of_time_steps = 200, 
-                nbs, number_of_tips = 1253)
+# sim_run_cluster(replicate_cycle = 1, 
+#                 combo_number = 31,
+#                 myWorld, number_of_time_steps = 200, 
+#                 nbs, number_of_tips = 1253)
 # map()
 # plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
 # points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
