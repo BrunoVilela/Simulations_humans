@@ -135,7 +135,6 @@ conds <- suitability
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
 
-
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
