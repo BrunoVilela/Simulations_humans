@@ -18,11 +18,11 @@ setwd("~/Desktop")
 rm(list = ls())  # remove existing objects from workspace.
 
 # Load all the functions used in this script from a folder where they are each stored and documented seperately. 
-load.files <- list.files(path = "Functions", pattern = ".R",
-                         full.names = TRUE)
-for (i in 1:length(load.files)) {
-  source(load.files[i])
-}
+#load.files <- list.files(path = "Functions", pattern = ".R",
+#                         full.names = TRUE)
+#for (i in 1:length(load.files)) {
+#  source(load.files[i])
+#}
 
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
