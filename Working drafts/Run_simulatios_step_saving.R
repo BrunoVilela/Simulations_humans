@@ -32,9 +32,12 @@ library(parallel)
 library(Rcpp)
 library(msm)
 library(FARM)
+library(phytools)
 
 
-sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips = 1254) {
+sim_run_cluster2 <- function(replicate_cycle, combo_number, myWorld, 
+                            number_of_time_steps, nbs, number_of_tips = 1254,
+                            resolution) {
   # Calls the full simulation script 
   #	 
   # Purpose: Need to wrap the entire simulation script into a function so it can be called in parallel from a cluster call 	
@@ -127,7 +130,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
                            replicate_cycle = replicate_cycle, 
                            combo_number = combo_number,
                            number_of_time_steps = number_of_time_steps,
-                           prob_choose_a = prob_choose_a)
+                           prob_choose_a = prob_choose_a, resolution = resolution)
   
   invisible(NULL)
 }
@@ -154,9 +157,10 @@ nbs <- t(sapply(nbs, "[", i = seq.max))
 
 dim(myWorld)
 
-sim_run_cluster(replicate_cycle = 1, combo_number = 25, myWorld,
-                number_of_time_steps = 10000,
-                nbs, number_of_tips = 1253)
+sim_run_cluster2(replicate_cycle = 1, combo_number = 25, myWorld,
+                number_of_time_steps = 5000,
+                nbs, number_of_tips = 1253,
+                resolution = 100)
 
 
 # library(maps)
@@ -173,10 +177,18 @@ files <- list.files("big world cluster outputs/bytime", recursive = TRUE,
                     full.names = TRUE)
 n <- length(files)
 gamma <- numeric(n)
+pop <- numeric(n)
 for(i in 1:n) {
 load(files[i])
 gamma[i] <- ltt(myOut$mytree, plot = FALSE)$gamma
+pop[i] <- sum(!is.na(myOut$myWorld$Trait))
 }
+gamma[is.na(gamma)] <- 0
+gamma <- c(0, gamma)
+pop <- c(0, pop)
 
-plot(y = gamma, x = 1:n*100, type = "l")
+par(mfrow = c(1, 2))
+plot(y = gamma, x = 0:n*100, type = "l", ylim = c(min(gamma), max(gamma)))
+plot(y = pop, x = 0:n*100, type = "l", ylim = c(min(pop), max(pop)))
+
 
