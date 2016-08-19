@@ -97,7 +97,11 @@ RunSim2 <- function(myWorld, P.extinction, P.speciation,
     if(steps %in% saveI) {
       myWorld <- as.data.frame(input[[6]])
       myWorld[, 8] <- paste0("t", myWorld[, 8])
-      mytree <- makePhy(input[[7]])
+      if(nrow(na.omit(input[[7]])) > 1) {
+        mytree <- makePhy(input[[7]])
+      } else {
+        mytree <- NA
+      }
       myOut <- list('mytree' = mytree, 'myWorld' = myWorld)
       save(myOut, file= paste0(folder,"/", formatC(steps, 10, flag = 0), ".Rdata"))
     }

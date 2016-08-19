@@ -10,34 +10,27 @@
 # Ty Tuff, Bruno Vilela & Carlos A. Botero
 # Washington University in Saint Louis
 #==================================================================
-
-setwd("~/Desktop")
+library(devtools)
+install_github("BrunoVilela/FARM")
+# setwd("~/Desktop")
 #setwd("~/Box Sync/colliding ranges/Simulations_humans")
 #####################################################################
 
 rm(list = ls())  # remove existing objects from workspace.
 
-# Load all the functions used in this script from a folder where they are each stored and documented seperately. 
-#load.files <- list.files(path = "Functions", pattern = ".R",
-#                         full.names = TRUE)
-#for (i in 1:length(load.files)) {
-#  source(load.files[i])
-#}
-
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
-library(devtools)
-install_github("BrunoVilela/FARM", force=TRUE)
 library(ape)
 library(spdep)
 library(parallel)
 library(Rcpp)
 library(msm)
 library(FARM)
-ls("package:FARM")
+
+
 
 sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, 
-                                     number_of_tips = 1254, resolution = 100) {
+                                     number_of_tips = 1253, resolution = 100) {
   # Calls the full simulation script 
   #	 
   # Purpose: Need to wrap the entire simulation script into a function so it can be called in parallel from a cluster call 	
@@ -136,8 +129,6 @@ sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, num
 }
 
 
-
-
 #####################################################################
 coords <- coords
 conds <- suitability
@@ -167,7 +158,6 @@ dim(myWorld)
 
 
 
-
 #####################################################################
 a <- Sys.time()
 
@@ -175,7 +165,7 @@ a <- Sys.time()
 
 # Set up cluster
 ncores <- detectCores()
-cl <- makeCluster(ncores, type = "PSOCK")
+cl <- makeCluster(ncores, type = "PSOCK", outfile="")
 
 
 
@@ -194,25 +184,29 @@ b <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
                combo_number = 25, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips,
+               resolution = 100) 
 
 c <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
                combo_number = 28, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips,
+               resolution = 100) 
 
 d <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
                combo_number = 29, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips,
+               resolution = 100) 
 
 e <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
                combo_number = 31, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips,
+               resolution = 100) 
 
 f <- Sys.time()
 

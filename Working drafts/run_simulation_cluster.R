@@ -19,13 +19,6 @@ install_github("BrunoVilela/FARM")
 
 rm(list = ls())  # remove existing objects from workspace.
 
-# Load all the functions used in this script from a folder where they are each stored and documented seperately. 
-# load.files <- list.files(path = "Functions", pattern = ".R",
-#                          full.names = TRUE)
-# for (i in 1:length(load.files)) {
-#   source(load.files[i])
-# }
-
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
 library(ape)
@@ -199,7 +192,6 @@ cl <- makeCluster(ncores, type = "PSOCK")
 # Push resources out to cluster'
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(msm))
-
 clusterEvalQ(cl, library(Rcpp))
 clusterEvalQ(cl, library(FARM))
 clusterExport(cl, varlist=ls())
