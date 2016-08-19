@@ -158,7 +158,7 @@ nbs <- t(sapply(nbs, "[", i = seq.max))
 dim(myWorld)
 
 sim_run_cluster2(replicate_cycle = 1, combo_number = 25, myWorld,
-                number_of_time_steps = 5000,
+                number_of_time_steps = 30000,
                 nbs, number_of_tips = 1253,
                 resolution = 100)
 
@@ -179,6 +179,7 @@ n <- length(files)
 gamma <- numeric(n)
 pop <- numeric(n)
 for(i in 1:n) {
+  print(i)
 load(files[i])
 gamma[i] <- ltt(myOut$mytree, plot = FALSE)$gamma
 pop[i] <- sum(!is.na(myOut$myWorld$Trait))
