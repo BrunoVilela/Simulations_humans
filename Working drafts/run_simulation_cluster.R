@@ -154,12 +154,12 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 5000
-replicate_cycle <- c(1:144)  #number of replicates
+number_of_time_steps_a <- 200
+replicate_cycle <- c(1)  #number of replicates
 #####################################################################
 
 
-sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )

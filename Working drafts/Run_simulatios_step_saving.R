@@ -36,7 +36,8 @@ library(msm)
 library(FARM)
 ls("package:FARM")
 
-sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips = 1254) {
+sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, 
+                                     number_of_tips = 1254, resolution = 100) {
   # Calls the full simulation script 
   #	 
   # Purpose: Need to wrap the entire simulation script into a function so it can be called in parallel from a cluster call 	
@@ -129,7 +130,7 @@ sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, num
                            replicate_cycle = replicate_cycle, 
                            combo_number = combo_number,
                            number_of_time_steps = number_of_time_steps,
-                           prob_choose_a = prob_choose_a, resolution = 10)
+                           prob_choose_a = prob_choose_a, resolution = resolution)
   
   invisible(NULL)
 }
@@ -137,29 +138,22 @@ sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, num
 
 
 
-#coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
-#conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
-#conds <- ifelse(conds <= 21, 1, 2)
-#conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
+#####################################################################
 coords <- coords
 conds <- suitability
+conds <- ifelse(conds <= 21, 1, 2)
+conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
 
 
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 50000
-replicate_cycle <- c(1:120)  #number of replicates
+number_of_time_steps_a <- 200
+replicate_cycle <- c(1)  #number of replicates
 #####################################################################
 
 
-number_of_tips <- 200
-number_of_time_steps_a <- 100
-replicate_cycle <- 1:4  #number of replicates
-
-
-
-sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
@@ -170,6 +164,8 @@ seq.max <- seq_len(max(n.obs))
 nbs <- t(sapply(nbs, "[", i = seq.max))
 
 dim(myWorld)
+
+
 
 
 #####################################################################
@@ -186,7 +182,6 @@ cl <- makeCluster(ncores, type = "PSOCK")
 # Push resources out to cluster'
 clusterEvalQ(cl, library(ape))
 clusterEvalQ(cl, library(msm))
-
 clusterEvalQ(cl, library(Rcpp))
 clusterEvalQ(cl, library(FARM))
 clusterExport(cl, varlist=ls())
@@ -234,4 +229,3 @@ difftime(e, d)
 difftime(f, e)
 
 stopCluster(cl)
-
