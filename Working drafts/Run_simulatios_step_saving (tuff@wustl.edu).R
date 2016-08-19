@@ -18,11 +18,11 @@ setwd("~/Desktop")
 rm(list = ls())  # remove existing objects from workspace.
 
 # Load all the functions used in this script from a folder where they are each stored and documented seperately. 
-#load.files <- list.files(path = "Functions", pattern = ".R",
-#                         full.names = TRUE)
-#for (i in 1:length(load.files)) {
-#  source(load.files[i])
-#}
+load.files <- list.files(path = "Functions", pattern = ".R",
+                         full.names = TRUE)
+for (i in 1:length(load.files)) {
+  source(load.files[i])
+}
 
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
@@ -169,6 +169,39 @@ nbs <- t(sapply(nbs, "[", i = seq.max))
 
 dim(myWorld)
 
+<<<<<<< HEAD
+=======
+sim_run_cluster2(replicate_cycle = 1, combo_number = 25, myWorld,
+                number_of_time_steps = 30000,
+                nbs, number_of_tips = 1253,
+                resolution = 100)
+
+
+# library(maps)
+# library(phytools)
+# gamma <- ltt(myOut$mytree, plot = FALSE)$gamma
+# par(mfrow = c(1, 2), mar = c(1, 1, 1, 1))
+# plot(myOut$mytree, main = gamma)
+# map(mar = c(4.1, 4.1, 1, 1))
+# plot(nbs2, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
+# points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
+# points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
+
+files <- list.files("big world cluster outputs/bytime", recursive = TRUE, 
+                    full.names = TRUE)
+n <- length(files)
+gamma <- numeric(n)
+pop <- numeric(n)
+for(i in 1:n) {
+  print(i)
+load(files[i])
+gamma[i] <- ltt(myOut$mytree, plot = FALSE)$gamma
+pop[i] <- sum(!is.na(myOut$myWorld$Trait))
+}
+gamma[is.na(gamma)] <- 0
+gamma <- c(0, gamma)
+pop <- c(0, pop)
+>>>>>>> origin/master
 
 #####################################################################
 a <- Sys.time()

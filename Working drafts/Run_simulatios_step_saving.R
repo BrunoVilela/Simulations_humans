@@ -18,11 +18,11 @@ setwd("~/Desktop")
 rm(list = ls())  # remove existing objects from workspace.
 
 # Load all the functions used in this script from a folder where they are each stored and documented seperately. 
-load.files <- list.files(path = "Functions", pattern = ".R",
-                         full.names = TRUE)
-for (i in 1:length(load.files)) {
-  source(load.files[i])
-}
+#load.files <- list.files(path = "Functions", pattern = ".R",
+#                         full.names = TRUE)
+#for (i in 1:length(load.files)) {
+#  source(load.files[i])
+#}
 
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
@@ -137,10 +137,12 @@ sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, num
 
 
 
-coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
-conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
-conds <- ifelse(conds <= 21, 1, 2)
-conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
+#coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
+#conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
+#conds <- ifelse(conds <= 21, 1, 2)
+#conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
+coords <- coords
+conds <- suitability
 
 
 ##### Specify simulation parameters #################################

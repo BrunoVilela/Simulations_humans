@@ -13,18 +13,18 @@
 
 library(devtools)
 install_github("BrunoVilela/FARM")
-setwd("~/Desktop")
+# setwd("~/Desktop")
 #setwd("~/Box Sync/colliding ranges/Simulations_humans")
 #####################################################################
 
 rm(list = ls())  # remove existing objects from workspace.
 
 # Load all the functions used in this script from a folder where they are each stored and documented seperately. 
-load.files <- list.files(path = "Functions", pattern = ".R",
-                         full.names = TRUE)
-for (i in 1:length(load.files)) {
-  source(load.files[i])
-}
+# load.files <- list.files(path = "Functions", pattern = ".R",
+#                          full.names = TRUE)
+# for (i in 1:length(load.files)) {
+#   source(load.files[i])
+# }
 
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
@@ -35,29 +35,6 @@ library(Rcpp)
 library(msm)
 library(FARM)
 
-
-## Load spatial coordinate and suitability data
-coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
-conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
-conds <- ifelse(conds <= 21, 1, 2)
-conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
-
-## Build the myWorld matrix object to pass on to the main function
-myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
-nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
-              sym = TRUE) # 7 symmetric neighbors
-nbs2 <- nbs
-# Adjust the nbs file from a list to a matrix
-n.obs <- sapply(nbs, length)
-seq.max <- seq_len(max(n.obs))
-nbs <- t(sapply(nbs, "[", i = seq.max))
-
-dim(myWorld)
-# ####################################################################
-# number_of_time_steps <- nrow(myWorld) ## these are for testing the function, not for the main code
-# replicate_cycle <- 3
-# combo_number <- 31
 
 sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips = 1254) {
   # Calls the full simulation script 
@@ -168,8 +145,8 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
 
 
 #####################################################################
-coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
-conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
+coords <- coords
+conds <- suitability
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
 
@@ -198,7 +175,10 @@ dim(myWorld)
 
 
 
-# 
+# sim_run_cluster(replicate_cycle = 1, 
+#                 combo_number = 31,
+#                 myWorld, number_of_time_steps = 200, 
+#                 nbs, number_of_tips = 1253)
 # map()
 # plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
 # points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
