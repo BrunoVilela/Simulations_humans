@@ -34,29 +34,6 @@ library(msm)
 library(FARM)
 
 
-## Load spatial coordinate and suitability data
-coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
-conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
-conds <- ifelse(conds <= 21, 1, 2)
-conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
-
-## Build the myWorld matrix object to pass on to the main function
-myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
-nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
-              sym = TRUE) # 7 symmetric neighbors
-nbs2 <- nbs
-# Adjust the nbs file from a list to a matrix
-n.obs <- sapply(nbs, length)
-seq.max <- seq_len(max(n.obs))
-nbs <- t(sapply(nbs, "[", i = seq.max))
-
-dim(myWorld)
-# ####################################################################
-# number_of_time_steps <- nrow(myWorld) ## these are for testing the function, not for the main code
-# replicate_cycle <- 3
-# combo_number <- 31
-
 sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips = 1254) {
   # Calls the full simulation script 
   #	 
@@ -143,128 +120,63 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   }
   
   multiplier <- rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
-  myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
-                          P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
-                          N.steps = number_of_time_steps, silent = F, 
-                          multiplier = multiplier)
-
-  save(myOut, file= paste0("big world cluster outputs/myOut_replicate_", 
-                           formatC(replicate_cycle, width = 2,flag = 0),
-                           "_combination_",
-                           formatC(combo_number, width = 2,flag = 0),
-                           "_","parameters", "_P.speciation_",
-                           paste(P.speciation, collapse="_"), "_P.extinction_",
-                           paste(P.extinction, collapse="_"), "_P.diffusion_",
-                           paste(P.diffusion, collapse="_"), "_P.TakeOver_",
-                           paste(P.TakeOver, collapse="_"),"_P.Arisal_",
-                           prob_choose_a,
-                           "_timesteps_", number_of_time_steps, "_.Rdata"))
+  myOut <- RunSimUltimate2(myWorld, P.extinction, P.speciation, 
+                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
+                           N.steps = number_of_time_steps, silent = F, 
+                           multiplier = multiplier, 
+                           replicate_cycle = replicate_cycle, 
+                           combo_number = combo_number,
+                           number_of_time_steps = number_of_time_steps,
+                           prob_choose_a = prob_choose_a)
   
+  invisible(NULL)
 }
 
 
 
 
-#####################################################################
+## Load spatial coordinate and suitability data
 coords <- as.matrix(read.csv("Functions/coords.csv", row.names = 1))
 conds <- as.matrix(read.csv("Functions/suitability.csv", row.names = 1))
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
+sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
 
-
-##### Specify simulation parameters #################################
-
-number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 5000
-
-#####################################################################
-
-
-sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
-system.time(
-  myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
-)
+## Build the myWorld matrix object to pass on to the main function
+myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
+nbs2 <- nbs
+# Adjust the nbs file from a list to a matrix
 n.obs <- sapply(nbs, length)
 seq.max <- seq_len(max(n.obs))
 nbs <- t(sapply(nbs, "[", i = seq.max))
 
 dim(myWorld)
 
+sim_run_cluster(replicate_cycle = 1, combo_number = 25, myWorld,
+                number_of_time_steps = 10000,
+                nbs, number_of_tips = 1253)
 
 
-# sim_run_cluster(replicate_cycle = 1, combo_number = 25, myWorld,
-#                 number_of_time_steps = number_of_time_steps_a,
-#                 nbs, number_of_tips = 1254)
-      
-
-# 
-# map()
-# plot(nbs, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
+# library(maps)
+# library(phytools)
+# gamma <- ltt(myOut$mytree, plot = FALSE)$gamma
+# par(mfrow = c(1, 2), mar = c(1, 1, 1, 1))
+# plot(myOut$mytree, main = gamma)
+# map(mar = c(4.1, 4.1, 1, 1))
+# plot(nbs2, coords[sub, ], add = TRUE, col = "gray80", lty = 3)
 # points(coords[sub, ], col = c("blue", "red")[conds[sub, ]])
 # points(coords[sub, ], col = c("blue", "red")[myOut$myWorld[, 6]], pch = 20)
-# plot(myOut$mytree)
 
-#####################################################################
-a <- Sys.time()
+files <- list.files("big world cluster outputs/bytime", recursive = TRUE, 
+                    full.names = TRUE)
+n <- length(files)
+gamma <- numeric(n)
+for(i in 1:n) {
+load(files[i])
+gamma[i] <- ltt(myOut$mytree, plot = FALSE)$gamma
+}
 
-
-
-# Set up cluster
-ncores <- detectCores()
-cl <- makeCluster(ncores, type = "PSOCK")
-replicate_cycle <- c(1:ncores)  #number of replicates
-
-
-# Push resources out to cluster'
-clusterEvalQ(cl, library(ape))
-clusterEvalQ(cl, library(msm))
-clusterEvalQ(cl, library(Rcpp))
-clusterEvalQ(cl, library(FARM))
-clusterExport(cl, varlist=ls())
-
-
-#####################################################################
-# lset are the landscapes that we will run
-b <- Sys.time()
-
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 25, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
-
-c <- Sys.time()
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 28, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
-
-d <- Sys.time()
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 29, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
-
-e <- Sys.time()
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster, 
-               combo_number = 31, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
-
-f <- Sys.time()
-
-
-
-difftime(b, a)
-# Time to load packages
-
-difftime(c, b)
-# Time to run 
-
-difftime(d, c)
-difftime(e, d)
-difftime(f, e)
-
-stopCluster(cl)
+plot(y = gamma, x = 1:n*100, type = "l")
 
