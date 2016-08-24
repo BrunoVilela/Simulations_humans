@@ -15,6 +15,18 @@ library(Rcpp)
 library(msm)
 library(FARM)
 
+######Read in R functions##############################
+
+setwd("~/Box Sync/colliding ranges/Simulations_humans")
+# Required packages and functions
+load.files <- list.files(path = "Functions", pattern = ".R",
+                         full.names = TRUE)
+for (i in 1:length(load.files)) {
+  source(load.files[i])
+}
+
+
+
 
 sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips ) {
   # Calls the full simulation script 
@@ -107,7 +119,21 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
                           N.steps = number_of_time_steps, silent = F, 
                           multiplier = multiplier)
 
-  save(myOut, file= paste0("./big_world_cluster_output/myOut_replicate_", 
+  save(myOut, file= paste0("./Module_1_outputs/myOut_replicate_", 
+                           formatC(replicate_cycle, width = 2,flag = 0),
+                           "_combination_",
+                           formatC(combo_number, width = 2,flag = 0),
+                           "_","parameters", "_P.speciation_",
+                           paste(P.speciation, collapse="_"), "_P.extinction_",
+                           paste(P.extinction, collapse="_"), "_P.diffusion_",
+                           paste(P.diffusion, collapse="_"), "_P.TakeOver_",
+                           paste(P.TakeOver, collapse="_"),"_P.Arisal_",
+                           prob_choose_a,
+                           "_timesteps_", number_of_time_steps, "_.Rdata"))
+  
+  Sim_statistics <- Module_2(myOut)
+  
+  save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_statistics_replicate_", 
                            formatC(replicate_cycle, width = 2,flag = 0),
                            "_combination_",
                            formatC(combo_number, width = 2,flag = 0),
@@ -134,12 +160,12 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 200
+number_of_time_steps_a <- 5000
 #replicate_cycle <- c(1)  #number of replicates
 #####################################################################
 
 
-sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 1253) # subsample (remove when running for all)
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
@@ -154,8 +180,10 @@ dim(myWorld)
 
 args <- commandArgs(trailingOnly = FALSE)
 
-NAI <- as.numeric(args[7])
+NAI <- 1
 
+#NAI <- as.numeric(args[7])
+setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs")
 
 sim_run_cluster(replicate_cycle = NAI, 
                  combo_number = 31,

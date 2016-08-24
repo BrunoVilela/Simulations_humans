@@ -22,10 +22,10 @@ for (i in 1:length(load.files)) {
   source(load.files[i])
 }
 
-load_functions <- Sys.time()
 
 
 in_path <- "~/Box Sync/colliding ranges/Simulations_humans/results cluster output/Collapsed sim results/"
+
 
 cluster_results_analysis <- function(in_path) {
   
@@ -36,9 +36,6 @@ for (i in 1:length(load.files)) {
 }
 
   
-load(Collapsed_simulation_outputs_containing_452_all_trees_objects.Rdata')
-load('~/Box Sync/colliding ranges/Simulations_humans/results cluster output/Collapsed sim results/Collapsed_simulation_outputs_containing_452_all_worlds_objects.Rdata')
-
   ##### Calculate each metric from the parameters provided by the file name and add them to the matrix  ###########
   ############################################################################################
   
