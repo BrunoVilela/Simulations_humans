@@ -30,7 +30,7 @@ library(FARM)
 
 
 sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, 
-                                     number_of_tips = 1253, resolution = 100) {
+                                     number_of_tips = 1253, resolution = 250) {
   # Calls the full simulation script 
   #	 
   # Purpose: Need to wrap the entire simulation script into a function so it can be called in parallel from a cluster call 	
@@ -138,12 +138,12 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 200
-replicate_cycle <- c(1)  #number of replicates
+number_of_time_steps_a <- 50000
+replicate_cycle <- c(1:108)  #number of replicates
 #####################################################################
 
 
-sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), 1253) # subsample (remove when running for all)
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
@@ -182,30 +182,26 @@ b <- Sys.time()
 
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
-               combo_number = 25, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips,
-               resolution = 100) 
+               combo_number = 31, number_of_time_steps = number_of_time_steps_a,
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 c <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
-               combo_number = 28, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips,
-               resolution = 100) 
+               combo_number = 29, number_of_time_steps = number_of_time_steps_a,
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 d <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
-               combo_number = 29, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips,
-               resolution = 100) 
+               combo_number = 28, number_of_time_steps = number_of_time_steps_a,
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 e <- Sys.time()
 
 clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
-               combo_number = 31, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips,
-               resolution = 100) 
+               combo_number = 25, number_of_time_steps = number_of_time_steps_a,
+               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
 
 f <- Sys.time()
 
