@@ -1,4 +1,6 @@
-
+## This module analyzes the results from module 1 and returns a list based on how many values each stat returns
+## Ty Tuff and Bruno Vilela
+## 24 August 2016 
 
 ###### Specify function ##############################
 
