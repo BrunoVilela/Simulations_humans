@@ -6,6 +6,10 @@
 rm(list = ls())
 
 
+
+install.packages("~/Desktop/FARM_1.0.tar.gz", repos=NULL, type="source")
+
+
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
 library(ape)
