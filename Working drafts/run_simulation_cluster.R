@@ -113,7 +113,7 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
     prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
     P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
   }
-  
+  independent <- 0 # Turn off
   multiplier <- rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,

@@ -5,7 +5,7 @@ RunSimUltimate2 <- function(myWorld, P.extinction, P.speciation,
                             silent = TRUE, resolution = 100,
                             replicate_cycle, combo_number,
                             number_of_time_steps, prob_choose_a) {
-  
+
   result <- try(RunSim2(myWorld, P.extinction, P.speciation,
                         P.diffusion, P.Arisal, P.TakeOver, nbs,
                         independent, N.steps,
@@ -56,35 +56,35 @@ RunSim2 <- function(myWorld, P.extinction, P.speciation,
   world.size <- nrow(myWorld)
   # Initialize parameters we will use later to build the phylogeny
   rootnode <-  world.size + 1 # standard convention for root node number
-  
+
   # set the seed for simulation
   if (is.null(start)) {
     start <- sample(1:world.size, 1)
   }
-  
+
   myWorld[start, 4:6] <- c(0, 0, 1) # Setting root(0), time(0), ancestral(1, forager)
-  
+
   mytree <- TheOriginOfSpecies(world.size, start) # Empty tree
   myT <- 0 # Time starts at zero
   saveI <- seq(1, N.steps, resolution)
   # Common input and output for all the internal modules
   input <- list(P.speciation, P.Arisal, P.diffusion, P.extinction, P.TakeOver,
                 myWorld, mytree, myT, multiplier, nbs, independent)
-  
+
   # Functions order to be randomized
   rand_order_func_run <- list("Extinction", "Diffusion", "SpeciationTakeOver", "Arisal")
-  
+
   cat("0% [") # Time count
   timesI <- round((N.steps / 10))
   for (steps in 1:N.steps) { # Starts the loop with 'n' steps
-    
+
     if (steps %% timesI == 0) { # Time count
       cat('-') # Time count
     }# Time count
     if (steps == N.steps) { # Time count
       cat("] 100 %\n")# Time count
     }# Time count
-    
+
     # Randomize functions order
     rand_order <- sample(rand_order_func_run)
     # Run the functions
@@ -92,13 +92,13 @@ RunSim2 <- function(myWorld, P.extinction, P.speciation,
     input <- do.call(rand_order[[2]], list(input = input))
     input <- do.call(rand_order[[3]], list(input = input))
     input <- do.call(rand_order[[4]], list(input = input))
-    
+
     # Save
     if(steps %in% saveI) {
       myWorld <- as.data.frame(input[[6]])
       myWorld[, 8] <- paste0("t", myWorld[, 8])
       if(nrow(na.omit(input[[7]])) > 1) {
-        mytree <- makePhy(input[[7]])
+      mytree <- makePhy(input[[7]])
       } else {
         mytree <- NA
       }

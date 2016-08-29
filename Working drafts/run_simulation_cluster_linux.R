@@ -15,20 +15,9 @@ library(Rcpp)
 library(msm)
 library(FARM)
 
-######Read in R functions##############################
 
-setwd("~/Box Sync/colliding ranges/Simulations_humans")
-# Required packages and functions
-load.files <- list.files(path = "Functions", pattern = ".R",
-                         full.names = TRUE)
-for (i in 1:length(load.files)) {
-  source(load.files[i])
-}
-
-
-
-
-sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, number_of_tips ) {
+sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
+                            number_of_tips, parameters.table) {
   # Calls the full simulation script 
   #	 
   # Purpose: Need to wrap the entire simulation script into a function so it can be called in parallel from a cluster call 	
@@ -58,92 +47,77 @@ sim_run_cluster <- function(replicate_cycle, combo_number, myWorld, number_of_ti
   #      	spatial and tree data in the second position 
   #		
   
-  
-  chosen_combo <- combo_of_choice(combo_number, FALSE)
-  independent <- 1 # Always do independent, unless you the combo includes takeover dependent
-  if (any(chosen_combo[[2]] == "Speciate")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .5, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2))  #prob speciation
-    P.speciation <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "For", "Dom")
-  } else {
-    P.speciation <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
-  }
-  
-  if (any(chosen_combo[[2]] == "Extinct")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2)) #prob of extinction
-    P.extinction  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "For", "Dom")     
-  } else {
-    P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
-  }
+  independent <- 0 # Never do independent, unless you the combo includes takeover dependent
   
   
-  if (any(chosen_combo[[2]] == "Random_new_origin")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
-    prob_choose_a <- prob_choose
-    P.Arisal0  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "Evol_to_F", "Evol_to_D")
-    # P.Arisal0 is the one you should change the parameters
-    P.Arisal <- matrix(NA, ncol = 2, nrow = nrow(myWorld)) # probability per cell
-    colnames(P.Arisal) <- c("Evolve_to_F", "Evolve_to_D")
-    Env.Dom <- myWorld[, 7] == 2
-    P.Arisal[Env.Dom, 1] <- P.Arisal0[1, 2]
-    P.Arisal[!Env.Dom, 1] <- P.Arisal0[1, 1]
-    P.Arisal[Env.Dom, 2] <- P.Arisal0[2, 2]
-    P.Arisal[!Env.Dom, 2] <- P.Arisal0[2, 1]
-    
-  } else {
-    P.Arisal <- matrix(0, ncol = 2, nrow = nrow(myWorld))
-    prob_choose_a <- 0
-  }
+  # Probability of Arisal
+  prob_choose_a <- rexp(4, rate = 9)
+  P.Arisal0  <- parameters(prob_choose_a[1], prob_choose_a[2],
+                           prob_choose_a[3], prob_choose_a[4],
+                           "Env_NonD", "Env_D",
+                           "Evol_to_F", "Evol_to_D")
+  # P.Arisal0 is the one you should change the parameters
+  P.Arisal <- matrix(NA, ncol = 2, nrow = nrow(myWorld)) # probability per cell
+  colnames(P.Arisal) <- c("Evolve_to_F", "Evolve_to_D")
+  Env.Dom <- myWorld[, 7] == 2
+  P.Arisal[Env.Dom, 1] <- P.Arisal0[1, 2]
+  P.Arisal[!Env.Dom, 1] <- P.Arisal0[1, 1]
+  P.Arisal[Env.Dom, 2] <- P.Arisal0[2, 2]
+  P.Arisal[!Env.Dom, 2] <- P.Arisal0[2, 1]
+  
   colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
+  #####
   
   
-  if (any(chosen_combo[[2]] == "Diffusion")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of diffusion
-    P.diffusion <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
-    diag(P.diffusion)<- NA
-  } else {
-    P.diffusion <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
-  }
+  # Other parameters
+  prob_choose <- as.numeric(parameters.table[replicate_cycle, ])
+    P.speciation <- parameters(prob_choose[1], prob_choose[1],
+                               prob_choose[2], prob_choose[3],
+                               "Env_NonD", "Env_D", "For", "Dom")
+
+    P.extinction  <- parameters(prob_choose[4], prob_choose[4],
+                                prob_choose[5], prob_choose[6],
+                                "Env_NonD", "Env_D", "For", "Dom")
+    P.diffusion <- parameters(0, prob_choose[7],
+                              prob_choose[8], 0,
+                              "Target_For", "Target_Dom",
+                              "Source_For", "Source_Dom")
+
+    P.TakeOver <- parameters(prob_choose[9], prob_choose[10],
+                             prob_choose[11], prob_choose[12],
+                             "Target_For", "Target_Dom",
+                             "Source_For", "Source_Dom")
+  multiplier <- 1 # always 1 now.
   
-  if (any(chosen_combo[[2]] == "Takeover")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
-    P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
-    independent <- rtnorm(1, mean = .5, sd = .1, upper = .7, lower = .3)
-  } else {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
-    P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
-  }
-  
-  multiplier <- rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
   myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
-                          N.steps = number_of_time_steps, silent = F, 
+                          N.steps = number_of_time_steps, silent = FALSE, 
                           multiplier = multiplier)
-
+  
   save(myOut, file= paste0("./Module_1_outputs/myOut_replicate_", 
                            formatC(replicate_cycle, width = 2,flag = 0),
                            "_combination_",
-                           formatC(combo_number, width = 2,flag = 0),
+                           formatC(31, width = 2,flag = 0),
                            "_","parameters", "_P.speciation_",
                            paste(P.speciation, collapse="_"), "_P.extinction_",
                            paste(P.extinction, collapse="_"), "_P.diffusion_",
                            paste(P.diffusion, collapse="_"), "_P.TakeOver_",
                            paste(P.TakeOver, collapse="_"),"_P.Arisal_",
-                           prob_choose_a,
                            "_timesteps_", number_of_time_steps, "_.Rdata"))
   
   Sim_statistics <- Module_2(myOut)
   
   save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_statistics_replicate_", 
-                           formatC(replicate_cycle, width = 2,flag = 0),
-                           "_combination_",
-                           formatC(combo_number, width = 2,flag = 0),
-                           "_","parameters", "_P.speciation_",
-                           paste(P.speciation, collapse="_"), "_P.extinction_",
-                           paste(P.extinction, collapse="_"), "_P.diffusion_",
-                           paste(P.diffusion, collapse="_"), "_P.TakeOver_",
-                           paste(P.TakeOver, collapse="_"),"_P.Arisal_",
-                           prob_choose_a,
-                           "_timesteps_", number_of_time_steps, "_.Rdata"))
+                                    formatC(replicate_cycle, width = 2,flag = 0),
+                                    "_combination_",
+                                    formatC(31, width = 2,flag = 0),
+                                    "_","parameters", "_P.speciation_",
+                                    paste(P.speciation, collapse="_"), "_P.extinction_",
+                                    paste(P.extinction, collapse="_"), "_P.diffusion_",
+                                    paste(P.diffusion, collapse="_"), "_P.TakeOver_",
+                                    paste(P.TakeOver, collapse="_"),"_P.Arisal_",
+                                    paste(P.Arisal0, collapse="_"),
+                                    "_timesteps_", number_of_time_steps, "_.Rdata"))
   
 }
 
@@ -165,7 +139,7 @@ number_of_time_steps_a <- 5000
 #####################################################################
 
 
-sub <- sample(1:nrow(coords), 1253) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
@@ -180,12 +154,12 @@ dim(myWorld)
 
 args <- commandArgs(trailingOnly = FALSE)
 
-NAI <- 1
-
+NAI <- 50000
+data("parameters.table")
 #NAI <- as.numeric(args[7])
 setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs")
 
-sim_run_cluster(replicate_cycle = NAI, 
-                 combo_number = 31,
-                 myWorld, number_of_time_steps = number_of_time_steps_a, 
-                 nbs, number_of_tips )
+sim_run_cluster(replicate_cycle = NAI,
+                myWorld, number_of_time_steps = number_of_time_steps_a, 
+                nbs, number_of_tips = nrow(myWorld),
+                parameters.table = parameters.table)

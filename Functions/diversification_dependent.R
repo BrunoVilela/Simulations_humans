@@ -1,4 +1,3 @@
-
 # Diversification dependent
 DivDep <- function(mytree, myWorld) {
   traits <- setNames(myWorld[, 6], myWorld[, 8])

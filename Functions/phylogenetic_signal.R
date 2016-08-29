@@ -1,9 +1,6 @@
-
-
-
 # Phylogenetic signal
-D <- function(mytree, myWorld) {
-  traits <- data.frame("trait" = myWorld[, 6], 
+Dsig <- function(mytree, myWorld) {
+  traits <- data.frame("trait" = myWorld[, 6],
                        "tips" = myWorld[, 8])
   compdata <- comparative.data(mytree, traits, tips)
   # Phylogenetic signal for binary traits (D of Fritz and Purvis 2010)
