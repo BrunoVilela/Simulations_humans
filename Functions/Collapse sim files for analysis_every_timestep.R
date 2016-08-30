@@ -5,107 +5,84 @@
 # Washington University in St. Loius
 
 
-CollapseSimulationFiles <- function(path , combo_pass, Timesteps_pass) {
-    
-    setwd("~/Box Sync/colliding ranges/Simulations_humans")
-   
-    setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/50000 timesteps with a file printed every 250 steps/model 31")
+CollapseSimulationFiles <- function(rep_number, path) {
+    setwd(path)
+      
     myfiles_full <- list.dirs()
     analyze_this_many <- length(myfiles_full)
     
     available_files <- matrix(NA, 1, 1)
     
-    for(i in 1:108){
+        
+    for(i in 1: analyze_this_many){
     available_files <- rbind(available_files , as.matrix(list.files(myfiles_full[i], full.names = TRUE)))
     }
     dim(available_files)
     
-    # Required packages and functions
-    #load.files <- list.files(path = "Functions", pattern = ".R", full.names = TRUE)
-    #for (i in 1:length(load.files)) {
-    #    source(load.files[i])
-    #}
     
-    ##### parse file names to retrieve simulation parameter info
-    ##### ########################
-    split.file.name <- strsplit(available_files, split = "_")  #split file name everywhere there is an underscore
     
-    data.result <- data.frame(matrix(unlist(split.file.name)[-1], ncol = 30, nrow =length(available_files[,1]), byrow=TRUE))
     
-    positions <- c(3, 5, 8:11, 13:16, 18:21, 23:26, 28, 30) +1 # 
-    data.result <- data.frame(matrix(ncol = 21, nrow = length(myfiles_full)))
-    colnames(data.result) <- c("File_path", "replicate", "combo", "speciation_1", 
-        "speciation_2", "speciation_3", "speciation_4", "extinction_1", 
-        "extinction_2", "extinction_3", "extinction_4", "diffusion_1", 
-        "diffusion_2", "diffusion_3", "diffusion_4", "takeover_1", "takeover_2", 
-        "takeover_3", "takeover_4", "arisal_1", "Timesteps")
-    data.result[, 1] <- myfiles_full
-    # head(data.result)
     
-    data.result.blank <- data.result  # pass matrix to new object to be used seperatly below
     
-    for (i in 1:length(positions)) {
-        data.result[, i + 1] <- sapply(split.file.name, "[", positions[i])
+    install.packages("~/Desktop/FARM_1.0.tar.gz", repos=NULL, type="source")
+
+
+#####################################################################
+## need to document which functions we use from each of these libraries. 
+library(ape)
+library(spdep)
+library(parallel)
+library(Rcpp)
+library(msm)
+library(FARM)
+library(phytools)
+library(diversitree)
+   
+    #source('~/Box Sync/colliding ranges/Simulations_humans/Functions/Serial result analysis.R', chdir = TRUE)
+   
+   load(available_files[rep_number])
+    
+    Sim_statistics <- Module_2(myOut)
+    
+    split.file.name <- strsplit(available_files[rep_number], split = "_")  #split file name everywhere there is an underscore
+    split.file.name_2 <- strsplit(split.file.name[[1]][30], split = "/") 
+    split.file.name_3 <- strsplit(split.file.name_2[[1]][2], split = ".Rdata")
+    
+    
+    
+    save(myOut, file= paste0("./Module_1_outputs/myOut_replicate_", 
+                           formatC(split.file.name[[1]][3], width = 2,flag = 0),
+                           "_combination_",
+                           formatC(split.file.name[[1]][5], width = 2,flag = 0),
+                           "_","parameters", "_P.speciation_",
+                           paste(split.file.name[[1]][8:11], collapse="_"), "_P.extinction_",
+                           paste(split.file.name[[1]][13:16], collapse="_"), "_P.diffusion_",
+                           paste(split.file.name[[1]][18:21], collapse="_"), "_P.TakeOver_",
+                           paste(split.file.name[[1]][23:26], collapse="_"),"_P.Arisal_",
+                           split.file.name[[1]][28],
+                           "_timesteps_", split.file.name_2[[1]][1], "_", split.file.name_3  ,"_.Rdata"))
+  
+    save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_statistics_replicate_", 
+                           formatC(split.file.name[[1]][3], width = 2,flag = 0),
+                           "_combination_",
+                           formatC(split.file.name[[1]][5], width = 2,flag = 0),
+                           "_","parameters", "_P.speciation_",
+                           paste(split.file.name[[1]][8:11], collapse="_"), "_P.extinction_",
+                           paste(split.file.name[[1]][13:16], collapse="_"), "_P.diffusion_",
+                           paste(split.file.name[[1]][18:21], collapse="_"), "_P.TakeOver_",
+                           paste(split.file.name[[1]][23:26], collapse="_"),"_P.Arisal_",
+                           split.file.name[[1]][28],
+                           "_timesteps_", split.file.name_2[[1]][1], "_", split.file.name_3  ,"_.Rdata"))
+    
+    
+    
+    
     }
-    
-    ##### Subset matrix of file information to pull out the files we want to
-    ##### analyze together ########################
-    cluster_input_files <- subset(data.result, combo == as.character(combo_pass) & 
-        Timesteps == as.character(Timesteps_pass))
-    n.cluster <- nrow(cluster_input_files)
-    rownames(cluster_input_files) <- 1:n.cluster
-    
-    ##### assign each divided section of the file name to a column of a matrix
-    ##### ########################
-    if (analyze_this_many > n.cluster) {
-        analyze_this_many <- n.cluster
-    }
-    sub <- 1:analyze_this_many
-    myfiles <- cluster_input_files[sub, 1]  ## temporary parameter to start index vector
-    data.result <- cluster_input_files[sub, ]
-    
-    parse_file_names <- Sys.time()
-    
-    
-    ##### Load the file specified by each row for independent analysis
-    ##### ################### for (i in 1:l.myfiles) {
-    
-    all_trees <- vector("list", 2)
-    class(all_trees) <- "multiPhylo"
-    
-    all_worlds <- list()
-    
-    for (i in 1:analyze_this_many) {
-        if (file.exists(myfiles[i])) {
-            load(myfiles[i])
-        }
-        if (any(!is.na(myOut))) {
-            all_trees[[i]] <- myOut$mytree
-            all_worlds[[i]] <- myOut$myWorld
-        }
-    }
-    
-    # Subset the trees and world
-    keep <- !sapply(all_trees, is.null)
-    all_trees <- all_trees[keep]
-    all_worlds <- all_worlds[keep]
-    # Number of world extinctions
-    extinctions <- sum(!keep)
-    
-    # Transform branch lenghts
-    #all_trees <- lapply(all_trees, adjBranch)
-    
-    
-      save(all_trees, file=paste0("~/Box Sync/colliding ranges/Simulations_humans/results cluster output/Collapsed sim results/Collapsed_simulation_outputs_containing_", analyze_this_many , "_all_trees_objects.Rdata"))
-    
-     save(all_worlds, file=paste0("~/Box Sync/colliding ranges/Simulations_humans/results cluster output/Collapsed sim results/Collapsed_simulation_outputs_containing_", analyze_this_many , "_all_worlds_objects.Rdata"))
-    
-}
 
 
 
      
-# CollapseSimulationFiles(path = "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/5000 timesteps"  , combo_pass = 31, Timesteps_pass = 5000)
+# CollapseSimulationFiles(1, path =  "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/50000 timesteps with a file printed every 250 steps/model 31")
 
 
 
