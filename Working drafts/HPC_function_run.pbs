@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -N bvilela_test
+#PBS -M bvilela@wustl.edu
+#PBS -m -a
+#PBS -V
+#PBS -l walltime=00:40:00
+#PBS -l pmem=900mb
+#PBS -l procs = 1
+#PBS -t 1-10
+
+echo $PBS_ARRAYID
+
+cd /home/bvilela/mydirectory
+module load R-3.2.1
+
+export R_LIBS=$HOME/rlibs

@@ -3,18 +3,14 @@
 #####################################################################
 
 # Run the full model in a cluster. This version writes files to a cluster output folder.
-rm(list = ls())
-
-
-
-install.packages("~/Desktop/FARM_1.0.tar.gz", repos=NULL, type="source")
+# rm(list = ls())
+# install.packages("~/Desktop/FARM_1.0.tar.gz", repos=NULL, type="source")
 
 
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
 library(ape)
 library(spdep)
-library(parallel)
 library(Rcpp)
 library(msm)
 library(FARM)
@@ -51,34 +47,41 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
   #      	spatial and tree data in the second position 
   #		
   
-  independent <- 0 # Never do independent, unless you the combo includes takeover dependent
-  
-  
-  # Probability of Arisal
-  prob_choose_a <- rexp(4, rate = 9)
-  P.Arisal0  <- parameters(prob_choose_a[1], prob_choose_a[2],
-                           prob_choose_a[3], prob_choose_a[4],
-                           "Env_NonD", "Env_D",
-                           "Evol_to_F", "Evol_to_D")
-  # P.Arisal0 is the one you should change the parameters
-  P.Arisal <- matrix(NA, ncol = 2, nrow = nrow(myWorld)) # probability per cell
-  colnames(P.Arisal) <- c("Evolve_to_F", "Evolve_to_D")
-  Env.Dom <- myWorld[, 7] == 2
-  P.Arisal[Env.Dom, 1] <- P.Arisal0[1, 2]
-  P.Arisal[!Env.Dom, 1] <- P.Arisal0[1, 1]
-  P.Arisal[Env.Dom, 2] <- P.Arisal0[2, 2]
-  P.Arisal[!Env.Dom, 2] <- P.Arisal0[2, 1]
-  
-  colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
-  #####
-  
-  
-  # Other parameters
-  prob_choose <- as.numeric(parameters.table[replicate_cycle, ])
+  x1 <- 5 #Number of runs per core
+  if (replicate_cycle != 1) {
+    replicate_cycle <- ((replicate_cycle - 1) * x1) + 1
+  }
+  sub <- nrow(parameters.table) - (x1 + replicate_cycle)
+  x <- ifelse(sub < 0, x1 + sub, x1) 
+  for (i in replicate_cycle:(replicate_cycle + x)) {
+    independent <- 0 # Never do independent, unless you the combo includes takeover dependent
+    
+    
+    # Probability of Arisal
+    prob_choose_a <- rexp(4, rate = 9)
+    P.Arisal0  <- parameters(prob_choose_a[1], prob_choose_a[2],
+                             prob_choose_a[3], prob_choose_a[4],
+                             "Env_NonD", "Env_D",
+                             "Evol_to_F", "Evol_to_D")
+    # P.Arisal0 is the one you should change the parameters
+    P.Arisal <- matrix(NA, ncol = 2, nrow = nrow(myWorld)) # probability per cell
+    colnames(P.Arisal) <- c("Evolve_to_F", "Evolve_to_D")
+    Env.Dom <- myWorld[, 7] == 2
+    P.Arisal[Env.Dom, 1] <- P.Arisal0[1, 2]
+    P.Arisal[!Env.Dom, 1] <- P.Arisal0[1, 1]
+    P.Arisal[Env.Dom, 2] <- P.Arisal0[2, 2]
+    P.Arisal[!Env.Dom, 2] <- P.Arisal0[2, 1]
+    
+    colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
+    #####
+    
+    
+    # Other parameters
+    prob_choose <- as.numeric(parameters.table[replicate_cycle, ])
     P.speciation <- parameters(prob_choose[1], prob_choose[1],
                                prob_choose[2], prob_choose[3],
                                "Env_NonD", "Env_D", "For", "Dom")
-
+    
     P.extinction  <- parameters(prob_choose[4], prob_choose[4],
                                 prob_choose[5], prob_choose[6],
                                 "Env_NonD", "Env_D", "For", "Dom")
@@ -86,42 +89,45 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                               prob_choose[8], 0,
                               "Target_For", "Target_Dom",
                               "Source_For", "Source_Dom")
-
+    
     P.TakeOver <- parameters(prob_choose[9], prob_choose[10],
                              prob_choose[11], prob_choose[12],
                              "Target_For", "Target_Dom",
                              "Source_For", "Source_Dom")
-  multiplier <- 1 # always 1 now.
-  
-  myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
-                          P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
-                          N.steps = number_of_time_steps, silent = FALSE, 
-                          multiplier = multiplier)
-  
-  save(myOut, file= paste0("./Module_1_outputs/myOut_replicate_", 
-                           formatC(replicate_cycle, width = 2,flag = 0),
-                           "_combination_",
-                           formatC(31, width = 2,flag = 0),
-                           "_","parameters", "_P.speciation_",
-                           paste(P.speciation, collapse="_"), "_P.extinction_",
-                           paste(P.extinction, collapse="_"), "_P.diffusion_",
-                           paste(P.diffusion, collapse="_"), "_P.TakeOver_",
-                           paste(P.TakeOver, collapse="_"),"_P.Arisal_",
-                           "_timesteps_", number_of_time_steps, "_.Rdata"))
-  
-  Sim_statistics <- Module_2(myOut)
-  
-  save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_statistics_replicate_", 
-                                    formatC(replicate_cycle, width = 2,flag = 0),
-                                    "_combination_",
-                                    formatC(31, width = 2,flag = 0),
-                                    "_","parameters", "_P.speciation_",
-                                    paste(P.speciation, collapse="_"), "_P.extinction_",
-                                    paste(P.extinction, collapse="_"), "_P.diffusion_",
-                                    paste(P.diffusion, collapse="_"), "_P.TakeOver_",
-                                    paste(P.TakeOver, collapse="_"),"_P.Arisal_",
-                                    paste(P.Arisal0, collapse="_"),
-                                    "_timesteps_", number_of_time_steps, "_.Rdata"))
+    multiplier <- 1 # always 1 now.
+    
+    myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
+                            P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
+                            N.steps = number_of_time_steps, silent = TRUE, 
+                            multiplier = multiplier)
+    
+    save(myOut,  file= paste0("./Module_1_outputs/myOut_replicate_",
+                              formatC(replicate_cycle, width = 2,flag = 0),
+                              "_combination_",
+                              formatC(31, width = 2,flag = 0),
+                              "_","parameters", "_P.speciation_",
+                              paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
+                              paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
+                              paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TakeOver_",
+                              paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
+                              paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
+                              "_timesteps_", number_of_time_steps, "_.Rdata"))
+    
+    Sim_statistics <- Module_2(myOut)
+    
+    save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_statistics_replicate_",
+                                      formatC(replicate_cycle, width = 2,flag = 0),
+                                      "_combination_",
+                                      formatC(31, width = 2,flag = 0),
+                                      "_","parameters", "_P.speciation_",
+                                      paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
+                                      paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
+                                      paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TakeOver_",
+                                      paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
+                                      paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
+                                      "_timesteps_", number_of_time_steps, "_.Rdata"))
+    replicate_cycle <- replicate_cycle + 1
+  }
   
 }
 
@@ -141,6 +147,7 @@ number_of_tips <- length(coords[,1])
 number_of_time_steps_a <- 5000
 #replicate_cycle <- c(1)  #number of replicates
 #####################################################################
+data("parameters.table")
 
 
 sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
@@ -156,14 +163,14 @@ nbs <- t(sapply(nbs, "[", i = seq.max))
 dim(myWorld)
 
 
-args <- commandArgs(trailingOnly = FALSE)
 
-NAI <- 50000
-data("parameters.table")
-#NAI <- as.numeric(args[7])
-setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs")
+# NAI <- 1000
+args <- commandArgs(trailingOnly = FALSE)
+NAI <- as.numeric(args[7])
+# setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs")
 
 sim_run_cluster(replicate_cycle = NAI,
                 myWorld, number_of_time_steps = number_of_time_steps_a, 
                 nbs, number_of_tips = nrow(myWorld),
                 parameters.table = parameters.table)
+
