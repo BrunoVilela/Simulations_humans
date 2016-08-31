@@ -26,6 +26,7 @@ TakeOver <- function(myWorld, mytree, P.TakeOver,
 
   # How good is the env for me
   good <- myWorld[i, 6] == myWorld[PosTargets, 7] & source.trait.dom
+  test <- FALSE
   if (any(good)) {
     PosTargets <- PosTargets[good]
     prob.to <- prob.to[good]

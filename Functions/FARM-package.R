@@ -1,8 +1,6 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom phytools ltt
-#' @importFrom diversitree make.musse
-#' @importFrom diversitree find.mle
-#' @importFrom diversitree starting.point.musse
+#' @import diversitree
 #' @importFrom caper comparative.data
 #' @importFrom caper phylo.d
 #' @importFrom stats cophenetic na.omit runif setNames var
