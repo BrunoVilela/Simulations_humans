@@ -53,7 +53,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
   }
   sub <- nrow(parameters.table) - (x1 + replicate_cycle)
   x <- ifelse(sub < 0, x1 + sub, x1) 
-  for (i in replicate_cycle:(replicate_cycle + x)) {
+  for (i in replicate_cycle:(replicate_cycle + x - 1)) {
     independent <- 0 # Never do independent, unless you the combo includes takeover dependent
     
     

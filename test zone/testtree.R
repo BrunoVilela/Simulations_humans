@@ -3,7 +3,7 @@
 #####################################################################
 
 # Run the full model in a cluster. This version writes files to a cluster output folder.
-# rm(list = ls())
+rm(list = ls())
 # install.packages("~/Desktop/FARM_1.0.tar.gz", repos=NULL, type="source")
 
 
@@ -91,7 +91,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                            "Source_For", "Source_Dom")
   multiplier <- 1 # always 1 now.
   
-  myOut <<- RunSimUltimate(myWorld, P.extinction, P.speciation, 
+  myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                           N.steps = number_of_time_steps, silent = F, 
                           multiplier = multiplier)
@@ -119,7 +119,7 @@ number_of_time_steps_a <- 5000
 data("parameters.table")
 
 
-sub <- sample(1:nrow(coords), 200) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
@@ -137,9 +137,9 @@ NAI <- 1
 # args <- commandArgs(trailingOnly = FALSE)
 # NAI <- as.numeric(args[7])
 # setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs")
-parameters.table[1, ] <- c(1, 1, 1, .1, .1, .1, .1, .1, .1, .1, .1, .1)
+parameters.table[1, ] <- c(.3, .01, .3, .1, .8, .1, .1, .1, .2, .005, .7, .3)
 test.tree <- sim_run_cluster(replicate_cycle = NAI,
-                             myWorld, number_of_time_steps = 200, 
+                             myWorld, number_of_time_steps = 30000, 
                              nbs, number_of_tips = nrow(myWorld),
                              parameters.table = parameters.table)
 test.tree[[2]]$results_summary_of_single_value_outputs
@@ -161,9 +161,7 @@ ext <- fit.musse$par[4:6]
 ext <- ext/max(ext)
 x
 
-
 test.tree[[1]]$myWorld
 test.tree[[2]]$results_summary_of_single_value_outputs
-tree2 <- test.tree[[1]]$mytree
-tree2$edge.length <- tree2$edge.length/max(tree2$edge.length)
-a <- DivDep(tree2, test.tree[[1]]$myWorld)
+test.tree <- list(test.tree, parameters.table[1, ], c(spec, ext))
+save(test.tree, file = "test.tree")
