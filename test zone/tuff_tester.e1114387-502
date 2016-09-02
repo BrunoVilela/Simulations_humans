@@ -1,0 +1,29 @@
+Loading required package: methods
+Loading required package: sp
+Loading required package: Matrix
+
+Attaching package: ‘spdep’
+
+The following object is masked from ‘package:ape’:
+
+    plot.mst
+
+Loading required package: maps
+
+ # maps v3.1: updated 'world': all lakes moved to separate new #
+ # 'lakes' database. Type '?world' or 'news(package="maps")'.  #
+
+
+
+Attaching package: ‘phytools’
+
+The following object is masked from ‘package:Matrix’:
+
+    expm
+
+Error in solve.default(out$hessian) : 
+  system is computationally singular: reciprocal condition number = 2.56688e-105
+Error in do.mle.search(func, x.init, method, fail.value, ...) : 
+  Starting point must have finite probability
+Calls: CollapseSimulationFiles -> Module_2 -> DivDep -> starting.point.musse
+Execution halted
