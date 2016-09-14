@@ -91,7 +91,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                            "Source_For", "Source_Dom")
   multiplier <- 1 # always 1 now.
   
-  myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
+  myOut <<- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                           N.steps = number_of_time_steps, silent = F, 
                           multiplier = multiplier)
@@ -142,26 +142,27 @@ test.tree <- sim_run_cluster(replicate_cycle = NAI,
                              myWorld, number_of_time_steps = 30000, 
                              nbs, number_of_tips = nrow(myWorld),
                              parameters.table = parameters.table)
-test.tree[[2]]$results_summary_of_single_value_outputs
 
 # Adjusting the parameters
 library(diversitree)
 myWorld = test.tree[[1]]$myWorld
 mytree = test.tree[[1]]$mytree
+mytree2 <- mytree
+mytree2$edge.length <- mytree2$edge.length/max(mytree2$edge.length)
 traits <- setNames(myWorld[, 6], myWorld[, 8])
 pos <- na.omit(traits == 2)
 traits[pos] <- traits[pos] + myWorld[pos, 7] - 1
-musse <- make.musse(mytree, traits, 3)
-p <- starting.point.musse(mytree, k = 3)
-fit.musse <- find.mle(musse, x.init = p[argnames(musse)])
+musse <- make.musse(mytree2, traits, 3)
+p <- starting.point.musse(mytree2, k = 3)
+fit.musse <- find.mle(musse, x.init = p)
 
 spec <- fit.musse$par[1:3]
 spec <- spec/max(spec)
 ext <- fit.musse$par[4:6]
 ext <- ext/max(ext)
-x
 
-test.tree[[1]]$myWorld
-test.tree[[2]]$results_summary_of_single_value_outputs
+
+# test.tree[[1]]$myWorld
+# test.tree[[2]]$results_summary_of_single_value_outputs
 test.tree <- list(test.tree, parameters.table[1, ], c(spec, ext))
-save(test.tree, file = "test.tree")
+save(test.tree, file = "test.tree.RData")

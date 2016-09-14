@@ -78,57 +78,74 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     
     # Other parameters
     prob_choose <- as.numeric(parameters.table[replicate_cycle, ])
-    P.speciation <- parameters(prob_choose[1], prob_choose[1],
-                               prob_choose[2], prob_choose[3],
-                               "Env_NonD", "Env_D", "For", "Dom")
+    npar <- length(prob_choose)
     
-    P.extinction  <- parameters(prob_choose[4], prob_choose[4],
-                                prob_choose[5], prob_choose[6],
-                                "Env_NonD", "Env_D", "For", "Dom")
-    P.diffusion <- parameters(0, prob_choose[7],
-                              prob_choose[8], 0,
-                              "Target_For", "Target_Dom",
-                              "Source_For", "Source_Dom")
-    
-    P.TakeOver <- parameters(prob_choose[9], prob_choose[10],
-                             prob_choose[11], prob_choose[12],
-                             "Target_For", "Target_Dom",
-                             "Source_For", "Source_Dom")
-    multiplier <- 1 # always 1 now.
-    
-    myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
-                            P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
-                            N.steps = number_of_time_steps, silent = TRUE, 
-                            multiplier = multiplier)
-    
-    save(myOut,  file= paste0("./Module_1_outputs/myOut_replicate_",
-                              formatC(replicate_cycle, width = 2,flag = 0),
-                              "_combination_",
-                              formatC(31, width = 2,flag = 0),
-                              "_","parameters", "_P.speciation_",
-                              paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
-                              paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
-                              paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TakeOver_",
-                              paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
-                              paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
-                              "_timesteps_", number_of_time_steps, "_.Rdata"))
-    
-    Sim_statistics <- Module_2(myOut)
-    
-    save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_statistics_replicate_",
-                                      formatC(replicate_cycle, width = 2,flag = 0),
-                                      "_combination_",
-                                      formatC(31, width = 2,flag = 0),
-                                      "_","parameters", "_P.speciation_",
-                                      paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
-                                      paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
-                                      paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TakeOver_",
-                                      paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
-                                      paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
-                                      "_timesteps_", number_of_time_steps, "_.Rdata"))
-    replicate_cycle <- replicate_cycle + 1
-  }
+    for (j in 1:npar) {
+      minp <- min(parameters.table[, j])
+      if (prob_choose[j] != minp) {
+        if (all(prob_choose[j] >= parameters.table[, j])) {
+          comp <- parameters.table[, j] < prob_choose[j] &  
+            parameters.table[, j] > minp
+          prob_choose[j] <- runif(1, parameters.table[comp, j][1],
+                                  prob_choose[j])
+        } else {
+          prob_choose[j] <- runif(1, 0, prob_choose[j])
+        }
+      }
+    }
   
+  
+  P.speciation <- parameters(prob_choose[1], prob_choose[1],
+                             prob_choose[2], prob_choose[3],
+                             "Env_NonD", "Env_D", "For", "Dom")
+  
+  P.extinction  <- parameters(prob_choose[4], prob_choose[4],
+                              prob_choose[5], prob_choose[6],
+                              "Env_NonD", "Env_D", "For", "Dom")
+  P.diffusion <- parameters(0, prob_choose[7],
+                            prob_choose[8], 0,
+                            "Target_For", "Target_Dom",
+                            "Source_For", "Source_Dom")
+  
+  P.TakeOver <- parameters(prob_choose[9], prob_choose[10],
+                           prob_choose[11], prob_choose[12],
+                           "Target_For", "Target_Dom",
+                           "Source_For", "Source_Dom")
+  multiplier <- 1 # always 1 now.
+  
+  myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
+                          P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
+                          N.steps = number_of_time_steps, silent = TRUE, 
+                          multiplier = multiplier)
+  
+  save(myOut,  file= paste0("./Module_1_outputs/myOut_replicate_",
+                            formatC(replicate_cycle, width = 2,flag = 0),
+                            "_combination_",
+                            formatC(31, width = 2,flag = 0),
+                            "_","parameters", "_P.speciation_",
+                            paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
+                            paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
+                            paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TakeOver_",
+                            paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
+                            paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
+                            "_timesteps_", number_of_time_steps, "_.Rdata"))
+  
+  Sim_statistics <- Module_2(myOut)
+  
+  save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_statistics_replicate_",
+                                    formatC(replicate_cycle, width = 2,flag = 0),
+                                    "_combination_",
+                                    formatC(31, width = 2,flag = 0),
+                                    "_","parameters", "_P.speciation_",
+                                    paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
+                                    paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
+                                    paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TakeOver_",
+                                    paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
+                                    paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
+                                    "_timesteps_", number_of_time_steps, "_.Rdata"))
+  replicate_cycle <- replicate_cycle + 1
+}
+
 }
 
 
