@@ -16,5 +16,6 @@ names(prob_choose_all) <- c("speciationF", "speciationNonD", "speciationD",
                             "diffusionFD", "diffusionDF", "takeoverFF",
                             "takeoverFD", "takeoverDF", "takeoverDD")
 parameters.table <- expand.grid(prob_choose_all[1:length(prob_choose_all)])
+parameters.table <- parameters.table[sample(1:nrow(parameters.table)), ]
 library(devtools)
 devtools::use_data(parameters.table, overwrite = TRUE)
