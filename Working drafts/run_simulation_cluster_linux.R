@@ -47,7 +47,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
   #      	spatial and tree data in the second position 
   #		
   
-  x1 <- 5 #Number of runs per core
+  x1 <- 10 #Number of runs per core
   if (replicate_cycle != 1) {
     replicate_cycle <- ((replicate_cycle - 1) * x1) + 1
   }
@@ -118,31 +118,31 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                           N.steps = number_of_time_steps, silent = TRUE, 
                           multiplier = multiplier)
   
-  save(myOut,  file= paste0("./Module_1_outputs/myOut_replicate_",
+  save(myOut,  file= paste0("./Module_1_outputs/myOut_rep_",
                             formatC(replicate_cycle, width = 2,flag = 0),
-                            "_combination_",
+                            "_combo_",
                             formatC(31, width = 2,flag = 0),
-                            "_","parameters", "_P.speciation_",
+                            "_","params", "_P.speciation_",
                             paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
-                            paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
-                            paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TakeOver_",
+                            paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffs_",
+                            paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TO_",
                             paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
                             paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
-                            "_timesteps_", number_of_time_steps, "_.Rdata"))
+                            "_steps_", number_of_time_steps, "_.Rdata"))
   
   Sim_statistics <- Module_2(myOut)
   
-  save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_statistics_replicate_",
+  save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_stats_rep_",
                                     formatC(replicate_cycle, width = 2,flag = 0),
-                                    "_combination_",
+                                    "_combo_",
                                     formatC(31, width = 2,flag = 0),
-                                    "_","parameters", "_P.speciation_",
+                                    "_","params", "_P.speciation_",
                                     paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
-                                    paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
-                                    paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TakeOver_",
+                                    paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffs_",
+                                    paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TO_",
                                     paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
                                     paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
-                                    "_timesteps_", number_of_time_steps, "_.Rdata"))
+                                    "_steps_", number_of_time_steps, "_.Rdata"))
   replicate_cycle <- replicate_cycle + 1
 }
 
@@ -161,7 +161,7 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 5000
+number_of_time_steps_a <- 30000
 #replicate_cycle <- c(1)  #number of replicates
 #####################################################################
 data("parameters.table")
