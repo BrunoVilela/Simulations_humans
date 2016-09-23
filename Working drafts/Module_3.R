@@ -1,114 +1,31 @@
-# Collapse the individual files produced by the first simulation module into one list with all the trees and another list with all the worlds. 
+# Refer to Module_3_Collapse_sim_files_into_table.R to collapse all the new cluster files into a new table. 
 
 # Ty Tuff and Bruno Vilela
 # 23 August 2016
 # Washington University in St. Loius
 
 
-    
-      path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs"
-      
-      setwd(path)
-    myfiles_full <- list.dirs()
-    analyze_this_many <- length(myfiles_full)
-    
-    available_files <- matrix(NA, 1, 1)
-    
-        
-    for(i in 1: analyze_this_many){
-    available_files <- rbind(available_files , as.matrix(list.files(myfiles_full[i], full.names = TRUE)))
-    }
-    dim(available_files)
-    
-    split.file.name <- strsplit(available_files[10], split = "_") 
-    
-    
-    
- 
-available <- list.files()
-files <- matrix(rep(NA, 62), length(available), 62)
-dim(files)
-i <- 10
+## Subset those results across different models
+
+# We need to find marginal distribution estimates for each parameter value first and then use those estimates to find the joint parameter estimates. 
+
+# no diffusion
+no_diffusion <- subset(files, P.diffusion_Target_forager == "00" & P.diffusion_Target_domesticator == "00" & P.diffusion_Source_forager == "00" & P.diffusion_Source_domesticator == "00")
+
+no_TO <- subset(files, P.diffusion_Target_forager == "00" & P.diffusion_Target_domesticator == "00" & P.diffusion_Source_forager == "00" & P.diffusion_Source_domesticator == "00")
+
+no_TO_or_diff <- subset(files, P.diffusion_Target_forager == "00" & P.diffusion_Target_domesticator == "00" & P.diffusion_Source_forager == "00" & P.diffusion_Source_domesticator == "00")
 
 
-for(i in 1:length(available)){
-load(available[i])
-name <- unlist(strsplit(available[i], split="_"))
-files[i,] <- c(as.vector(matrix(name, 1,35)),matrix(Sim_statistics[[1]], 1, 27))
+head(sub_diff)
 
-}
+files <- sub_diff
 
 
-colnames(files) <-  c(
 
-	rep(NA,3), 
-	"replicate",
-	rep(NA,4),
-	"speciation_of_Env_NonD",
-	"speciation_of_Env_D",
-	"speciation_of_For",
-	"speciation_of_Dom",
-	NA,
-	"extinction_of_Env_NonD",
-	"extinction_of_Env_D",
-	"extinction_of_For",
-	"extinction_of_Dom",
-	NA,
-	"P.diffusion_Target_forager",
-	"P.diffusion_Target_domesticator",
-	"P.diffusion_Source_forager",
-	"P.diffusion_Source_domesticator",
-	NA,
-	"P.takeover_Target_forager",
-	"P.takeover_Target_domesticator",
-	"P.takeover_Source_forager",
-	"P.takeover_Source_domesticator",
-	NA,
-	"arisal_of_Env_NonD",
-	"arisal_of_Env_D",
-	"arisal_of_For",
-	"arisal_of_Dom",
-	
-	NA, 
-	"timestep", 
-	NA,
-        
-    "number_of_branches",
-	"Pylo_diversity_is_sum_of_BL",
-	"average_phylogenetic_diversity_is_mean_of_BL",
-	"variance_Pylo_diversity_is_variance_of_BL",
 
-	"F_quadratic_entropy_is_sum_of_PD",
-	"Mean_pairwise_distance",
-	"variance_pairwise_distance",
 
-	"Evolutionary_distinctiveness_sum",
-	"mean_Phylogenetic_isolation",
-	"variance_Phylogenetic_isolation",
-
-	"gamma",
-	"gamma_p_value",
-	"speciation_rate",
-	"extinction_rate",
-	"extinction_per_speciation",
-	"speciation_minus_extinction",
-	"trait_1_speciation",
-  	"trait_2_speciation" ,
-  	"trait_1_extinction" ,
-  	"trait_2_extinction" ,
-  	"transition_from_trait_1_to_2" ,
-  	"transition_from_trait_2_to_1" ,
-  	"transition_rate_ratio_1to2_over_2to1" ,
-  	"Phylogenetic_signal",
-  	"spatial.tests.fora",
-  	"spatial.tests.dom",
-  	"prevalence"
-  	
-    
-  )
-
-files <- as.data.frame(files)
-head(files)
+## Now plot a panal with all the stats against a single parameter range
 
 
 par(mfrow=c(7,4), mar=c(2,2,3,0))
@@ -134,9 +51,9 @@ ys[51,] <- c(0, 2)
 ys[52,] <- c(0, 13500)
 ys[53,] <- c(0, 13500)
 ys[54,] <- c(0, 50500)
-ys[55,] <- c(0, 18500)
-ys[56,] <- c(0, 23500)
-ys[57,] <- c(0, 15000)
+ys[55,] <- c(0, 30500)
+ys[56,] <- c(0, 6000)
+ys[57,] <- c(0, 6000)
 ys[58,] <- c(0, 50)
 ys[59,] <- c(-0.2, 1.8)
 ys[60,] <- c(0, 70)
@@ -144,37 +61,41 @@ ys[61,] <- c(0, 100)
 ys[62,] <- c(-1, 1.1)
 
 
-"speciation_of_Env_NonD",
-	"speciation_of_Env_D",
-	"speciation_of_For",
-	"speciation_of_Dom",
-	NA,
-	"extinction_of_Env_NonD",
-	"extinction_of_Env_D",
-	"extinction_of_For",
-	"extinction_of_Dom",
-	NA,
-	"P.diffusion_Target_forager",
-	"P.diffusion_Target_domesticator",
-	"P.diffusion_Source_forager",
-	"P.diffusion_Source_domesticator",
-	NA,
-	"P.takeover_Target_forager",
-	"P.takeover_Target_domesticator",
-	"P.takeover_Source_forager",
-	"P.takeover_Source_domesticator",
-	NA,
-	"arisal_of_Env_NonD",
-	"arisal_of_Env_D",
-	"arisal_of_For",
-	"arisal_of_Dom",
+#"speciation_of_Env_NonD",
+#	"speciation_of_Env_D",
+#	"speciation_of_For",
+#	"speciation_of_Dom",
+#	NA,
+#	"extinction_of_Env_NonD",
+#	"extinction_of_Env_D",
+#	"extinction_of_For",
+#	"extinction_of_Dom",
+#	NA,
+#	"P.diffusion_Target_forager",
+#	"P.diffusion_Target_domesticator",
+#	"P.diffusion_Source_forager",
+#	"P.diffusion_Source_domesticator",
+#	NA,
+#	"P.takeover_Target_forager",
+#	"P.takeover_Target_domesticator",
+#	"P.takeover_Source_forager",
+#	"P.takeover_Source_domesticator",
+#	NA,
+#	"arisal_of_Env_NonD",
+#	"arisal_of_Env_D",
+#	"arisal_of_For",
+#	"arisal_of_Dom",
 	
+take <- which(as.numeric(as.character(files[,56])) >5000)
+files[take,56] <- NA
 
+take <- which(as.numeric(as.character(files[,57])) >5000)
+files[take,57] <- NA
 
 parameter <- as.numeric(as.character(files$extinction_of_For))
 par(mfrow=c(7,4), mar=c(2,2,3,0))
 for(i in 36:62){
-plot(parameter, as.numeric(as.character(files[,i])), main=colnames(files)[i], ylim= c(ys[i,1], ys[i,2]), type="p")
+plot(parameter, as.numeric(as.character(files[,i])), main=colnames(files)[i], ylim= c(ys[i,1], ys[i,2]), type="p", xlim=c(0,1))
 model<- lm(as.numeric(as.character(files[,i])) ~ parameter)
 abline(model, col="red")
 }
@@ -188,6 +109,7 @@ mean(stat, na.rm=TRUE)
 
 
 
+ hist(as.numeric(as.character(files[,56][-take])))
 
 
 
