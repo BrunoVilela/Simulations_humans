@@ -8,26 +8,26 @@
 ## Subset those results across different models
 
 # We need to find marginal distribution estimates for each parameter value first and then use those estimates to find the joint parameter estimates. 
-
+load('~/Box Sync/colliding ranges/Simulations_humans/first_50K_sim_results.Rdata')
 # no diffusion
-no_diffusion <- subset(files, P.diffusion_Target_forager == "00" & P.diffusion_Target_domesticator == "00" & P.diffusion_Source_forager == "00" & P.diffusion_Source_domesticator == "00")
+no_diffusion <- subset(results_table, P.diffusion_Target_forager == "00" & P.diffusion_Target_domesticator == "00" & P.diffusion_Source_forager == "00" & P.diffusion_Source_domesticator == "00")
 
-no_TO <- subset(files, P.diffusion_Target_forager == "00" & P.diffusion_Target_domesticator == "00" & P.diffusion_Source_forager == "00" & P.diffusion_Source_domesticator == "00")
+no_TO <- subset(results_table, P.diffusion_Target_forager == "00" & P.diffusion_Target_domesticator == "00" & P.diffusion_Source_forager == "00" & P.diffusion_Source_domesticator == "00")
 
-no_TO_or_diff <- subset(files, P.diffusion_Target_forager == "00" & P.diffusion_Target_domesticator == "00" & P.diffusion_Source_forager == "00" & P.diffusion_Source_domesticator == "00")
+no_TO_or_diff <- subset(results_table, P.diffusion_Target_forager == "00" & P.diffusion_Target_domesticator == "00" & P.diffusion_Source_forager == "00" & P.diffusion_Source_domesticator == "00")
 
 
 head(sub_diff)
 
-files <- sub_diff
+files <- results_table  #results_table
 
 
 
 
 
 ## Now plot a panal with all the stats against a single parameter range
-
-
+getwd()
+pdf(file="speciation_of_Env_NonD.pdf", width=40, height=70)
 par(mfrow=c(7,4), mar=c(2,2,3,0))
 
 ys <- matrix(c(0,5000), 62, 2)
@@ -54,7 +54,7 @@ ys[54,] <- c(0, 50500)
 ys[55,] <- c(0, 30500)
 ys[56,] <- c(0, 6000)
 ys[57,] <- c(0, 6000)
-ys[58,] <- c(0, 50)
+ys[58,] <- c(0, 100)
 ys[59,] <- c(-0.2, 1.8)
 ys[60,] <- c(0, 70)
 ys[61,] <- c(0, 100)
@@ -86,30 +86,49 @@ ys[62,] <- c(-1, 1.1)
 #	"arisal_of_For",
 #	"arisal_of_Dom",
 	
+data_tree <- test.tree[[1]][[2]]$results_summary_of_single_value_outputs
+data_parameters <- 	test.tree[[2]]
+	
 take <- which(as.numeric(as.character(files[,56])) >5000)
 files[take,56] <- NA
 
 take <- which(as.numeric(as.character(files[,57])) >5000)
 files[take,57] <- NA
 
-parameter <- as.numeric(as.character(files$extinction_of_For))
+parameter <- as.numeric(as.character(files$speciation_of_Env_NonD))
 par(mfrow=c(7,4), mar=c(2,2,3,0))
+u <- 1
+
+ hist(as.numeric(as.character(files[,56][-take])))
+
 for(i in 36:62){
 plot(parameter, as.numeric(as.character(files[,i])), main=colnames(files)[i], ylim= c(ys[i,1], ys[i,2]), type="p", xlim=c(0,1))
 model<- lm(as.numeric(as.character(files[,i])) ~ parameter)
 abline(model, col="red")
+try(abline(h = data_tree[u], col="blue"), silent=TRUE)
+u <- u +1 
 }
+
+dev.off()
+
 summary(model)
 names(files)
 stat <- as.numeric(as.character(files[,46]))
 mean(stat, na.rm=TRUE)
 
+dim(data_tree)
+
+names(files[,36:62])
+names(data_tree)
 
 
 
 
 
- hist(as.numeric(as.character(files[,56][-take])))
+
+
+
+
 
 
 
@@ -118,14 +137,14 @@ par(mar=c(0,4,0,2))
 #x <- seq(1,1000,by=1)
 #y <- (x*8)+ rnorm(100, mean=10, sd=100)
 
-parameter <- as.numeric(as.character(files$extinction_of_For))
+parameter <- as.numeric(as.character(files$P.takeover_Source_forager))
 stat <- as.numeric(as.character(files[,46]))
 
 x <- parameter
 y <- stat
 
-
-plot(x,y, type="n", xlab="parameter value", ylab="statistic value", xlim=c(0,1), ylim=c(20,65))
+give_x_lim <- c(0,1)
+plot(x,y, type="n", xlab="parameter value", ylab="statistic value", xlim= give_x_lim, ylim=c(20,65))
 model <- lm(y~x)
 
 abline(v=0)
@@ -170,11 +189,11 @@ polygon(c(out$breaks[k-1], out$breaks[k-1], out$breaks[k] , out$breaks[k]), c(ch
 
 #lines(out$mids, out$counts + choosen_y, col="cornflowerblue", lwd=2)
 
-plot(x,y, type="n", ylim=c(0, choosen_y), xaxt="n", yaxt="n", bty="n", ylab="", xlab="", xlim=c(-5,5))
+plot(x,y, type="n", ylim=c(0, choosen_y), xaxt="n", yaxt="n", bty="n", ylab="", xlab="", xlim= give_x_lim)
 
 for(k in 1:length(out$breaks)){
 polygon(c(out$breaks[k-1], out$breaks[k-1], out$breaks[k] , out$breaks[k]), c(choosen_y, choosen_y - out$density[k-1], choosen_y - out$density[k-1], choosen_y), col=adjustcolor("limegreen", alpha=.8), border="limegreen")
 }
 
-test.tree
+
 
