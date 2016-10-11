@@ -106,4 +106,4 @@ head(results_table)
 dim(results_table)
 
 
-save(results_table, file="~/Box Sync/colliding ranges/Simulations_humans/first_50K_sim_results.Rdata")
+save(results_table, file="~/Box Sync/colliding ranges/Simulations_humans/first_63K_sim_results.Rdata")

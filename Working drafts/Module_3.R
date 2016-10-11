@@ -19,15 +19,47 @@ no_TO_or_diff <- subset(results_table, P.diffusion_Target_forager == "00" & P.di
 
 head(sub_diff)
 
+
+load('~/Box Sync/colliding ranges/Simulations_humans/first_50K_sim_results.Rdata')
+load('~/Box Sync/colliding ranges/Simulations_humans/test.tree.RData')
+objects()
+
 files <- results_table  #results_table
 
 
 
+names_list <- c(
+	"speciation_of_Env_NonD",
+	"speciation_of_Env_D",
+	"speciation_of_For",
+	"speciation_of_Dom",
 
+	"extinction_of_Env_NonD",
+	"extinction_of_Env_D",
+	"extinction_of_For",
+	"extinction_of_Dom",
 
+	"P.diffusion_Target_forager",
+	"P.diffusion_Target_domesticator",
+	"P.diffusion_Source_forager",
+	"P.diffusion_Source_domesticator",
+
+	"P.takeover_Target_forager",
+	"P.takeover_Target_domesticator",
+	"P.takeover_Source_forager",
+	"P.takeover_Source_domesticator",
+	"arisal_of_Env_NonD",
+	"arisal_of_Env_D",
+	"arisal_of_For",
+	"arisal_of_Dom"
+	)
+
+z <- 1
 ## Now plot a panal with all the stats against a single parameter range
 getwd()
-pdf(file="speciation_of_Env_NonD.pdf", width=40, height=70)
+
+for(z in 1:length(names_list)){
+pdf(file=paste0(names_list[z] ,".pdf"), width=40, height=70)
 par(mfrow=c(7,4), mar=c(2,2,3,0))
 
 ys <- matrix(c(0,5000), 62, 2)
@@ -60,31 +92,6 @@ ys[60,] <- c(0, 70)
 ys[61,] <- c(0, 100)
 ys[62,] <- c(-1, 1.1)
 
-
-#"speciation_of_Env_NonD",
-#	"speciation_of_Env_D",
-#	"speciation_of_For",
-#	"speciation_of_Dom",
-#	NA,
-#	"extinction_of_Env_NonD",
-#	"extinction_of_Env_D",
-#	"extinction_of_For",
-#	"extinction_of_Dom",
-#	NA,
-#	"P.diffusion_Target_forager",
-#	"P.diffusion_Target_domesticator",
-#	"P.diffusion_Source_forager",
-#	"P.diffusion_Source_domesticator",
-#	NA,
-#	"P.takeover_Target_forager",
-#	"P.takeover_Target_domesticator",
-#	"P.takeover_Source_forager",
-#	"P.takeover_Source_domesticator",
-#	NA,
-#	"arisal_of_Env_NonD",
-#	"arisal_of_Env_D",
-#	"arisal_of_For",
-#	"arisal_of_Dom",
 	
 data_tree <- test.tree[[1]][[2]]$results_summary_of_single_value_outputs
 data_parameters <- 	test.tree[[2]]
@@ -95,21 +102,36 @@ files[take,56] <- NA
 take <- which(as.numeric(as.character(files[,57])) >5000)
 files[take,57] <- NA
 
-parameter <- as.numeric(as.character(files$speciation_of_Env_NonD))
+parameter <- as.numeric(as.character(files[,which(names(files) == names_list[z])]))
 par(mfrow=c(7,4), mar=c(2,2,3,0))
 u <- 1
+data_parameter_line <- data_parameters[z]
 
- hist(as.numeric(as.character(files[,56][-take])))
+
+ #hist(as.numeric(as.character(files[,56][-take])))
 
 for(i in 36:62){
 plot(parameter, as.numeric(as.character(files[,i])), main=colnames(files)[i], ylim= c(ys[i,1], ys[i,2]), type="p", xlim=c(0,1))
 model<- lm(as.numeric(as.character(files[,i])) ~ parameter)
-abline(model, col="red")
+try(abline(model, col="red"), silent=TRUE)
 try(abline(h = data_tree[u], col="blue"), silent=TRUE)
+try(abline(v=data_parameter_line, col="green"), silent=TRUE)
 u <- u +1 
 }
 
 dev.off()
+
+}
+
+
+
+
+
+
+
+
+
+
 
 summary(model)
 names(files)
@@ -120,8 +142,6 @@ dim(data_tree)
 
 names(files[,36:62])
 names(data_tree)
-
-
 
 
 
