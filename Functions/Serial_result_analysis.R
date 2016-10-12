@@ -12,7 +12,6 @@ Module_2 <- function(Module_1_output) {
   } else {
 
     this_tree <- chronopl(Module_1_output$mytree, 1)
-    this_tree$edge.length <- this_tree$edge.length/max(this_tree$edge.length)
     this_world <- Module_1_output$myWorld
 
 
