@@ -10,8 +10,7 @@ Module_2 <- function(Module_1_output) {
     cat("----------]")
     return(NA)
   } else {
-
-    this_tree <- chronopl(Module_1_output$mytree, 1)
+    this_tree <- Module_1_output$mytree
     this_world <- Module_1_output$myWorld
 
 
