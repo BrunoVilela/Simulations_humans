@@ -9,7 +9,7 @@ g<-1
 rep_number <- 60000
 data_gamma <- rep(NA, rep_number)
 for(g in 1:rep_number){
-data_tree <- sim.bdtree(b=1, d=1, n=1200, t=30000)
+data_tree <- sim.bdtree(b=1, d=.1, n=1200, t=30000)
 data_gamma[g] <- ltt(data_tree, plot=FALSE)$gamma
 print(g)
 }
@@ -23,9 +23,9 @@ data_gamma_b4_d.1 <- data_gamma
 data_gamma_b4_d3 <- data_gamma
 data_gamma_b40_d1 <- data_gamma
 
-
-
-
+str(data_tree)
+objects()
+str(myOut$mytree)
 load('~/Box Sync/colliding ranges/Simulations_humans/first_63K_sim_results.Rdata')
 objects()
 head(results_table)
