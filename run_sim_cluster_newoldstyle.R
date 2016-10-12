@@ -17,7 +17,7 @@ library(FARM)
 
 
 sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
-                            number_of_tips, parameters.table) {
+                            number_of_tips) {
   # Calls the full simulation script 
   #	 
   # Purpose: Need to wrap the entire simulation script into a function so it can be called in parallel from a cluster call 	
@@ -74,6 +74,8 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
     #####
     prob_choose <- runif(12, 0.1, 1)
+    prob_choose[c(4)] <- runif(1, 0.1, prob_choose[1])
+    prob_choose[c(6)] <- runif(1, 0.1, prob_choose[3])
     prob_choose[c(9, 10, 12)] <- runif(3, 0.1, prob_choose[11])
     if (count == 1) {
       prob_choose[7:12] <- 0
@@ -110,7 +112,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     
     myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                             P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
-                            N.steps = number_of_time_steps, silent = TRUE, 
+                            N.steps = number_of_time_steps, silent = F, 
                             multiplier = multiplier)
     
     save(myOut,  file= paste0("./Module_1_outputs/myOut_replicate_",
@@ -156,11 +158,9 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 5000
+number_of_time_steps_a <- 30000
 #replicate_cycle <- c(1)  #number of replicates
 #####################################################################
-data("parameters.table")
-
 
 sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 system.time(
@@ -172,17 +172,14 @@ n.obs <- sapply(nbs, length)
 seq.max <- seq_len(max(n.obs))
 nbs <- t(sapply(nbs, "[", i = seq.max))
 
-dim(myWorld)
 
 
-
-# NAI <- 1000
+#NAI <- 1000
 args <- commandArgs(trailingOnly = FALSE)
 NAI <- as.numeric(args[7])
 # setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs")
 
 sim_run_cluster(replicate_cycle = NAI,
                 myWorld, number_of_time_steps = number_of_time_steps_a, 
-                nbs, number_of_tips = nrow(myWorld),
-                parameters.table = parameters.table)
+                nbs, number_of_tips = nrow(myWorld))
 
