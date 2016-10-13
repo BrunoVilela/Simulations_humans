@@ -74,8 +74,8 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
     #####
     prob_choose <- runif(12, 0.1, 1)
-    prob_choose[c(4)] <- runif(1, 0.1, prob_choose[1])
-    prob_choose[c(6)] <- runif(1, 0.1, prob_choose[3])
+    prob_choose[c(4)] <- runif(1, 0.1, (prob_choose[1] - 0.1))
+    prob_choose[c(6)] <- runif(1, 0, (prob_choose[3] - 0.1))
     prob_choose[c(9, 10, 12)] <- runif(3, 0.1, prob_choose[11])
     if (count == 1) {
       prob_choose[7:12] <- 0
@@ -114,11 +114,11 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                             P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                             N.steps = number_of_time_steps, silent = F, 
                             multiplier = multiplier)
-    
+    # Count refers to the combo, 1 = null, 2 = diffusion, 3 = Takeover, 4 = full
     save(myOut,  file= paste0("./Module_1_outputs/myOut_replicate_",
                               formatC(replicate_cycle, width = 2,flag = 0),
                               "_combination_",
-                              formatC(31, width = 2,flag = 0),
+                              formatC(count, width = 2,flag = 0),
                               "_","parameters", "_P.speciation_",
                               paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
                               paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
@@ -132,7 +132,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_statistics_replicate_",
                                       formatC(replicate_cycle, width = 2,flag = 0),
                                       "_combination_",
-                                      formatC(31, width = 2,flag = 0),
+                                      formatC(count, width = 2,flag = 0),
                                       "_","parameters", "_P.speciation_",
                                       paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
                                       paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
@@ -158,7 +158,7 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 30000
+number_of_time_steps_a <- 200
 #replicate_cycle <- c(1)  #number of replicates
 #####################################################################
 
