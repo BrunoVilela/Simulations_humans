@@ -9,8 +9,8 @@ bd_null <- function(g){
 #rep_number <- 60000
 #data_gamma <- rep(NA, rep_number)
 #for(g in 1:rep_number){
-this_tree <- sim.bdtree(b=1, d=0, n=1200, t=30000)
-
+a_tree <- sim.bdtree(b=1, d=0, n=1200, t=30000)
+this_tree <- chronopl(a_tree, 1)
 
  ##### (0) Pull necessary variables from simulated trees and organize into a single object for all the tests below to pull from.
 
