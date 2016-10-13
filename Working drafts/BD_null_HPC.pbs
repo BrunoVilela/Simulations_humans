@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -N tuff_tester 
+#PBS -M tuff@wustl.edu 		
+#PBS -m a				
+#PBS -V 					
+#PBS -l walltime=23:30:00				
+#PBS -l pmem=1200mb 
+#PBS -l procs=1 
+#PBS -t 10001-20000
+
+
+echo $PBS_ARRAYID
+
+cd /home/ttuff/mydirectory
+module load R-3.2.1
+
+export R_LIBS=$HOME/rlibs
+#R CMD INSTALL --library=/home/ttuff/rlibs  FARM_1.0.tar.gz
+
+Rscript --vanilla ./run_simulation_cluster_linux.R ${PBS_ARRAYID} 
