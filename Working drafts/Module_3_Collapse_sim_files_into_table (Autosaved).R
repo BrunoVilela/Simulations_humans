@@ -39,7 +39,7 @@ colnames(files) <-  c(
 	rep(NA,3), 
 	"replicate",
 	NA,
-	"Model type",
+	"Model_type",
 	rep(NA,2),
 	"speciation_of_Env_NonD",
 	"speciation_of_Env_D",
