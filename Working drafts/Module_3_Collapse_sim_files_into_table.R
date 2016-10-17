@@ -1,6 +1,7 @@
 ## First consolidate the available files into a single table
     
-      path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs"
+      path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Four_model_compare_Module2"
+      
       
       setwd(path)
     myfiles_full <- list.dirs()
@@ -35,9 +36,13 @@ files[i,] <- c(as.vector(matrix(name, 1,35)),matrix(Sim_statistics[[1]], 1, 27))
 
 colnames(files) <-  c(
 
-	rep(NA,3), 
+	NA,
+	"background_takeover_type" ,
+	NA,
 	"replicate",
-	rep(NA,4),
+	NA,
+	"Model_type",
+	rep(NA,2),
 	"speciation_of_Env_NonD",
 	"speciation_of_Env_D",
 	"speciation_of_For",
@@ -64,7 +69,7 @@ colnames(files) <-  c(
 	"arisal_of_Dom",
 	
 	NA, 
-	"timestep", 
+	"timesteps", 
 	NA,
         
     "number_of_branches",
@@ -106,4 +111,4 @@ head(results_table)
 dim(results_table)
 
 
-save(results_table, file="~/Box Sync/colliding ranges/Simulations_humans/first_63K_sim_results.Rdata")
+save(results_table, file="~/Box Sync/colliding ranges/Simulations_humans/first_10000_sim_results_four_model_compare.Rdata")
