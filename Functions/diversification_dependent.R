@@ -1,5 +1,6 @@
 # Diversification dependent
 DivDep <- function(mytree, myWorld) {
+  myWorld <- myWorld[!is.na(myWorld[, 6]), ] 
   traits <- setNames(myWorld[, 6], myWorld[, 8])
   musse <- make.musse(mytree, traits, 2)
   p <- try(starting.point.musse(mytree, k = 2), silent = TRUE)
