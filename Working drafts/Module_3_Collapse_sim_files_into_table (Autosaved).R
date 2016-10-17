@@ -36,7 +36,9 @@ files[i,] <- c(as.vector(matrix(name, 1,35)),matrix(Sim_statistics[[1]], 1, 27))
 
 colnames(files) <-  c(
 
-	rep(NA,3), 
+	NA,
+	"background_takeover_type" ,
+	NA,
 	"replicate",
 	NA,
 	"Model_type",
@@ -109,4 +111,4 @@ head(results_table)
 dim(results_table)
 
 
-save(results_table, file="~/Box Sync/colliding ranges/Simulations_humans/first_2200_sim_results_four_model_compare.Rdata")
+save(results_table, file="~/Box Sync/colliding ranges/Simulations_humans/first_10000_sim_results_four_model_compare.Rdata")
