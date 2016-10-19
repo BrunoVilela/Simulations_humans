@@ -115,7 +115,7 @@ sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, num
     P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
   }
   
-  multiplier <- rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
+  multiplier <- 1 # rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
   myOut <- RunSimUltimate2(myWorld, P.extinction, P.speciation, 
                            P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                            N.steps = number_of_time_steps, silent = F, 
@@ -138,8 +138,8 @@ conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE)
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
-number_of_time_steps_a <- 50000
-replicate_cycle <- c(1:108)  #number of replicates
+number_of_time_steps_a <- 30000
+replicate_cycle <- c(1:8)  #number of replicates
 #####################################################################
 
 
