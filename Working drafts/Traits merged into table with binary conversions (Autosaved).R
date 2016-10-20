@@ -48,10 +48,12 @@ more_complex_than_chiefdoms[which(more_complex_than_chiefdoms == 4 | more_comple
 merged_3 <- cbind(merged_2[,1:25], merged_2[,40:45], social.complexity.types, sedentary_homes, slavery.types, formalized_slavery, Jurisdictional.heirarchy.types, more_complex_than_chiefdoms)
 head(merged_3)
 Society_data_with_binary_conversions <- merged_3
+dim(Society_data_with_binary_conversions)
+save(Society_data_with_binary_conversions, file="~/Box Sync/colliding ranges/Simulations_humans/FULL_TREE_Society_data_with_binary_conversions.Rdata")
 
-save(Society_data_with_binary_conversions, file="~/Box Sync/colliding ranges/Simulations_humans/Society_data_with_binary_conversions.Rdata")
-
-subed_merge <- merged_2[which(bantu_tree$tip.label%in% merged_2[,1] ), ]
+BANTU_Society_data_with_binary_conversions <- merged_2[which(bantu_tree$tip.label%in% merged_2[,1] ), ]
+save(BANTU_Society_data_with_binary_conversions, file="~/Box Sync/colliding ranges/Simulations_humans/BANTU_Society_data_with_binary_conversions.Rdata")
+dim(BANTU_Society_data_with_binary_conversions)
 
 subed_merge[,1]
 names(subed_merge)
