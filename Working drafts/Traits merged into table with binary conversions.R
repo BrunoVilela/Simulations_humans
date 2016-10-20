@@ -1,10 +1,9 @@
-social.complexity <- read.csv("~/Desktop/social complexity.csv")
+social.complexity <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/social complexity.csv")
 head(social.complexity)
-
-slavery <- read.csv("~/Desktop/slavery.csv")
+slavery <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/slavery.csv")
 head(slavery)
 
-Jurisdictional.heirarchy <- read.csv("~/Desktop/Jurisdictional_heirarchy_beyond_local_community.csv")
+Jurisdictional.heirarchy <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/Jurisdictional_heirarchy_beyond_local_community.csv")
 head(Jurisdictional.heirarchy)
 
 length(social.complexity[,3])
@@ -20,10 +19,6 @@ dim(merged_2)
 
 names(merged_2)
 
-
-load('~/Desktop/Tree_Bantu.RData')
-
-bantu_tree$tip.label
 
 
 social.complexity.types <- as.numeric(as.character(merged_2[,15]))
@@ -45,15 +40,29 @@ more_complex_than_chiefdoms[which(more_complex_than_chiefdoms == 4 | more_comple
 
 
 
-merged_3 <- cbind(merged_2[,1:25], merged_2[,40:45], social.complexity.types, social.complexity.types.convert, slavery.types, slavery.types.convert, Jurisdictional.heirarchy.types, Jurisdictional.heirarchy.types.convert)
+merged_3 <- cbind(merged_2[,1:25], merged_2[,40:45], social.complexity.types, sedentary_homes, slavery.types, formalized_slavery, Jurisdictional.heirarchy.types, more_complex_than_chiefdoms)
 head(merged_3)
+Society_data_with_binary_conversions <- merged_3
+dim(Society_data_with_binary_conversions)
+save(Society_data_with_binary_conversions, file="~/Box Sync/colliding ranges/Simulations_humans/FULL_TREE_Society_data_with_binary_conversions.Rdata")
+
+load('~/Box Sync/colliding ranges/Simulations_humans/Available trees/Tree_Bantu.RData')
+bantu_tree$tip.label
+BANTU_Society_data_with_binary_conversions <- merged_2[which(bantu_tree$tip.label%in% merged_2[,1] ), ]
+save(BANTU_Society_data_with_binary_conversions, file="~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/BANTU_Society_data_with_binary_conversions.Rdata")
+dim(BANTU_Society_data_with_binary_conversions)
 
 
-subed_merge <- merged_2[which(bantu_tree$tip.label%in% merged_2[,1] ), ]
+load('~/Box Sync/colliding ranges/Simulations_humans/Available trees/Tree_austronisian.RData')
+aus_tree$tip.label
+AUSTRONISIAN_Society_data_with_binary_conversions <- merged_2[which(aus_tree$tip.label%in% merged_2[,1] ), ]
+save(AUSTRONISIAN_Society_data_with_binary_conversions, file="~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/AUSTRONISIAN_Society_data_with_binary_conversions.Rdata")
+dim(AUSTRONISIAN_Society_data_with_binary_conversions)
 
-subed_merge[,1]
-names(subed_merge)
-
-
+load('~/Box Sync/colliding ranges/Simulations_humans/Available trees/Tree_Uto.RData')
+uto_tree $tip.label
+UTO_Society_data_with_binary_conversions <- merged_2[which(uto_tree$tip.label%in% merged_2[,1] ), ]
+save(UTO_Society_data_with_binary_conversions, file="~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/UTO_Society_data_with_binary_conversions.Rdata")
+dim(UTO_Society_data_with_binary_conversions)
 
 
