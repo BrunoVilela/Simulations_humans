@@ -1,4 +1,26 @@
 
+
+
+one <- subset(results_table, Model_type=="01" )
+two <- subset(results_table, Model_type=="02" )
+three <- subset(results_table, Model_type=="03" )
+four <- subset(results_table, Model_type=="04" )
+crop <- min(length(one[,1]),
+length(two[,1]),
+length(three[,1]),
+length(four[,1]))
+one <- one[1:crop,]
+two <- two[1:crop,]
+three <- three[1:crop,]
+four <- four[1:crop,]
+
+Concatenated_data <- rbind(one, two, three, four)
+dim(Concatenated_data)
+save(Concatenated_data, file="~/Box Sync/colliding ranges/Simulations_humans/Four_model_compare_BANTU.Rdata")
+
+
+#################################
+
 levels(results_table[,2]) <- c("background_takeover", "no_background_takeover")
 names(results_table)
 

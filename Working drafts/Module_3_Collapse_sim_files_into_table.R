@@ -1,6 +1,6 @@
 ## First consolidate the available files into a single table
     
-      path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Four_model_compare_Module2"
+      path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs_bantu"
       
       
       setwd(path)
@@ -111,4 +111,4 @@ head(results_table)
 dim(results_table)
 
 
-save(results_table, file="~/Box Sync/colliding ranges/Simulations_humans/first_10000_sim_results_four_model_compare.Rdata")
+save(results_table, file="~/Box Sync/colliding ranges/Simulations_humans/Bantu_5000_sim_results_four_model_compare.Rdata")
