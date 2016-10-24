@@ -32,6 +32,8 @@ slavery.types <- as.numeric(as.character(merged_2[,21]))
 formalized_slavery <- slavery.types
 formalized_slavery[which(formalized_slavery == 1 | formalized_slavery == 2 )] <- 0
 formalized_slavery[which(formalized_slavery == 3 | formalized_slavery == 4 )] <- 1
+formalized_slavery[which(formalized_slavery == 1900)] <- NA
+
 
 Jurisdictional.heirarchy.types <- as.numeric(as.character(merged_2[,15]))
 have_politics <- Jurisdictional.heirarchy.types
@@ -67,12 +69,20 @@ dim(UTO_Society_data_with_binary_conversions)
 
 names(BANTU_Society_data_with_binary_conversions)
 
+par(mfrow=c(3,2))
+hist(Society_data_with_binary_conversions[,33])
+hist(UTO_Society_data_with_binary_conversions[,33])
 
-hist(BANTU_Society_data_with_binary_conversions[,15])
+
+hist(Society_data_with_binary_conversions[,35])
+hist(UTO_Society_data_with_binary_conversions[,35])
 
 
-levels(BANTU_Society_data_with_binary_conversions[,16])
 
+
+
+hist(Society_data_with_binary_conversions[,37])
+hist(UTO_Society_data_with_binary_conversions[,37])
 
 
 
