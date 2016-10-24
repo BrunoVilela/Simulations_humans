@@ -1,8 +1,9 @@
-social.complexity <- read.csv("~/Desktop/social complexity.csv")
+social.complexity <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/social complexity.csv")
 head(social.complexity)
 
 
-load('~/Desktop/Tree_Bantu.RData')
+load('~/Box Sync/colliding ranges/Simulations_humans/Available trees/Tree_Bantu.RData')
+
 
 objects()
 
@@ -21,8 +22,8 @@ dim(social.complexity.bantu)
 hist(as.numeric(as.character(na.omit(social.complexity.bantu[,15]))), breaks=8)
 
 types <- as.numeric(as.character(social.complexity.bantu[,15]))
-types[which(types == 1 | types == 2 | types == 3 | types == 4 )] <- 0
-types[which(types == 5 | types == 6 | types == 7 )] <- 1
+types[which(types == 1 | types == 2  )] <- 0
+types[which(types == 3 | types == 4 )] <- 1
 sedentary_homes <- types
 
 social.complexity.bantu_binary <- cbind(social.complexity.bantu, sedentary_homes)
@@ -30,11 +31,10 @@ head(social.complexity.bantu_binary)
 
 ###########################################
 
-slavery <- read.csv("~/Desktop/slavery.csv")
+slavery <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/slavery.csv")
 head(slavery)
 
 
-load('~/Desktop/Tree_Bantu.RData')
 
 objects()
 
@@ -63,11 +63,9 @@ head(Bantu.data.table)
 
 ###########################################
 
-Jurisdictional.heirarchy <- read.csv("~/Desktop/Jurisdictional_heirarchy_beyond_local_community.csv")
+Jurisdictional.heirarchy <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/Jurisdictional_heirarchy_beyond_local_community.csv")
 head(Jurisdictional.heirarchy)
 
-
-load('~/Desktop/Tree_Bantu.RData')
 
 objects()
 
@@ -86,8 +84,8 @@ dim(Jurisdictional.heirarchy.bantu)
 hist(as.numeric(as.character(na.omit(Jurisdictional.heirarchy.bantu[,15]))), breaks=5)
 
 types <- as.numeric(as.character(Jurisdictional.heirarchy.bantu[,15]))
-types[which(types == 1 | types == 2 )] <- 0
-types[which(types == 3 | types == 4 )] <- 1
+types[which(types == 1 | types == 2 | types == 3 | types == 4 )] <- 0
+types[which(types == 5 | types == 6 | types == 7 | types == 8 )] <- 1
 complexity <- types
 
 Bantu.data.table <- cbind(Jurisdictional.heirarchy.bantu, complexity)

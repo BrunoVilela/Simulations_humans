@@ -1,4 +1,4 @@
-setwd("~/Desktop/Module_2_outputs")
+setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/50000 timesteps with a file printed every 250 steps/model 31/Module_2_outputs")
 
 available <- list.files()
 files <- matrix(rep(NA, 60), length(available), 60)

@@ -1,7 +1,7 @@
 ## First consolidate the available files into a single table
     
       path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs_bantu"
-      
+      path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Four_model_compare_Module2"
       
       setwd(path)
     myfiles_full <- list.dirs()
