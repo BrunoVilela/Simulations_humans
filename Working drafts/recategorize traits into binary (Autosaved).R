@@ -2,7 +2,8 @@ social.complexity <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Co
 head(social.complexity)
 
 
-load('~/Desktop/Tree_Bantu.RData')
+load('~/Box Sync/colliding ranges/Simulations_humans/Available trees/Tree_Bantu.RData')
+
 
 objects()
 
@@ -34,7 +35,6 @@ slavery <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated
 head(slavery)
 
 
-load('~/Desktop/Tree_Bantu.RData')
 
 objects()
 
@@ -66,7 +66,6 @@ head(Bantu.data.table)
 Jurisdictional.heirarchy <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/Jurisdictional_heirarchy_beyond_local_community.csv")
 head(Jurisdictional.heirarchy)
 
-load('~/Box Sync/colliding ranges/Simulations_humans/Available trees/Tree_Bantu.RData')
 
 objects()
 
