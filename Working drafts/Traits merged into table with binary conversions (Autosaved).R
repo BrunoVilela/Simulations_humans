@@ -71,18 +71,18 @@ names(BANTU_Society_data_with_binary_conversions)
 
 par(mfrow=c(3,2))
 hist(Society_data_with_binary_conversions[,33])
-hist(BANTU_Society_data_with_binary_conversions[,33])
+hist(UTO_Society_data_with_binary_conversions[,33])
 
 
 hist(Society_data_with_binary_conversions[,35])
-hist(BANTU_Society_data_with_binary_conversions[,35])
+hist(UTO_Society_data_with_binary_conversions[,35])
 
 
 
 
 
 hist(Society_data_with_binary_conversions[,37])
-hist(BANTU_Society_data_with_binary_conversions[,37])
+hist(UTO_Society_data_with_binary_conversions[,37])
 
 
 
