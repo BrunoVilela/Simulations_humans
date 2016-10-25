@@ -1,36 +1,23 @@
-# Script for running the full simulation on an MPI cluster
-#
-# This is the master script for calling all the individual functions to create full simulations. This script also controls parallel
-#   calls made to a local cluster (MPI) within R using library(parallel). A seperate function is needed to control parallel runs on 
-#   a high performance computing cluster that runs on linux. The ouput from this function is one file per simulation 
-#   replicate and that file contains the object myOut, which is a list containing a 'phylo' tree object and myWorld, a matrix 
-#   object containing the data produced by the simulation. 
-#
-# 28 July 2016 
-# Ty Tuff, Bruno Vilela & Carlos A. Botero
-# Washington University in Saint Louis
-#==================================================================
-library(devtools)
-install_github("BrunoVilela/FARM")
-# setwd("~/Desktop")
-#setwd("~/Box Sync/colliding ranges/Simulations_humans")
+
+
 #####################################################################
 
-rm(list = ls())  # remove existing objects from workspace.
+# Run the full model in a cluster. This version writes files to a cluster output folder.
+# rm(list = ls())
+# install.packages("~/Desktop/FARM_1.0.tar.gz", repos=NULL, type="source")
+
 
 #####################################################################
 ## need to document which functions we use from each of these libraries. 
 library(ape)
 library(spdep)
-library(parallel)
 library(Rcpp)
 library(msm)
 library(FARM)
 
 
-
-sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, number_of_time_steps, nbs, 
-                                     number_of_tips = 1253, resolution = 250) {
+sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
+                            number_of_tips) {
   # Calls the full simulation script 
   #	 
   # Purpose: Need to wrap the entire simulation script into a function so it can be called in parallel from a cluster call 	
@@ -60,28 +47,21 @@ sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, num
   #      	spatial and tree data in the second position 
   #		
   
-  
-  chosen_combo <- combo_of_choice(combo_number, FALSE)
-  independent <- 1 # Always do independent, unless you the combo includes takeover dependent
-  if (any(chosen_combo[[2]] == "Speciate")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .5, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2))  #prob speciation
-    P.speciation <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "For", "Dom")
-  } else {
-    P.speciation <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
+  x1 <- 4 #Number of runs per core
+  if (replicate_cycle != 1) {
+    replicate_cycle <- ((replicate_cycle - 1) * x1) + 1
   }
-  
-  if (any(chosen_combo[[2]] == "Extinct")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.05, lower = 0, upper = 1), width = 3,flag = 0, digits=2)) #prob of extinction
-    P.extinction  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "For", "Dom")     
-  } else {
-    P.extinction  <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
-  }
-  
-  
-  if (any(chosen_combo[[2]] == "Random_new_origin")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .05, sd =.01, upper=1, lower=0), width = 3,flag = 0)) # prob of Arisal
-    prob_choose_a <- prob_choose
-    P.Arisal0  <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Env_NonD", "Env_D", "Evol_to_F", "Evol_to_D")
+  count <- 0
+  for (i in replicate_cycle:(replicate_cycle + x1)) {
+    independent <- 1
+    count <- count + 1  
+    
+    # Probability of Arisal
+    prob_choose_a <- rexp(4, rate = 9)
+    P.Arisal0  <- parameters(prob_choose_a[1], prob_choose_a[2],
+                             prob_choose_a[3], prob_choose_a[4],
+                             "Env_NonD", "Env_D",
+                             "Evol_to_F", "Evol_to_D")
     # P.Arisal0 is the one you should change the parameters
     P.Arisal <- matrix(NA, ncol = 2, nrow = nrow(myWorld)) # probability per cell
     colnames(P.Arisal) <- c("Evolve_to_F", "Evolve_to_D")
@@ -91,42 +71,81 @@ sim_run_cluster_per_step <- function(replicate_cycle, combo_number, myWorld, num
     P.Arisal[Env.Dom, 2] <- P.Arisal0[2, 2]
     P.Arisal[!Env.Dom, 2] <- P.Arisal0[2, 1]
     
-  } else {
-    P.Arisal <- matrix(0, ncol = 2, nrow = nrow(myWorld))
-    prob_choose_a <- 0
+    colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
+    #####
+    prob_choose <- runif(12, 0.1, 1)
+    prob_choose[c(4)] <- runif(1, 0.1, (prob_choose[1] - 0.1))
+    prob_choose[c(6)] <- runif(1, 0, (prob_choose[3] - 0.1))
+    prob_choose[c(9, 10, 12)] <- runif(3, 0.1, prob_choose[11])
+    if (count == 1) {
+      prob_choose[7:12] <- 0
+    }
+    if (count == 2) {
+      prob_choose[9:12] <- 0
+    }
+    if (count == 3) {
+      prob_choose[7:8] <- 0
+      independent <- 0
+    }
+    if (count == 4) {
+      independent <- 0
+    }
+    P.speciation <- parameters(prob_choose[1], prob_choose[1],
+                               prob_choose[2], prob_choose[3],
+                               "Env_NonD", "Env_D", "For", "Dom")
+    
+    P.extinction  <- parameters(prob_choose[4], prob_choose[4],
+                                prob_choose[5], prob_choose[6],
+                                "Env_NonD", "Env_D", "For", "Dom")
+    
+    
+    P.diffusion <- parameters(0, prob_choose[7],
+                              prob_choose[8], 0,
+                              "Target_For", "Target_Dom",
+                              "Source_For", "Source_Dom")
+    
+    P.TakeOver <- parameters(prob_choose[9], prob_choose[10],
+                             prob_choose[11], prob_choose[12],
+                             "Target_For", "Target_Dom",
+                             "Source_For", "Source_Dom")
+    multiplier <- 1 # always 1 now.
+    
+    myOut <- RunSimUltimate2(myWorld, P.extinction, P.speciation, 
+                            P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
+                            N.steps = number_of_time_steps, silent = TRUE, 
+                            multiplier = multiplier)
+    # Count refers to the combo, 1 = null, 2 = diffusion, 3 = Takeover, 4 = full
+    save(myOut,  file= paste0("./Module_1_outputs/myOut_rep_",
+                              formatC(replicate_cycle, width = 2,flag = 0),
+                              "_combo_",
+                              formatC(count, width = 2,flag = 0),
+                              "_","params", "_P.speciation_",
+                              paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
+                              paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
+                              paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TO_",
+                              paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
+                              paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
+                              "_timesteps_", number_of_time_steps, "_.Rdata"))
+    
+    Sim_statistics <- Module_2(myOut)
+    
+    save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_stats_rep_",
+                                      formatC(replicate_cycle, width = 2,flag = 0),
+                                      "_combo_",
+                                      formatC(count, width = 2,flag = 0),
+                                      "_","params", "_P.speciation_",
+                                      paste(formatC(P.speciation, width = 2,flag = 0), collapse="_"),"_P.extinction_",
+                                      paste(formatC(P.extinction, width = 2,flag = 0), collapse="_"), "_P.diffusion_",
+                                      paste(formatC(P.diffusion, width = 2,flag = 0), collapse="_"), "_P.TO_",
+                                      paste(formatC(P.TakeOver, width = 2,flag = 0), collapse="_"),"_P.Arisal_",
+                                      paste(formatC(P.Arisal0, width = 2,flag = 0), collapse="_"),
+                                      "_timesteps_", number_of_time_steps, "_.Rdata"))
+    replicate_cycle <- replicate_cycle + 1
   }
-  colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
   
-  
-  if (any(chosen_combo[[2]] == "Diffusion")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of diffusion
-    P.diffusion <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
-    diag(P.diffusion)<- NA
-  } else {
-    P.diffusion <- parameters(0, 0, 0, 0, "For", "Dom", "For", "Dom")
-  }
-  
-  if (any(chosen_combo[[2]] == "Takeover")) {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
-    P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
-    independent <- rtnorm(1, mean = .5, sd = .1, upper = .7, lower = .3)
-  } else {
-    prob_choose <- as.numeric(formatC(rtnorm(1, mean = .2, sd =.2, upper=1, lower=0.05), width = 3,flag = 0, digits=2)) #prob of takeover
-    P.TakeOver <- parameters(prob_choose, prob_choose, prob_choose, prob_choose, "Target_For", "Target_Dom", "Source_For", "Source_Dom")
-  }
-  
-  multiplier <- 1 # rtnorm(1, mean = 2, sd = .5, upper = 4, lower = 1)
-  myOut <- RunSimUltimate2(myWorld, P.extinction, P.speciation, 
-                           P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
-                           N.steps = number_of_time_steps, silent = F, 
-                           multiplier = multiplier, 
-                           replicate_cycle = replicate_cycle, 
-                           combo_number = combo_number,
-                           number_of_time_steps = number_of_time_steps,
-                           prob_choose_a = prob_choose_a, resolution = resolution)
-  
-  invisible(NULL)
 }
+
+
 
 
 #####################################################################
@@ -135,15 +154,15 @@ conds <- suitability
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
 
+
 ##### Specify simulation parameters #################################
 
 number_of_tips <- length(coords[,1])
 number_of_time_steps_a <- 30000
-replicate_cycle <- c(1:8)  #number of replicates
+#replicate_cycle <- c(1)  #number of replicates
 #####################################################################
 
-
-sub <- sample(1:nrow(coords), 1253) # subsample (remove when running for all)
+sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
@@ -153,68 +172,14 @@ n.obs <- sapply(nbs, length)
 seq.max <- seq_len(max(n.obs))
 nbs <- t(sapply(nbs, "[", i = seq.max))
 
-dim(myWorld)
 
 
+#NAI <- 1000
+args <- commandArgs(trailingOnly = FALSE)
+NAI <- as.numeric(args[7])
+# setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs")
 
-#####################################################################
-a <- Sys.time()
+sim_run_cluster(replicate_cycle = NAI,
+                myWorld, number_of_time_steps = number_of_time_steps_a, 
+                nbs, number_of_tips = nrow(myWorld))
 
-
-
-# Set up cluster
-ncores <- detectCores()
-cl <- makeCluster(ncores, type = "PSOCK", outfile="")
-
-
-
-# Push resources out to cluster'
-clusterEvalQ(cl, library(ape))
-clusterEvalQ(cl, library(msm))
-clusterEvalQ(cl, library(Rcpp))
-clusterEvalQ(cl, library(FARM))
-clusterExport(cl, varlist=ls())
-
-
-#####################################################################
-# lset are the landscapes that we will run
-b <- Sys.time()
-
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
-               combo_number = 31, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
-
-c <- Sys.time()
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
-               combo_number = 29, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
-
-d <- Sys.time()
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
-               combo_number = 28, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
-
-e <- Sys.time()
-
-clusterApplyLB(cl, x = replicate_cycle, fun = sim_run_cluster_per_step, 
-               combo_number = 25, number_of_time_steps = number_of_time_steps_a,
-               myWorld = myWorld, nbs=nbs, number_of_tips = number_of_tips) 
-
-f <- Sys.time()
-
-
-
-difftime(b, a)
-# Time to load packages
-
-difftime(c, b)
-# Time to run 
-
-difftime(d, c)
-difftime(e, d)
-difftime(f, e)
-
-stopCluster(cl)
