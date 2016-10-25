@@ -2,6 +2,9 @@
     
       path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs_bantu"
       path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Four_model_compare_Module2"
+      path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs_AUS"
+      
+      
       
       setwd(path)
     myfiles_full <- list.dirs()
@@ -111,4 +114,21 @@ head(results_table)
 dim(results_table)
 
 
-save(results_table, file="~/Box Sync/colliding ranges/Simulations_humans/Bantu_5000_sim_results_four_model_compare.Rdata")
+
+one <- subset(results_table, Model_type=="01" )
+two <- subset(results_table, Model_type=="02" )
+three <- subset(results_table, Model_type=="03" )
+four <- subset(results_table, Model_type=="04" )
+crop <- min(length(one[,1]),
+length(two[,1]),
+length(three[,1]),
+length(four[,1]))
+one <- one[1:crop,]
+two <- two[1:crop,]
+three <- three[1:crop,]
+four <- four[1:crop,]
+
+Concatenated_data <- rbind(one, two, three, four)
+dim(Concatenated_data)
+save(Concatenated_data, file="~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/Four_model_compare_Bantu.Rdata")
+crop

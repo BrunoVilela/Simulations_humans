@@ -47,7 +47,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
   #      	spatial and tree data in the second position 
   #		
   
-  x1 <- 10 #Number of runs per core
+  x1 <- 8 #Number of runs per core
   if (replicate_cycle != 1) {
     replicate_cycle <- ((replicate_cycle - 1) * x1) + 1
   }
