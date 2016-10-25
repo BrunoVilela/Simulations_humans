@@ -52,7 +52,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     replicate_cycle <- ((replicate_cycle - 1) * x1) + 1
   }
   count <- 0
-  for (i in replicate_cycle:(replicate_cycle + x1)) {
+  for (i in replicate_cycle:(replicate_cycle + x1 - 1)) {
     independent <- 1
     count <- count + 1  
     
