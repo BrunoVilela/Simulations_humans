@@ -74,7 +74,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
     #####
     prob_choose <- runif(12, 0.1, 1)
-    prob_choose[c(4)] <- runif(1, 0.1, (prob_choose[1] - 0.1))
+    prob_choose[c(4)] <- runif(1, 0, (prob_choose[1] - 0.1))
     prob_choose[c(6)] <- runif(1, 0, (prob_choose[3] - 0.1))
     prob_choose[c(9, 10, 12)] <- runif(3, 0.1, prob_choose[11])
     if (count == 1) {
@@ -110,10 +110,10 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                              "Source_For", "Source_Dom")
     multiplier <- 1 # always 1 now.
     
-    myOut <- RunSimUltimate2(myWorld, P.extinction, P.speciation, 
+    myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
                             P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
-                            N.steps = number_of_time_steps, silent = TRUE, 
-                            multiplier = multiplier, count, resolution = 100)
+                            N.steps = number_of_time_steps, silent = FALSE, 
+                            multiplier = multiplier, count = count)
     # Count refers to the combo, 1 = null, 2 = diffusion, 3 = Takeover, 4 = full
     save(myOut,  file= paste0("./Module_1_outputs/myOut_rep_",
                               formatC(replicate_cycle, width = 2,flag = 0),
