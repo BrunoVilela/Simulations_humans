@@ -3,7 +3,7 @@
       path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs_bantu"
       path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Four_model_compare_Module2"
       path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs_AUS"
-      
+      path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs_UTO"
       
       
       setwd(path)
@@ -130,5 +130,5 @@ four <- four[1:crop,]
 
 Concatenated_data <- rbind(one, two, three, four)
 dim(Concatenated_data)
-save(Concatenated_data, file="~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/Four_model_compare_Bantu.Rdata")
+save(Concatenated_data, file="~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/Four_model_compare_UTO.Rdata")
 crop
