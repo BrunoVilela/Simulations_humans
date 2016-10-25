@@ -130,7 +130,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     Sim_statistics <- Module_2(myOut)
     
     save(Sim_statistics, file= paste0("./Module_2_outputs/Sim_stats_rep_",
-                                      formatC(replicate_cycle, width = 2,flag = 0),
+                                      formatC(count, width = 2,flag = 0),
                                       "_combo_",
                                       formatC(count, width = 2,flag = 0),
                                       "_","params", "_P.speciation_",
