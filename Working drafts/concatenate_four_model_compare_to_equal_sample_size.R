@@ -16,8 +16,8 @@ four <- four[1:crop,]
 
 Concatenated_data <- rbind(one, two, three, four)
 dim(Concatenated_data)
-save(Concatenated_data, file="~/Box Sync/colliding ranges/Simulations_humans/Four_model_compare.Rdata")
-
+save(Concatenated_data, file="~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/Four_model_compare_Bantu.Rdata")
+crop
 
 #################################
 
