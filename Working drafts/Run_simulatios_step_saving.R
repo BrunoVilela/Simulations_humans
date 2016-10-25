@@ -110,7 +110,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                              "Source_For", "Source_Dom")
     multiplier <- 1 # always 1 now.
     
-    myOut <- RunSimUltimate(myWorld, P.extinction, P.speciation, 
+    myOut <- RunSimUltimate2(myWorld, P.extinction, P.speciation, 
                             P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                             N.steps = number_of_time_steps, silent = FALSE, 
                             multiplier = multiplier, count = count)
