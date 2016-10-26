@@ -4,9 +4,9 @@
       path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Four_model_compare_Module2"
       path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs_AUS"
       path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_outputs_UTO"
-      
-      
-      setwd(path)
+     
+     
+           setwd(path)
     myfiles_full <- list.dirs()
     analyze_this_many <- length(myfiles_full)
     
