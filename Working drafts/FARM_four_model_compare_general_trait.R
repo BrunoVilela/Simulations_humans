@@ -1,4 +1,5 @@
-
+#library("devtools")
+#install_github("BrunoVilela/FARM")
 
 #####################################################################
 
@@ -53,7 +54,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
   }
   count <- 0
   for (i in replicate_cycle:(replicate_cycle + (x1 - 1))) {
-  independent <- 1
+  independent <- 0
   count <- count + 1  
     
     # Probability of Arisal
@@ -115,7 +116,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                             N.steps = number_of_time_steps, silent = TRUE, 
                             multiplier = multiplier)
     # Count refers to the combo, 1 = null, 2 = diffusion, 3 = Takeover, 4 = full
-    save(myOut,  file= paste0("./Module_1_outputs_bantu/myOut_rep_",
+    save(myOut,  file= paste0("./Module_1_outputs_bantu/myOut.bantu.no.bTO_rep_",
                               formatC(replicate_cycle, width = 2,flag = 0),
                               "_combo_",
                               formatC(count, width = 2,flag = 0),
@@ -129,7 +130,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     
     Sim_statistics <- Module_2(myOut)
     
-    save(Sim_statistics, file= paste0("./Module_2_outputs_bantu/Sim_stats_rep_",
+    save(Sim_statistics, file= paste0("./Module_2_outputs_bantu/Sim_stats.bantu.no.bTO_rep_",
                                       formatC(replicate_cycle, width = 2,flag = 0),
                                       "_combo_",
                                       formatC(count, width = 2,flag = 0),
@@ -153,7 +154,7 @@ coords <- coords.bantu
 conds <- suitability
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
-
+conds <- rep(2, length(coords)) # Every env is good 
 
 ##### Specify simulation parameters #################################
 
@@ -163,9 +164,9 @@ number_of_time_steps_a <- 30000
 #####################################################################
 
 sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for all)
-system.time(
-  myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
-)
+#system.time(
+  myWorld <- BuildWorld(coords[sub, ], conds[sub ]) #removed "," after "sub" for subset coords
+#)
 nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
 n.obs <- sapply(nbs, length)
