@@ -56,9 +56,10 @@ four.nbto <- four.nbto[1:crop.nbto,]
 
 Concatenated_data <- rbind(one.bto, two.bto, three.bto, four.bto, one.nbto, two.nbto, three.nbto, four.nbto)
 
-save(Concatenated_data, file="~/Box Sync/colliding ranges/Simulations_humans/Four_model_compare_background_TO_and_not.Rdata")
+save(Concatenated_data, file="~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/BANTU_Four_model_compare_background_TO_and_not.Rdata")
 
 
 Concatenated_data$gamma
-head(Concatenated_data)
+names(Concatenated_data)
+Concatenated_data$background_takeover_type
 
