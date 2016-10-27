@@ -119,7 +119,7 @@ source('~/Box Sync/colliding ranges/Simulations_humans/Functions/PLOT_input_para
 setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_sequence_for_movie")
 j <- 1
 
-for(j in 3:length(levels(chosen_ones$NA.10))){
+for(j in 151:length(levels(chosen_ones$NA.10))){
 
 this_time_step <- subset(chosen_ones, NA.10 == levels(chosen_ones$NA.10)[j])
 
@@ -157,7 +157,7 @@ names(sea)
 
 getwd()
 #pdf( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie/", j,".pdf"), width = 8.5, height = 11) # start page one, this command ends when the command dev.off() is called.
-jpeg( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie/", j,".jpeg"), width = 12, height = 14, units="in", res=1080 , quality=100)
+jpeg( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie/", j,".jpg"), width = 12, height = 14, units="in", res=1080 , quality=100)
 # The layout function establishes the grid background for plots to be plotted to. 
 # This layout should contain a boarder around the periphery for formatting adjustment later. 
 # This layout should contain blank rows and columns between primary plot boxes for later formatting. 
