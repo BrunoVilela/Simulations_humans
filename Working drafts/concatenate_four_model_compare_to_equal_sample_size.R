@@ -62,4 +62,31 @@ save(Concatenated_data, file="~/Box Sync/colliding ranges/Simulations_humans/Con
 Concatenated_data$gamma
 names(Concatenated_data)
 Concatenated_data$background_takeover_type
+head(Concatenated_data)
+length(Concatenated_data[,1])
+
+
+
+one.bto <- subset(Concatenated_data, Model_type=="01" & background_takeover_type == "background_takeover")
+two.bto <- subset(Concatenated_data, Model_type=="02" & background_takeover_type == "background_takeover")
+three.bto <- subset(Concatenated_data, Model_type=="03" & background_takeover_type == "background_takeover")
+four.bto <- subset(Concatenated_data, Model_type=="04" & background_takeover_type == "background_takeover")
+one.nbto <- subset(Concatenated_data, Model_type=="01" & background_takeover_type == "no_background_takeover")
+two.nbto <- subset(Concatenated_data, Model_type=="02" & background_takeover_type == "no_background_takeover")
+three.nbto <- subset(Concatenated_data, Model_type=="03" & background_takeover_type == "no_background_takeover")
+four.nbto <- subset(Concatenated_data, Model_type=="04" & background_takeover_type == "no_background_takeover")
+
+
+length(one.bto[,1])
+length(two.bto[,1])
+length(three.bto[,1])
+length(four.bto[,1])
+length(one.nbto[,1])
+length(two.nbto[,1])
+length(three.nbto[,1])
+length(four.nbto[,1])
+
+
+
+
 
