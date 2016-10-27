@@ -109,7 +109,8 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                              "Target_For", "Target_Dom",
                              "Source_For", "Source_Dom")
     multiplier <- 1 # always 1 now.
-    resolution <-  exp(seq(log(1), log(30000), length.out = 500))
+    resolution1 <-  round(exp(seq(log(1), log(30000), length.out = 750)))
+    resolution <- resolution1[!duplicated(resolution1)]
     myOut <- RunSimUltimate2(myWorld, P.extinction, P.speciation, 
                             P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                             N.steps = number_of_time_steps, silent = FALSE, 
