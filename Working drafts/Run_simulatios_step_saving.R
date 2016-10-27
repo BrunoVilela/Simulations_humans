@@ -109,12 +109,12 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
                              "Target_For", "Target_Dom",
                              "Source_For", "Source_Dom")
     multiplier <- 1 # always 1 now.
-    
+    resolution <-  exp(seq(log(1), log(30000), length.out = 500))
     myOut <- RunSimUltimate2(myWorld, P.extinction, P.speciation, 
                             P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                             N.steps = number_of_time_steps, silent = FALSE, 
                             multiplier = multiplier, count = count, 
-                            P.Arisal0 = P.Arisal0)
+                            P.Arisal0 = P.Arisal0, resolution = resolution)
     # Count refers to the combo, 1 = null, 2 = diffusion, 3 = Takeover, 4 = full
     save(myOut,  file= paste0("./Module_1_outputs/myOut_rep_",
                               formatC(replicate_cycle, width = 2,flag = 0),
