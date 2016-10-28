@@ -183,5 +183,5 @@ NAI <- as.numeric(args[7])
 
 sim_run_cluster(replicate_cycle = NAI,
                 myWorld, number_of_time_steps = number_of_time_steps_a, 
-                nbs, number_of_tips = nrow(myWorld))
+                nbs, number_of_tips = nrow(myWorld), start = 441)
 
