@@ -15,11 +15,18 @@ example_tree <- function(which_model, color){
 example_tree_2 <- function(tree_of_choice, color, timestep){
 	require(phytools)
 	require(diversitree)
+	str(sea$mytree)
+	this_tree <- sea$mytree
+	tip_count <- length(this_tree$tip.label)
 	
-	start_mar <- 15
-	end_mar <- 0
+	small_mar <- 15
+	large_mar <- 0
+	
+	count_vector <- seq(1,1255, by=1)/1255 *15
+	
+	
 	this_mar <- seq(start_mar, end_mar, length.out=300)
-	that_mar <- seq(start_mar, end_mar, length.out=300)
+	
 	par(mar=c(this_mar[timestep], this_mar[timestep], this_mar[timestep], this_mar[timestep]))
 	#tree_of_choice <- which_model[[3]]
 	# plot(tree_of_choice[[15]], type="fan")

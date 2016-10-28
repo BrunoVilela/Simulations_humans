@@ -77,6 +77,9 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     prob_choose[c(4)] <- runif(1, 0, (prob_choose[1] - 0.1))
     prob_choose[c(6)] <- runif(1, 0, (prob_choose[3] - 0.1))
     prob_choose[c(9, 10, 12)] <- runif(3, 0.1, prob_choose[11])
+    
+    prob_choose <- c(0.5, 0.5, 0.5, 0.4, 0.15, 0.4, 0.15, 0.1, 0.1, 0.1, 0.2, 0.2)
+    
     if (count == 1) {
       prob_choose[7:12] <- 0
     }
@@ -90,6 +93,9 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     if (count == 4) {
       independent <- 0
     }
+    
+    
+    
     P.speciation <- parameters(prob_choose[1], prob_choose[1],
                                prob_choose[2], prob_choose[3],
                                "Env_NonD", "Env_D", "For", "Dom")
@@ -111,6 +117,10 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     multiplier <- 1 # always 1 now.
     resolution1 <-  round(exp(seq(log(1), log(30000), length.out = 750)))
     resolution <- resolution1[!duplicated(resolution1)]
+    
+    
+    
+    
     myOut <- RunSimUltimate2(myWorld, P.extinction, P.speciation, 
                             P.diffusion, P.Arisal, P.TakeOver, nbs, independent,
                             N.steps = number_of_time_steps, silent = FALSE, 
