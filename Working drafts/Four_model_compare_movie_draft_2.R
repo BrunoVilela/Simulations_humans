@@ -116,6 +116,17 @@ sub_three <- as.matrix(subset(three, arisal_of_Env_NonD == "0.01466"))
 
 sub_four <- as.matrix(subset(four, arisal_of_Env_NonD == "0.02"))
 
+sub_one <- as.matrix(subset(one, NA.10 == "00000029901"))
+sub_two <- as.matrix(subset(two, NA.10 == "00000029901"))
+sub_three <- as.matrix(subset(three, NA.10 == "00000029901"))
+sub_four <- as.matrix(subset(four, NA.10 == "00000029901"))
+sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.1981))
+sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.2171))
+sub_three <- as.matrix(subset(three, speciation_of_Env_NonD == 0.1823))
+sub_four <- as.matrix(subset(four, speciation_of_Env_NonD == 0.2088))
+
+
+
 chosen_ones <- as.data.frame(rbind(sub_one, sub_two, sub_three, sub_four))
 
 this_time_step <- subset(chosen_ones, NA.10 == levels(chosen_ones$NA.10)[1])
@@ -135,9 +146,9 @@ source('~/Box Sync/colliding ranges/Simulations_humans/Functions/PLOT_input_para
 
 #setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_sequence_for_movie")
 setwd(path)
-j <- 20
+j <- 2
 
-#for(j in 3:length(levels(chosen_ones$NA.10))){
+for(j in 1:length(levels(chosen_ones$NA.10))){
 
 this_time_step <- subset(chosen_ones, NA.10 == levels(chosen_ones$NA.10)[j])
 
@@ -175,7 +186,7 @@ names(sea)
 
 getwd()
 #pdf( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie/", j,".pdf"), width = 8.5, height = 11) # start page one, this command ends when the command dev.off() is called.
-jpeg( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie/", j,".jpg"), width =8.5, height = 11, units="in", res=1000 , quality=100)
+jpeg( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie 2/", "opener",".jpg"), width =8.5, height = 11, units="in", res=1000 , quality=100)
 # The layout function establishes the grid background for plots to be plotted to. 
 # This layout should contain a boarder around the periphery for formatting adjustment later. 
 # This layout should contain blank rows and columns between primary plot boxes for later formatting. 
@@ -226,9 +237,8 @@ col1 <- adjustcolor("red", alpha = 1)
   col2 <-  adjustcolor("gold", alpha = 1)
 legend(200, 80, legend=c("Domestication", "Foraging"), pch=19, col=c(col1, col2), bty="n", cex=1.5)
 
-mtext("How does culture spread?", 3, line=2.7, cex=2.5)
-mtext(paste0("Timestep  ", j), 1, adj=.9, line=-4, font=2)
-
+mtext("How did agriculture spread?", 3, line=2.7, cex=2.5)
+if(j==2) {mtext(paste0("Initial conditions"), 1, adj=.9, line=-4, font=2)} else {mtext(paste0("Timestep  ", (j -2)*100), 1, adj=.9, line=-4, font=2)}
 #blankplot(c(0,0), c(0,0))
 
 # display date, replicated quantity, and timesteps in top right plot box
@@ -245,7 +255,7 @@ try(maps_with_points_2(sea$myWorld), silent=TRUE)
 #blankplot(c(0,0), c(0,0))
 polygon(x= c(-180,-180,180,180), y=c(-100,-60,-60,-100), col="white", border="white")
 
-mtext("Basic", 2, -50, cex=1.5, adj= 0.5)
+mtext("Basic model", 2, -50, cex=1.5, adj= 0.5)
 
 try(example_tree_2(sea $mytree, "black", j), silent=TRUE)
 
@@ -261,7 +271,7 @@ try(maps_with_points_2(sea.D$myWorld), silent=TRUE)
 polygon(x= c(-180,-180,180,180), y=c(-100,-60,-60,-100), col="white", border="white")
 
 
-mtext("Diffusion", 2, -50, cex=1.5, adj=0.5)
+mtext("+  Diffusion", 2, -50, cex=1.5, adj=0.5)
 
 try(example_tree_2(sea.D $mytree, "black", j), silent=TRUE)
 
@@ -273,7 +283,7 @@ try(maps_with_points_2(sea.T$myWorld), silent=TRUE)
 
 
 polygon(x= c(-180,-180,180,180), y=c(-100,-60,-60,-100), col="white", border="white")
-mtext("Takeover", 2, -50, cex=1.5, adj=0.5)
+mtext("+ Takeover", 2, -50, cex=1.5, adj=0.5)
 
 try(example_tree_2(sea.T $mytree, "black", j), silent=TRUE)
 
@@ -284,8 +294,8 @@ try(maps_with_points_2(sea.DT$myWorld), silent=TRUE)
 #blankplot(c(0,10), c(0,0))
 
 polygon(x= c(-180,-180,180,180), y=c(-100,-60,-60,-100), col="white", border="white")
-mtext("Full model", 2, -50, cex=1.5, adj=0.5)
-mtext(paste0("Created by Ty Tuff, Bruno Vilela, and Carlos Botero at WUSTL on ", format(Sys.time(), format ="%d-%b-%Y")), 1, adj=0.5, line=-1.5)
+mtext("+ Diffusion \n+ Takeover", 2, -50, cex=1.5, adj=0.5)
+mtext(paste0("Created by Ty Tuff, Bruno Vilela, and Carlos Botero at WUSTL on ", format(Sys.time(), format ="%d-%b-%Y")), 1, adj=1, line=-1.5)
 try(example_tree_2(sea.DT$mytree, "black", j), silent=TRUE)
 
 
@@ -296,4 +306,4 @@ dev.off()
 }
 
 
-
+prob_choose <- c(0.5, 0.5, 0.5, 0.4, 0.15, 0.4, 0.15, 0.1, 0.1, 0.1, 0.2, 0.2)
