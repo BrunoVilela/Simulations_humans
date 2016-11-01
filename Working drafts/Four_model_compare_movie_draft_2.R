@@ -2,7 +2,7 @@ path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster output
 path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_sequence_for_movie_same_parameter_values"
 path <- "~/Desktop/temp"
 
-
+path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_and_2_no_bgTO_every_time_step_for_movie"
 
       setwd(path)
     myfiles_full <- list.dirs()
@@ -31,7 +31,7 @@ split.file.name <- unlist(strsplit(available[i], split="_"))
     split.file.name_timestep <-  unlist(strsplit(split.file.name[34], split=".R"))
        
     
-files[i,] <- c(split.file.name[1:33], split.file.name_timestep)
+try(files[i,] <- c(split.file.name[1:33], split.file.name_timestep ), silent=FALSE)
 
 }
 
@@ -71,9 +71,9 @@ NA,
 	"arisal_of_Dom",
 	
 	NA, 
-	"timesteps", 
-	NA,
-	NA
+	"total_timesteps", 
+	"this_timestep",
+	"data_type"
         
       
   )
@@ -82,57 +82,67 @@ results_table <- as.data.frame(files)
 head(results_table)
 dim(results_table)
 
+levels(results_table$this_timestep)
 
+raw_data <- subset(results_table, data_type =="data" )
 
+one <- subset(raw_data, Model_type=="01" )
+two <- subset(raw_data, Model_type=="02" )
+three <- subset(raw_data, Model_type=="03" )
+four <- subset(raw_data, Model_type=="04" )
 
-one <- subset(results_table, Model_type=="01" )
-two <- subset(results_table, Model_type=="02" )
-three <- subset(results_table, Model_type=="03" )
-four <- subset(results_table, Model_type=="04" )
+levels(one$this_timestep)
+levels(two$this_timestep)
+levels(three$this_timestep)
+levels(four$this_timestep)
+
 
 names(one)
 one$NA.10
 j<-3
-sub_one <- as.matrix(subset(one, NA.10 == "00000030000"))
-sub_two <- as.matrix(subset(two, NA.10 == "00000030000"))
-sub_three <- as.matrix(subset(three, NA.10 == "00000030000"))
-sub_four <- as.matrix(subset(four, NA.10 == "00000030000"))
-
+sub_one <- as.matrix(subset(one, this_timestep == "00000002049"))
+sub_two <- as.matrix(subset(two, this_timestep == "00000002049"))
+sub_three <- as.matrix(subset(three, this_timestep == "00000002049"))
+sub_four <- as.matrix(subset(four, this_timestep == "00000002049"))
+sub_one
+sub_two
+sub_three
+sub_four
 
 
 0.06842
 
-sub_one <- as.matrix(subset(one, arisal_of_Env_NonD == "0.1633"))
+sub_one <- as.matrix(subset(one, arisal_of_Env_NonD == "0.07063"))
 
 0.01809
 
-sub_two <- as.matrix(subset(two, arisal_of_Env_NonD == "0.01809"))
+sub_two <- as.matrix(subset(two, arisal_of_Env_NonD == "0.1568"))
 
 0.01466
 
-sub_three <- as.matrix(subset(three, arisal_of_Env_NonD == "0.01466"))
+sub_three <- as.matrix(subset(three, arisal_of_Env_NonD == "0.2564"))
 
 0.02
 
-sub_four <- as.matrix(subset(four, arisal_of_Env_NonD == "0.02"))
+sub_four <- as.matrix(subset(four, arisal_of_Env_NonD == "0.03473"))
 
-sub_one <- as.matrix(subset(one, NA.10 == "00000029901"))
-sub_two <- as.matrix(subset(two, NA.10 == "00000029901"))
-sub_three <- as.matrix(subset(three, NA.10 == "00000029901"))
-sub_four <- as.matrix(subset(four, NA.10 == "00000029901"))
-sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.1981))
-sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.2171))
-sub_three <- as.matrix(subset(three, speciation_of_Env_NonD == 0.1823))
-sub_four <- as.matrix(subset(four, speciation_of_Env_NonD == 0.2088))
+#sub_one <- as.matrix(subset(one, NA.10 == "00000029901"))
+#sub_two <- as.matrix(subset(two, NA.10 == "00000029901"))
+#sub_three <- as.matrix(subset(three, NA.10 == "00000029901"))
+#sub_four <- as.matrix(subset(four, NA.10 == "00000029901"))
+#sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.1981))
+#sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.2171))
+#sub_three <- as.matrix(subset(three, speciation_of_Env_NonD == 0.1823))
+#sub_four <- as.matrix(subset(four, speciation_of_Env_NonD == 0.2088))
 
 
 
 chosen_ones <- as.data.frame(rbind(sub_one, sub_two, sub_three, sub_four))
 
-this_time_step <- subset(chosen_ones, NA.10 == levels(chosen_ones$NA.10)[1])
+this_time_step <- subset(chosen_ones, this_timestep == levels(chosen_ones$this_timestep)[1])
 
 names(chosen_ones)
-levels(chosen_ones$NA.10)
+levels(chosen_ones$this_timestep)
 
 
 #####################################################################
@@ -146,11 +156,11 @@ source('~/Box Sync/colliding ranges/Simulations_humans/Functions/PLOT_input_para
 
 #setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_sequence_for_movie")
 setwd(path)
-j <- 2
+j <- 1
 
-for(j in 1:length(levels(chosen_ones$NA.10))){
+for(j in 1:length(levels(chosen_ones$this_timestep))){
 
-this_time_step <- subset(chosen_ones, NA.10 == levels(chosen_ones$NA.10)[j])
+this_time_step <- subset(chosen_ones, this_timestep == levels(chosen_ones$this_timestep)[j])
 
 sub_one <- as.matrix(this_time_step[1,])
 sub_two <- as.matrix(this_time_step[2,])
@@ -186,7 +196,7 @@ names(sea)
 
 getwd()
 #pdf( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie/", j,".pdf"), width = 8.5, height = 11) # start page one, this command ends when the command dev.off() is called.
-jpeg( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie 2/", "opener",".jpg"), width =8.5, height = 11, units="in", res=1000 , quality=100)
+jpeg( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie 2/", j,".jpg"), width =15, height = 11, units="in", res=1000 , quality=100)
 # The layout function establishes the grid background for plots to be plotted to. 
 # This layout should contain a boarder around the periphery for formatting adjustment later. 
 # This layout should contain blank rows and columns between primary plot boxes for later formatting. 
@@ -216,7 +226,7 @@ page_one_layout <-layout(matrix(seq(1:10),5,2, byrow=TRUE), width=c( 2,1), heigh
 
 #layout.show(page_one_layout) 
 #par(mar=c(0,0,0,0)) #set the default margin size within plot boxes to 0. This transfers the control of margin size to the width specified in the layout call.
-par(mfrow=c(5,1))
+par(mfrow=c(2,2))
 
 
 ### Row 1
@@ -225,20 +235,26 @@ par(mfrow=c(5,1))
 # plot input parameter distributions
 #input_parameters_plot(sea, sea.T, sea.D, sea.DT)
 #blankplot(c(0,0), c(0,0))
-try(maps_with_points_3(sea$myWorld), silent=TRUE)
-polygon(x= c(-180,-180,180,180), y=c(-100,-60,-60,-100), col="white", border="white")
-library(plotrix)
-testcol<-gray.colors(30, start = 0.2, end = 0.9, gamma = 2.2, alpha = NULL)
- col.labels<-c("Many \n domesticable \n species ", "Few \n domesticable \n species ")
-color.legend(-230,-50,-200,80,col.labels,testcol,gradient="y")
 
 
-col1 <- adjustcolor("red", alpha = 1)
-  col2 <-  adjustcolor("gold", alpha = 1)
-legend(200, 80, legend=c("Domestication", "Foraging"), pch=19, col=c(col1, col2), bty="n", cex=1.5)
 
-mtext("How did agriculture spread?", 3, line=2.7, cex=2.5)
-if(j==2) {mtext(paste0("Initial conditions"), 1, adj=.9, line=-4, font=2)} else {mtext(paste0("Timestep  ", (j -2)*100), 1, adj=.9, line=-4, font=2)}
+#############
+
+#try(maps_with_points_3(sea$myWorld), silent=TRUE)
+#polygon(x= c(-180,-180,180,180), y=c(-100,-60,-60,-100), col="white", border="white")
+#library(plotrix)
+#testcol<-gray.colors(30, start = 0.2, end = 0.9, gamma = 2.2, alpha = NULL)
+# col.labels<-c("Many \n domesticable \n species ", "Few \n domesticable \n species ")
+#color.legend(-230,-50,-200,80,col.labels,testcol,gradient="y")
+
+
+#col1 <- adjustcolor("red", alpha = 1)
+#  col2 <-  adjustcolor("gold", alpha = 1)
+#legend(200, 80, legend=c("Domestication", "Foraging"), pch=19, col=c(col1, col2), bty="n", cex=1.5)
+
+#mtext("How did agriculture spread?", 3, line=2.7, cex=2.5)
+
+
 #blankplot(c(0,0), c(0,0))
 
 # display date, replicated quantity, and timesteps in top right plot box
@@ -251,6 +267,14 @@ if(j==2) {mtext(paste0("Initial conditions"), 1, adj=.9, line=-4, font=2)} else 
 ### Row 2
 
 try(maps_with_points_2(sea$myWorld), silent=TRUE)
+
+resolution1 <-  round(exp(seq(log(1), log(30000), length.out = 750)))
+    resolution <- resolution1[!duplicated(resolution1)]
+    
+
+mtext(paste0("Timestep  ", resolution[j]), 3, adj=-0.25, line=-2, font=2)
+
+
 
 #blankplot(c(0,0), c(0,0))
 polygon(x= c(-180,-180,180,180), y=c(-100,-60,-60,-100), col="white", border="white")
