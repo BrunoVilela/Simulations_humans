@@ -57,7 +57,7 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     count <- count + 1  
     
     # Probability of Arisal
-    prob_choose_a <- rexp(4, rate = 9)
+    set.seed(replicate_cycle);prob_choose_a <- rexp(4, rate = 100)
     P.Arisal0  <- parameters(prob_choose_a[1], prob_choose_a[2],
                              prob_choose_a[3], prob_choose_a[4],
                              "Env_NonD", "Env_D",
@@ -73,10 +73,10 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
     
     colnames(P.Arisal) <- c("Prob_of_Foraging", "Porb_of_Domestication")
     #####
-    prob_choose <- runif(12, 0.1, 1)
-    prob_choose[c(4)] <- runif(1, 0, (prob_choose[1] - 0.1))
-    prob_choose[c(6)] <- runif(1, 0, (prob_choose[3] - 0.1))
-    prob_choose[c(9, 10, 12)] <- runif(3, 0.1, prob_choose[11])
+    set.seed(replicate_cycle);prob_choose <- runif(12, 0.1, 1)
+    set.seed(replicate_cycle);prob_choose[c(4)] <- runif(1, 0, (prob_choose[1] - 0.1))
+    set.seed(replicate_cycle);prob_choose[c(6)] <- runif(1, 0, (prob_choose[3] - 0.1))
+    set.seed(replicate_cycle);prob_choose[c(9, 10, 12)] <- runif(3, 0.1, prob_choose[11])
     if (count == 1) {
       prob_choose[7:12] <- 0
     }
