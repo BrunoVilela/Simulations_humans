@@ -100,10 +100,10 @@ levels(four$this_timestep)
 names(one)
 one$NA.10
 j<-3
-sub_one <- as.matrix(subset(one, this_timestep == "00000002049"))
-sub_two <- as.matrix(subset(two, this_timestep == "00000002049"))
-sub_three <- as.matrix(subset(three, this_timestep == "00000002049"))
-sub_four <- as.matrix(subset(four, this_timestep == "00000002049"))
+sub_one <- as.matrix(subset(one, this_timestep == "00000030000"))
+sub_two <- as.matrix(subset(two, this_timestep == "00000030000"))
+sub_three <- as.matrix(subset(three, this_timestep == "00000030000"))
+sub_four <- as.matrix(subset(four, this_timestep == "00000030000"))
 sub_one
 sub_two
 sub_three
@@ -196,7 +196,7 @@ names(sea)
 
 getwd()
 #pdf( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie/", j,".pdf"), width = 8.5, height = 11) # start page one, this command ends when the command dev.off() is called.
-jpeg( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie 2/", j,".jpg"), width =15, height = 11, units="in", res=1000 , quality=100)
+jpeg( file = paste0("~/Box Sync/colliding ranges/Simulations_humans/Figures/Time sequence for movie 2/", j,".jpg"), width =8.5, height = 11, units="in", res=1000 , quality=100)
 # The layout function establishes the grid background for plots to be plotted to. 
 # This layout should contain a boarder around the periphery for formatting adjustment later. 
 # This layout should contain blank rows and columns between primary plot boxes for later formatting. 
@@ -226,7 +226,7 @@ page_one_layout <-layout(matrix(seq(1:10),5,2, byrow=TRUE), width=c( 2,1), heigh
 
 #layout.show(page_one_layout) 
 #par(mar=c(0,0,0,0)) #set the default margin size within plot boxes to 0. This transfers the control of margin size to the width specified in the layout call.
-par(mfrow=c(2,2))
+par(mfrow=c(4,1))
 
 
 ### Row 1
