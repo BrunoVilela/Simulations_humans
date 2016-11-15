@@ -15,16 +15,16 @@ Mulch_protection <- subset( dat, dat[,2] == "0" & dat[,3] == "1")
 Tarweed_and_mulch <- subset( dat, dat[,2] == "1" & dat[,3] == "1")
 
 
-shinyUI(dashboardPage(
+shinyUI(dashboardPage( skin="green",
   dashboardHeader(title = "FARM project"),
   dashboardSidebar(
     sidebarMenu(
-      menuItem("Introduction", tabName = "introduction", icon = icon("cogs")),
-      menuItem("Model design", tabName = "model_design", icon = icon("cogs")),
+      menuItem("Introduction", tabName = "introduction", icon = icon("book")),
+      menuItem("Model design", tabName = "model_design", icon = icon("wrench")),
       menuItem("Methods", tabName = "methods", icon = icon("cogs")),
       menuItem("Results", tabName = "results_page", icon = icon("area-chart")),
-      menuItem("Conclusions", tabName = "conclusions", icon = icon("area-chart")),
-      menuItem("Citations", tabName = "citations", icon = icon("cogs"))
+      menuItem("Conclusions", tabName = "conclusions", icon = icon("lightbulb-o")),
+      menuItem("Citations", tabName = "citations", icon = icon("sitemap"))
     )
   ),
   dashboardBody(
@@ -81,7 +81,7 @@ shinyUI(dashboardPage(
 	
 
 		),
-                tabPanel("Maps vs. Trees", 
+                tabPanel("Simulation at equilibium", 
                          fluidRow(
                            imageOutput("measure_means", height = 375, width = 400)
                          ),
@@ -92,7 +92,18 @@ shinyUI(dashboardPage(
                          
                                
                 ), 
-                tabPanel("Traits", 
+		                tabPanel("Simulation per timesteps", 
+		                      fluidRow(
+		                        imageOutput("five pillars", height = 375, width = 400)
+		                      ),
+		         
+		                      p("This page will include a video of the maps and trees through time and a reactive element to let ppl toggle through simulations and timesteps themselves. 
+		                        ")
+		         
+		         
+		         
+		         ), 
+                tabPanel("Traits to compare", 
                          
                          fluidRow(
                            imageOutput("anova_cartoon", height = 400, width = 400)
@@ -105,9 +116,23 @@ shinyUI(dashboardPage(
                          
                 ), 
 
+		            tabPanel("Tree statistics at equilibrium", 
+		         
+		                      fluidRow(
+		                        imageOutput("wash", height = 400, width = 400)
+		                      ),
+		         
+		         
+		                      tags$h3("How do traits compare to eachother?"),
+		         
+		                      p("Show the binary division of each trait and the analysis that follows for each trait")
+		         
+		              ), 
+		
+		
+		
 
-
-                tabPanel("Tree statistics through time", 
+                tabPanel("Tree statistics per timestep", 
                          
                          fluidRow(
                            imageOutput("gm_regression", height = 400, width = 400)

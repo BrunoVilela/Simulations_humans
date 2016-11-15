@@ -1,4 +1,4 @@
-path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_and_2_no_bgTO_every_time_step_for_movie"
+path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_and_2_no_bgTO_every_time_step_for_movie_2"
       
       setwd(path)
     myfiles_full <- list.dirs()
@@ -89,6 +89,10 @@ head(results_table)
 dim(results_table)
 names(results_table)
 
+# results_table_folder_1 <- results_table
+# results_table_folder_2 <- results_table
+# results_table <- rbind(results_table_folder_1, results_table_folder_2)
+
 simulations_table <- subset(results_table, File_type =="data" )
 stats_table <- subset(results_table, File_type =="stats" )
 
@@ -99,17 +103,32 @@ three <- subset(simulations_table, Model_type=="03" )
 four <- subset(simulations_table, Model_type=="04" )
 
 names(one)
-levels(two$NA.10)
+levels(one$NA.10)
 j<-3
 sub_one <- as.matrix(subset(one, NA.10 == "00000030000"))
 sub_two <- as.matrix(subset(two, NA.10 == "00000030000"))
 sub_three <- as.matrix(subset(three, NA.10 == "00000030000"))
 sub_four <- as.matrix(subset(four, NA.10 == "00000030000"))
 
-sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.4981))
-sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.4641))
+
+
+sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.5553))
+sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.5158))
 sub_three <- as.matrix(subset(three, speciation_of_Env_NonD == 0.4391))
 sub_four <- as.matrix(subset(four, speciation_of_Env_NonD == 0.4234))
+
+#sub_one <- as.data.frame(sub_one)
+#names(sub_one)
+#sub_two <- as.data.frame(sub_two)
+#names(sub_two)
+#sub_three <- as.data.frame(sub_three)
+#names(sub_three)
+#sub_four <- as.data.frame(sub_four)
+#names(sub_four)
+#length(levels(sub_one $NA.10))
+#length(levels(sub_two $NA.10))
+#length(levels(sub_three $NA.10))
+#length(levels(sub_four $NA.10))
 
 chosen_ones <- as.data.frame(rbind(sub_one, sub_two, sub_three, sub_four))
 
@@ -129,7 +148,7 @@ source('~/Box Sync/colliding ranges/Simulations_humans/Functions/PLOT_input_para
 
 #setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_sequence_for_movie")
 setwd(path)
-j <- 24
+j <- 104
 
 for(j in 2:length(levels(chosen_ones$NA.10))){
 
@@ -144,20 +163,27 @@ sub_four <- as.matrix(this_time_step[4,])
 sea_name <- paste0(as.character(sub_one[1]), "_",as.character(sub_one[2]), "_",as.character(sub_one[3]), "_",as.character(sub_one[ 4]), "_",as.character(sub_one[5]), "_",as.character(sub_one[ 6]), "_",as.character(sub_one[ 7]), "_",as.character(sub_one[8]), "_",as.character(sub_one[ 9]), "_",as.character(sub_one[ 10]), "_",as.character(sub_one[11]), "_",as.character(sub_one[ 12]), "_",as.character(sub_one[ 13]), "_",as.character(sub_one[ 14]), "_",as.character(sub_one[ 15]), "_",as.character(sub_one[ 16]), "_",as.character(sub_one[ 17]), "_",as.character(sub_one[ 18]), "_",as.character(sub_one[ 19]), "_",as.character(sub_one[ 20]), "_",as.character(sub_one[ 21]), "_",as.character(sub_one[ 22]), "_",as.character(sub_one[ 23]), "_",as.character(sub_one[ 24]), "_",as.character(sub_one[ 25]), "_",as.character(sub_one[ 26]), "_",as.character(sub_one[ 27]), "_",as.character(sub_one[ 28]), "_",as.character(sub_one[ 29]), "_",as.character(sub_one[ 30]), "_",as.character(sub_one[ 31]), "_",as.character(sub_one[ 32]), "_",as.character(sub_one[ 33]), "_",as.character(sub_one[ 34]), ".R",as.character(sub_one[ 35]))
 load( sea_name)
 sea 		<- myOut  ## S + E + A 
+if(file.exists(sea_name)){load(sea_name )
+	sea 	<- myOut } else print("skipped")  ## S + E + A 
+
 
 sea.D_name <- paste0(as.character(sub_one[1]), "_",as.character(sub_one[2]), "_",as.character(sub_two[3]), "_",as.character(sub_two[ 4]), "_",as.character(sub_two[ 5]), "_",as.character(sub_two[6]), "_",as.character(sub_two[ 7]), "_",as.character(sub_two[ 8]), "_",as.character(sub_two[ 9]), "_",as.character(sub_two[ 10]), "_",as.character(sub_two[ 11]), "_",as.character(sub_two[ 12]), "_",as.character(sub_two[ 13]), "_",as.character(sub_two[ 14]), "_",as.character(sub_two[ 15]), "_",as.character(sub_two[ 16]), "_",as.character(sub_two[ 17]), "_",as.character(sub_two[ 18]), "_",as.character(sub_two[ 19]), "_",as.character(sub_two[ 20]), "_",as.character(sub_two[ 21]), "_",as.character(sub_two[ 22]), "_",as.character(sub_two[ 23]), "_",as.character(sub_two[ 24]), "_",as.character(sub_two[ 25]), "_",as.character(sub_two[ 26]), "_",as.character(sub_two[ 27]), "_",as.character(sub_two[ 28]), "_",as.character(sub_two[ 29]), "_",as.character(sub_two[ 30]), "_",as.character(sub_two[ 31]), "_",as.character(sub_two[ 32]), "_",as.character(sub_two[ 33]), "_",as.character(sub_two[ 34]), ".R",as.character(sub_two[ 35]))
 load(sea.D_name)
 sea.D 	<- myOut  ## S + E + A + D
+if(file.exists(sea.D_name)){load(sea.D_name )
+	sea.D 	<- myOut } else print("skipped")  ## S + E + A + D
 
 
 sea.T_name <- paste0(as.character(sub_three[1]), "_",as.character(sub_three[2]), "_",as.character(sub_three[3]), "_",as.character(sub_three[ 4]), "_",as.character(sub_three[ 5]), "_",as.character(sub_three[6]), "_",as.character(sub_three[ 7]), "_",as.character(sub_three[ 8]), "_",as.character(sub_three[ 9]), "_",as.character(sub_three[ 10]), "_",as.character(sub_three[ 11]), "_",as.character(sub_three[ 12]), "_",as.character(sub_three[ 13]), "_",as.character(sub_three[ 14]), "_",as.character(sub_three[ 15]), "_",as.character(sub_three[16]), "_",as.character(sub_three[ 17]), "_",as.character(sub_three[ 18]), "_",as.character(sub_three[ 19]), "_",as.character(sub_three[ 20]), "_",as.character(sub_three[ 21]), "_",as.character(sub_three[ 22]), "_",as.character(sub_three[23]), "_",as.character(sub_three[ 24]), "_",as.character(sub_three[ 25]), "_",as.character(sub_three[ 26]), "_",as.character(sub_three[ 27]), "_",as.character(sub_three[ 28]), "_",as.character(sub_three[ 29]), "_",as.character(sub_three[ 30]), "_",as.character(sub_three[ 31]), "_",as.character(sub_three[ 32]), "_",as.character(sub_three[ 33]), "_",as.character(sub_three[ 34]), ".R",as.character(sub_three[ 35]))
-load(sea.T_name)
-sea.T 	<- myOut  ## S + E + A + T
+
+if(file.exists(sea.T_name)){load(sea.T_name )
+	sea.T 	<- myOut } else print("skipped")  ## S + E + A + T
 
 
 sea.DT_name <- paste0(as.character(sub_four[1]), "_",as.character(sub_four[2]), "_",as.character(sub_four[3]), "_",as.character(sub_four[ 4]), "_",as.character(sub_four[ 5]), "_",as.character(sub_four[ 6]), "_",as.character(sub_four[ 7]), "_",as.character(sub_four[ 8]), "_",as.character(sub_four[ 9]), "_",as.character(sub_four[ 10]), "_",as.character(sub_four[ 11]), "_",as.character(sub_four[ 12]), "_",as.character(sub_four[ 13]), "_",as.character(sub_four[ 14]), "_",as.character(sub_four[ 15]), "_",as.character(sub_four[ 16]), "_",as.character(sub_four[ 17]), "_",as.character(sub_four[ 18]), "_",as.character(sub_four[ 19]), "_",as.character(sub_four[ 20]), "_",as.character(sub_four[ 21]), "_",as.character(sub_four[ 22]), "_",as.character(sub_four[ 23]), "_",as.character(sub_four[ 24]), "_",as.character(sub_four[ 25]), "_",as.character(sub_four[ 26]), "_",as.character(sub_four[ 27]), "_",as.character(sub_four[ 28]), "_",as.character(sub_four[ 29]), "_",as.character(sub_four[ 30]), "_",as.character(sub_four[ 31]), "_",as.character(sub_four[ 32]), "_",as.character(sub_four[ 33]), "_",as.character(sub_four[ 34]), ".R",as.character(sub_four[ 35]))
-load(sea.DT_name )
-sea.DT 	<- myOut ## S + E + A + D + T
+if(file.exists(sea.DT_name)){load(sea.DT_name )
+	sea.DT 	<- myOut } else print("skipped")  ## S + E + A + D + T
+
 
 names(sea)
 #### These results are plotted across 4 different pages, each with their own pdf call
