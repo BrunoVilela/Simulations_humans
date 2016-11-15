@@ -1,9 +1,5 @@
-path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_sequence_for_movie"
-path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_2_sequence_for_movie_same_parameter_values"
-path <- "~/Desktop/temp"
-
 path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_and_2_no_bgTO_every_time_step_for_movie"
-
+      
       setwd(path)
     myfiles_full <- list.dirs()
     analyze_this_many <- length(myfiles_full)
@@ -19,19 +15,25 @@ path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster output
     split.file.name <- strsplit(available_files[10], split = "_") 
     
     available <- list.files()
-files <- matrix(rep(NA, 35), length(available), 35)
+files <- matrix(rep(NA, 37), length(available), 37)
 dim(files)
-i <- 10
+i <- 3000
 
 
 for(i in 1:length(available)){
 #load(available[i])
 
 split.file.name <- unlist(strsplit(available[i], split="_"))
-    split.file.name_timestep <-  unlist(strsplit(split.file.name[34], split=".R"))
-       
+
+if(is.na(split.file.name[35] == "stats.Rdata") == FALSE){
+    split.file.name_timestep <-  unlist(strsplit(split.file.name[35], split=".R"))
+    files[i,] <- c(split.file.name[1:34], split.file.name_timestep, available[i])
+       } else { 
+       	split.file.name_timestep <-  unlist(strsplit(split.file.name[34], split=".R"))
+       	files[i,] <- c(split.file.name[1:33], split.file.name_timestep, NA, available[i])
+       	}
     
-try(files[i,] <- c(split.file.name[1:33], split.file.name_timestep ), silent=FALSE)
+
 
 }
 
@@ -71,79 +73,50 @@ NA,
 	"arisal_of_Dom",
 	
 	NA, 
-	"total_timesteps", 
-	"this_timestep",
-	"data_type"
+	"timesteps", 
+	NA,
+	"File_type",
+	NA,
+	"File_name"
+	
         
       
   )
 
 results_table <- as.data.frame(files)
+results_table <- results_table[,-36]
 head(results_table)
 dim(results_table)
+names(results_table)
 
-levels(results_table$this_timestep)
+simulations_table <- subset(results_table, File_type =="data" )
+stats_table <- subset(results_table, File_type =="stats" )
 
-raw_data <- subset(results_table, data_type =="data" )
 
-one <- subset(raw_data, Model_type=="01" )
-two <- subset(raw_data, Model_type=="02" )
-three <- subset(raw_data, Model_type=="03" )
-four <- subset(raw_data, Model_type=="04" )
-
-levels(one$this_timestep)
-levels(two$this_timestep)
-levels(three$this_timestep)
-levels(four$this_timestep)
-
+one <- subset(simulations_table, Model_type=="01" )
+two <- subset(simulations_table, Model_type=="02" )
+three <- subset(simulations_table, Model_type=="03" )
+four <- subset(simulations_table, Model_type=="04" )
 
 names(one)
-one$NA.10
+levels(two$NA.10)
 j<-3
-sub_one <- as.matrix(subset(one, this_timestep == "00000030000"))
-sub_two <- as.matrix(subset(two, this_timestep == "00000030000"))
-sub_three <- as.matrix(subset(three, this_timestep == "00000030000"))
-sub_four <- as.matrix(subset(four, this_timestep == "00000030000"))
-sub_one
-sub_two
-sub_three
-sub_four
+sub_one <- as.matrix(subset(one, NA.10 == "00000030000"))
+sub_two <- as.matrix(subset(two, NA.10 == "00000030000"))
+sub_three <- as.matrix(subset(three, NA.10 == "00000030000"))
+sub_four <- as.matrix(subset(four, NA.10 == "00000030000"))
 
-
-0.06842
-
-sub_one <- as.matrix(subset(one, arisal_of_Env_NonD == "0.07063"))
-
-0.01809
-
-sub_two <- as.matrix(subset(two, arisal_of_Env_NonD == "0.1568"))
-
-0.01466
-
-sub_three <- as.matrix(subset(three, arisal_of_Env_NonD == "0.2564"))
-
-0.02
-
-sub_four <- as.matrix(subset(four, arisal_of_Env_NonD == "0.03473"))
-
-#sub_one <- as.matrix(subset(one, NA.10 == "00000029901"))
-#sub_two <- as.matrix(subset(two, NA.10 == "00000029901"))
-#sub_three <- as.matrix(subset(three, NA.10 == "00000029901"))
-#sub_four <- as.matrix(subset(four, NA.10 == "00000029901"))
-#sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.1981))
-#sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.2171))
-#sub_three <- as.matrix(subset(three, speciation_of_Env_NonD == 0.1823))
-#sub_four <- as.matrix(subset(four, speciation_of_Env_NonD == 0.2088))
-
-
+sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.4981))
+sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.4641))
+sub_three <- as.matrix(subset(three, speciation_of_Env_NonD == 0.4391))
+sub_four <- as.matrix(subset(four, speciation_of_Env_NonD == 0.4234))
 
 chosen_ones <- as.data.frame(rbind(sub_one, sub_two, sub_three, sub_four))
 
-this_time_step <- subset(chosen_ones, this_timestep == levels(chosen_ones$this_timestep)[1])
+this_time_step <- subset(chosen_ones, NA.10 == levels(chosen_ones$NA.10)[1])
 
 names(chosen_ones)
-levels(chosen_ones$this_timestep)
-
+levels(chosen_ones$NA.10)
 
 #####################################################################
 source('~/Box Sync/colliding ranges/Simulations_humans/Functions/PLOT_blankplot.R', chdir = TRUE)
@@ -156,11 +129,11 @@ source('~/Box Sync/colliding ranges/Simulations_humans/Functions/PLOT_input_para
 
 #setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_sequence_for_movie")
 setwd(path)
-j <- 1
+j <- 24
 
-for(j in 1:length(levels(chosen_ones$this_timestep))){
+for(j in 2:length(levels(chosen_ones$NA.10))){
 
-this_time_step <- subset(chosen_ones, this_timestep == levels(chosen_ones$this_timestep)[j])
+this_time_step <- subset(chosen_ones, NA.10 == levels(chosen_ones$NA.10)[j])
 
 sub_one <- as.matrix(this_time_step[1,])
 sub_two <- as.matrix(this_time_step[2,])
@@ -272,7 +245,7 @@ resolution1 <-  round(exp(seq(log(1), log(30000), length.out = 750)))
     resolution <- resolution1[!duplicated(resolution1)]
     
 
-mtext(paste0("Timestep  ", resolution[j]), 3, adj=-0.25, line=-2, font=2)
+mtext(paste0("Timestep  ", resolution[j]-1), 3, adj=-0.25, line=-1.5, font=2)
 
 
 
@@ -330,4 +303,3 @@ dev.off()
 }
 
 
-prob_choose <- c(0.5, 0.5, 0.5, 0.4, 0.15, 0.4, 0.15, 0.1, 0.1, 0.1, 0.2, 0.2)

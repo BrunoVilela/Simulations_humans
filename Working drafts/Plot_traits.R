@@ -1,8 +1,8 @@
-load('~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/dplace_traits_as_binary.Rdata')
+
+ load('~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/FULL_TREE_Greenhill_data_with_binary_conversions.Rdata')
  
- 
- load('~/Desktop/dplace.Rdata')
-binary_cultures <- as.data.frame(rdata)
+
+binary_cultures <- as.data.frame(start_table)
 binary_cultures
 
 names(binary_cultures)

@@ -2,6 +2,9 @@ social.complexity <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Co
 head(social.complexity)
 slavery <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/slavery.csv")
 head(slavery)
+load('~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/dplace_traits_as_binary.Rdata')
+binary_cultures <- as.data.frame(rdata)
+binary_cultures
 
 Jurisdictional.heirarchy <- read.csv("~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/Jurisdictional_heirarchy_beyond_local_community.csv")
 head(Jurisdictional.heirarchy)
@@ -9,6 +12,21 @@ head(Jurisdictional.heirarchy)
 length(social.complexity[,3])
 length(slavery[,3])
 length(Jurisdictional.heirarchy[,3])
+length(binary_cultures[,1])
+
+head(binary_cultures)
+head(social.complexity)
+frame <- social.complexity[which(social.complexity[,3]%in% binary_cultures[,1] ),]
+names(binary_cultures)[1] <- "Society.id"
+start_table <- merge(social.complexity, binary_cultures, by = "Society.id")
+
+head(start_table)
+names(start_table)
+table_of_binary <- start_table[,-12:-29]
+save(start_table, file="~/Box Sync/colliding ranges/Simulations_humans/Concatenated data tables/FULL_TREE_Greenhill_data_with_binary_conversions.Rdata")
+
+
+
 names(slavery)
 merged <- merge(social.complexity, slavery, by = "Society.id")
 merged_2 <- merge(Jurisdictional.heirarchy, merged, by = "Society.id")
