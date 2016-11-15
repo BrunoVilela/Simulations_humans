@@ -5,23 +5,16 @@ library(shinydashboard)
 library(scales)
 library(shinyRGL)
 
-#library(MASS)
-#data(beav1)
-
-dat <- read.csv("www/TNC_BommerCanyon_data.csv")
-Control <- subset( dat, dat[,2] == "0" & dat[,3] == "0")
-Tarweed_protection <- subset( dat, dat[,2] == "1" & dat[,3] == "0")
-Mulch_protection <- subset( dat, dat[,2] == "0" & dat[,3] == "1")
-Tarweed_and_mulch <- subset( dat, dat[,2] == "1" & dat[,3] == "1")
 
 
-shinyUI(dashboardPage( skin="green",
+shinyUI(dashboardPage( skin="black",
   dashboardHeader(title = "FARM project"),
   dashboardSidebar(
     sidebarMenu(
       menuItem("Introduction", tabName = "introduction", icon = icon("book")),
       menuItem("Model design", tabName = "model_design", icon = icon("wrench")),
       menuItem("Methods", tabName = "methods", icon = icon("cogs")),
+      menuItem("Try for yourself", tabName = "methods", icon = icon("cogs")),
       menuItem("Results", tabName = "results_page", icon = icon("area-chart")),
       menuItem("Conclusions", tabName = "conclusions", icon = icon("lightbulb-o")),
       menuItem("Citations", tabName = "citations", icon = icon("sitemap"))
@@ -44,7 +37,7 @@ shinyUI(dashboardPage( skin="green",
                 
               ),
        
-      tabItem(tabName = "model_design",    
+      tabItem(tabName = "model_design", skin="green",   
                
               fluidRow(
                 imageOutput("cow_race", height = 450, width = 400)
@@ -64,7 +57,15 @@ shinyUI(dashboardPage( skin="green",
               
        ),
       
-   
+      
+      tabItem(tabName = "Try for yourself",
+              fluidRow(
+                imageOutput("w", height = 500, width = 400)
+              ),
+              tags$h3("Using the model to answer scientific questions"), 
+              p("Describe the process of using the model to answer questions about culture. Describe our choice of parameter values and describe our choice to implement the model in four combinations and compete those models against eachother. ")
+              
+      ),
 
         tabItem(tabName = "results_page",
             tabsetPanel(
@@ -87,8 +88,12 @@ shinyUI(dashboardPage( skin="green",
                          ),
                          
                          p("This page will include a video of the maps and trees through time and a reactive element to let ppl toggle through simulations and timesteps themselves. 
-                           ")
-                   
+                           "),
+                         fluidRow(
+                           box(title = "Summary plot", width=12, status = "primary", solidHeader = TRUE, 
+                               plotOutput("summary_plot_r")
+                           )
+                         )
                          
                                
                 ), 
