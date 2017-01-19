@@ -24,15 +24,18 @@ names(farming_binary) <- mydata2$soc_id
 # Plot
 library(phytools)
 library(diversitree)
+tiff("phy.tiff", 20, 20, "cm", res = 100)
 trait.plot(newtree2, as.data.frame(farming_binary), 
-           list(cols = c("blue", "red")), lab = rep("", Ntip(newtree2)))
-
+           list(cols = c("blue", "red")), lab = rep("", Ntip(newtree2)),
+           cex.lab = 0.1)
+dev.off()
 # Match space
 myWorld2 <- as.data.frame(BuildWorld(mydata2[, c(2, 3)], conditions = 1))
 myWorld2[, 6] <- mydata2[, 12]
-myWorld2[, 8] <- mydata2[, 1]
+myWorld2[, 8] <- mydata2[, 1]    
 
 # Analysis
 library(FARM)
 MyOut2 <- list("myWorld" = myWorld2, "mytree" = newtree2)
 real.analysis <- Module_2(MyOut2)
+save(real.analysis, file = "Real_phy/real.analysis.RData")
