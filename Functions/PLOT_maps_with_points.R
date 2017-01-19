@@ -52,12 +52,13 @@ plot(rich, col = gray.colors(100, start = 0.7, end = 0.2), interpolate=TRUE, box
   col2 <-  adjustcolor("white", alpha = 0)
   points(coords, col = c(col2, col1)[myWorld[, 7]], pch = 19, cex=1)
   
-  col1 <- adjustcolor("red", alpha = .5)
-  col2 <-  adjustcolor("gold", alpha = .5)
+  col1 <- adjustcolor("red", alpha = .7)
+  col2 <-  adjustcolor("gold", alpha = .7)
   col3 <- adjustcolor("white", alpha = 0)
   myWorld[which(is.na(myWorld[,6]) == TRUE) ,6]<- 3
-  points(coords, col = c(col2, col1, col3)[myWorld[, 6]], pch = 19, cex=1)
- 
+  points(coords, col = c(col2, col1, col3)[myWorld[, 6]], pch = 19, cex=1.2)
+ 	
+ 	 
 }
 
 

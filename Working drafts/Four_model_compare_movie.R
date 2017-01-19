@@ -1,4 +1,4 @@
-path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_sequence_for_movie"
+path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_and_2_no_bgTO_every_time_step_for_movie"
       
       setwd(path)
     myfiles_full <- list.dirs()
@@ -15,19 +15,25 @@ path <- "~/Box Sync/colliding ranges/Simulations_humans/big world cluster output
     split.file.name <- strsplit(available_files[10], split = "_") 
     
     available <- list.files()
-files <- matrix(rep(NA, 35), length(available), 35)
+files <- matrix(rep(NA, 37), length(available), 37)
 dim(files)
-i <- 10
+i <- 3000
 
 
 for(i in 1:length(available)){
 #load(available[i])
 
 split.file.name <- unlist(strsplit(available[i], split="_"))
-    split.file.name_timestep <-  unlist(strsplit(split.file.name[34], split=".R"))
-       
+
+if(is.na(split.file.name[35] == "stats.Rdata") == FALSE){
+    split.file.name_timestep <-  unlist(strsplit(split.file.name[35], split=".R"))
+    files[i,] <- c(split.file.name[1:34], split.file.name_timestep, available[i])
+       } else { 
+       	split.file.name_timestep <-  unlist(strsplit(split.file.name[34], split=".R"))
+       	files[i,] <- c(split.file.name[1:33], split.file.name_timestep, NA, available[i])
+       	}
     
-files[i,] <- c(split.file.name[1:33], split.file.name_timestep)
+
 
 }
 
@@ -69,35 +75,41 @@ NA,
 	NA, 
 	"timesteps", 
 	NA,
-	NA
+	"File_type",
+	NA,
+	"File_name"
+	
         
       
   )
 
 results_table <- as.data.frame(files)
+results_table <- results_table[,-36]
 head(results_table)
 dim(results_table)
+names(results_table)
+
+simulations_table <- subset(results_table, File_type =="data" )
+stats_table <- subset(results_table, File_type =="stats" )
 
 
-
-
-one <- subset(results_table, Model_type=="01" )
-two <- subset(results_table, Model_type=="02" )
-three <- subset(results_table, Model_type=="03" )
-four <- subset(results_table, Model_type=="04" )
+one <- subset(simulations_table, Model_type=="01" )
+two <- subset(simulations_table, Model_type=="02" )
+three <- subset(simulations_table, Model_type=="03" )
+four <- subset(simulations_table, Model_type=="04" )
 
 names(one)
-one$NA.10
+levels(two$NA.10)
 j<-3
-sub_one <- as.matrix(subset(one, NA.10 == "00000029901"))
-sub_two <- as.matrix(subset(two, NA.10 == "00000029901"))
-sub_three <- as.matrix(subset(three, NA.10 == "00000029901"))
-sub_four <- as.matrix(subset(four, NA.10 == "00000029901"))
+sub_one <- as.matrix(subset(one, NA.10 == "00000030000"))
+sub_two <- as.matrix(subset(two, NA.10 == "00000030000"))
+sub_three <- as.matrix(subset(three, NA.10 == "00000030000"))
+sub_four <- as.matrix(subset(four, NA.10 == "00000030000"))
 
-sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.1981))
-sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.2171))
-sub_three <- as.matrix(subset(three, speciation_of_Env_NonD == 0.1823))
-sub_four <- as.matrix(subset(four, speciation_of_Env_NonD == 0.2088))
+sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.4981))
+sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.5003))
+sub_three <- as.matrix(subset(three, speciation_of_Env_NonD == 0.4951))
+sub_four <- as.matrix(subset(four, speciation_of_Env_NonD == 0.449))
 
 chosen_ones <- as.data.frame(rbind(sub_one, sub_two, sub_three, sub_four))
 
@@ -116,8 +128,8 @@ source('~/Box Sync/colliding ranges/Simulations_humans/Functions/PLOT_input_para
 
 
 
-setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_sequence_for_movie")
-j <- 1
+setwd("~/Box Sync/colliding ranges/Simulations_humans/big world cluster outputs/Module_1_and_2_no_bgTO_every_time_step_for_movie")
+j <- 10
 
 for(j in 151:length(levels(chosen_ones$NA.10))){
 

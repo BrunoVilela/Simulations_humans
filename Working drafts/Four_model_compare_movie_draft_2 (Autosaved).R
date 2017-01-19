@@ -118,7 +118,7 @@ sub_four <- as.matrix(subset(four, NA.10 == "00000030000"))
 
 
 
-sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.5))
+sub_one <- as.matrix(subset(one, speciation_of_Env_NonD == 0.4981))
 sub_two <- as.matrix(subset(two, speciation_of_Env_NonD == 0.5158))
 sub_three <- as.matrix(subset(three, speciation_of_Env_NonD == 0.4391))
 sub_four <- as.matrix(subset(four, speciation_of_Env_NonD == 0.4234))
