@@ -152,8 +152,8 @@ sim_run_cluster <- function(replicate_cycle, myWorld, number_of_time_steps, nbs,
 
 
 #####################################################################
-coords <- coords
-conds <- suitability
+coords <- language_centroids[,3:4] #coords
+conds <- suitability2
 conds <- ifelse(conds <= 21, 1, 2)
 conds[is.na(conds)] <- sample(c(1, 2), sum(is.na(conds)), replace = TRUE) 
 
