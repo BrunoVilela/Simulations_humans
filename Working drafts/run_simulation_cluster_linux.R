@@ -171,8 +171,14 @@ sub <- sample(1:nrow(coords), nrow(coords)) # subsample (remove when running for
 system.time(
   myWorld <- BuildWorld(coords[sub, ], conds[sub, ])
 )
-nbs <- knn2nb(knearneigh(coords[sub, ], k = 7, longlat = TRUE),
+nbs <- knn2nb(knearneigh(apply(coords[sub, ], 2, as.numeric), k = 7, longlat = TRUE),
               sym = TRUE) # 7 symmetric neighbors
+map()
+plot(nbs, apply(coords[sub, ], 2, as.numeric), add = TRUE, col = "gray80", points=FALSE)
+points(apply(coords[sub, ], 2, as.numeric), pch = 20, col = rgb(1, 0, 0, .2))
+
+
+
 n.obs <- sapply(nbs, length)
 seq.max <- seq_len(max(n.obs))
 nbs <- t(sapply(nbs, "[", i = seq.max))
